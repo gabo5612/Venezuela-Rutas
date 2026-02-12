@@ -1,4 +1,4 @@
-<footer>
+<footer class="container">
     <h5>footer</h5>
         <div class="footer_menu" >
         <?php

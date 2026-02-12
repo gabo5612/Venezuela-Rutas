@@ -1,0 +1,98 @@
+:root {
+  --primary: #F48F96;
+  --secondary: #7BC9A7;
+  --accent: #F7C56C;
+  --info: #8ED2DA;
+  --background: #FAFAFA;
+  --t-background:rgb(250 250 250 / 0.8);
+  --card: #FFFFFF;
+  --card-light: #FFFFFF;
+  --text: #121212;
+  --a-white: #FFFFFF;
+  --a-black: #121212;
+  --line:#eeeeee;
+  --default: 9999px;
+  --default-padding: 0.675em 1.25rem;
+  --sm: 0.875rem;
+  --md: 1rem;
+  --lg: 1.25rem;
+  --xl: 1.5rem;
+  --2xl: 2.5rem;
+  --3xl: 3rem;
+  --4xl: 4rem;
+  --single-card: 20px;
+}
+
+
+
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  background-color: var(--background);
+  color: var(--text);
+  
+  a{
+    color: var(--text);
+  }
+  svg svg path {
+    fill: var(--text);
+  }
+}
+html.dark {
+    transition: background-color 0.3s ease, color 0.3s ease;
+  --background: #121212;
+  --t-background: rgb(18 18 18 / 0.8);
+  --card: #1E1E1E;
+  --text: #FAFAFA;
+  --line: #333333;
+}
+
+h1,
+h2,
+h3,
+h4,
+.font-vintage {
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+.btn{
+  border-radius: var(--default);
+  padding: var(--default-padding);
+  border: none;
+  background-color: var(--primary);
+  font-weight: bold;
+  font-size: var(--sm);
+  color: var(--card-light);
+}
+.btn:hover{
+  cursor: pointer;
+  opacity: 0.9;
+}
+
+.container{
+      width: 93%;
+    margin: 0 auto;
+}
+
+@media (min-width:1023px) {
+  .container{
+    width: 100%;
+    max-width: 764px;
+  }
+    .btn {
+        padding: 0.9rem 2.2rem;
+    }
+}
+
+@media (min-width:1439px) {
+  .container{
+    max-width: 1100px;
+    
+  }
+}
+@media (min-width:1600px) {
+  .container{
+    max-width: 1400px;
+    
+  }
+}

@@ -1,0 +1,123 @@
+/* Menu */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  background: var(--t-background);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 30px;
+
+  .nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px auto;
+
+    .nav_menu {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+
+      .nav_menu_items {
+        height: 100%;
+        display: flex;
+        gap: 12px;
+        .menu-1 a, .menu-2 a, .menu-3 a, .menu-4 a {
+              transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+        }
+        .menu-1 a:hover {
+          color: var(--primary);
+        }
+
+        .menu-2 a:hover {
+          color: var(--secondary);
+        }
+
+        .menu-3 a:hover {
+          color: var(--accent);
+        }
+
+        .menu-4 a:hover {
+          color: var(--info);
+        }
+
+        ul {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-evenly;
+          height: 60%;
+        }
+      }
+
+      .nav_menu_items li a {
+        text-decoration: none;
+        color: #94a3b8a9;
+        font-weight: bold;
+      }
+    }
+
+    .darkmode {
+      border: none;
+      background: #eeeeee;
+      border-radius: 9999px;
+      padding: 5px;
+
+      img {
+        width: 25px;
+        height: 20px;
+      }
+    }
+
+    .darkmode:hover {
+      cursor: pointer;
+      scale: 1.1;
+    }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+
+
+    @media (min-width: 768px) {
+      .nav_menu {
+        display: flex;
+      }
+
+      .nav_menu_items {
+        ul {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+          gap: 30px;
+          margin-right: 20px;
+        }
+      }
+    }
+
+    @media (min-width: 1023px) {
+      .nav_menu {
+        display: flex;
+      }
+
+      .nav_menu_items {
+        ul {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+          gap: 30px;
+          margin-right: 20px;
+        }
+      }
+    }
+  }
+
+
+
+}
