@@ -2,7 +2,7 @@
 $svg_path = get_template_directory() . '/assets/images/hero/shining.svg';
 $shining = file_exists($svg_path) ? file_get_contents($svg_path) : '';
 ?>
-<section class="hero-cards container card-<?php echo get_sub_field("card_color"); ?>">
+<section class="hero-cards card-shadow container card-<?php echo get_sub_field("card_color"); ?>">
 
     <div class="hero-content-container">
         <div class="hero-tip"><?php echo $shining; ?>

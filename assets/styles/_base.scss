@@ -5,8 +5,10 @@
   --info: #8ED2DA;
   --background: #FAFAFA;
   --t-background:rgb(250 250 250 / 0.8);
+  --box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.55);
   --card: #FFFFFF;
   --card-light: #FFFFFF;
+  
   --text: #121212;
   --a-white: #FFFFFF;
   --a-black: #121212;
@@ -38,10 +40,16 @@ body {
     fill: var(--text);
   }
 }
+.card-shadow{
+ -webkit-box-shadow: var(--box-shadow);
+box-shadow: var(--box-shadow);
+}
+
 html.dark {
     transition: background-color 0.3s ease, color 0.3s ease;
   --background: #121212;
   --t-background: rgb(18 18 18 / 0.8);
+  --box-shadow: 0px 1px 8px 0px rgb(255 255 255 / 30%);
   --card: #1E1E1E;
   --text: #FAFAFA;
   --line: #333333;
