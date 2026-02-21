@@ -22,16 +22,23 @@
             }
             ?>
             <article class="post">
-                <a class="btn category category-<?php echo $catIcon; ?>" href="/category/<?php echo esc_html($catName); ?>" target="_black">
-                    <?php echo esc_html($catName); ?>
-                </a>
+                <div class="share-section">
+                    <a class="btn category category-<?php echo $catIcon; ?>" href="/category/<?php echo esc_html($catName); ?>" target="_black">
+                        <?php echo esc_html($catName); ?>
+                    </a>
+                    <span class="material-symbols-rounded shareBtn" >Share</span>
+                    <span class="material-symbols-rounded printBtn" >print</span>
+                </div>
                 <h1><?php the_title(); ?></h1>
 
                 <div class="post-content">
                     <?php the_content(); ?>
                 </div>
                 <section class="continue-reading ">
-                    <h3>Más artículos</h3>
+                    <div class="share-section share-2">
+                        <h3>Más artículos</h3>   <span class="material-symbols-rounded shareBtn" >Share</span>
+                    <span class="material-symbols-rounded printBtn" >print</span>
+                    </div>
                     <div class="posts-container" id="postsContainer">
                         <?php
                         $queried = get_queried_object();
@@ -114,6 +121,27 @@
     endif; ?>
     <?php get_template_part('parts/aside'); ?>
 </main>
+<script>
+  const shareData = {
+    title: "<?php echo esc_js(get_the_title()); ?>",
+    text: "<?php echo esc_js(get_the_excerpt()); ?>",
+    url: "<?php echo esc_url(get_permalink()); ?>"
+  };
 
+  document.querySelectorAll('.shareBtn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (navigator.share) {
+        navigator.share(shareData);
+      } else {
+        navigator.clipboard?.writeText(shareData.url);
+        alert('Link copiado');
+      }
+    });
+  });
+
+  document.querySelectorAll('.printBtn').forEach((btn) => {
+    btn.addEventListener('click', () => window.print());
+  });
+</script>
 
 <?php get_template_part('parts/footer'); ?>

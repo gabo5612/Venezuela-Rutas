@@ -29,6 +29,9 @@
             padding-bottom: 12px;
             
         }
+        li{
+            padding-bottom: 6px;
+        }
         .wp-block-image{
             display: flex;
             .aligncenter{
@@ -38,6 +41,22 @@
         img{
             width: 100%;
             height: auto;
+        }
+        .share-section{
+            display: flex;
+    align-items: center;
+    gap: 20px;
+            h3{
+                padding: 0;
+            }
+            span{
+                cursor: pointer;
+            }
+        }
+   
+     
+        .share-2{
+            padding-bottom: 30px;
         }
     }
     .posts-container{

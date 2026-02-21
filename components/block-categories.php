@@ -1,6 +1,6 @@
 <section class="category-container container">
     <h1>
-        <?php echo get_field('title', 'option'); ?>
+        <?php echo get_field('cat_title', 'option'); ?>
     </h1>
     <div>
      <?php if (have_rows('categories', 'option')) : ?>

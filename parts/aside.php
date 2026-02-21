@@ -1,6 +1,6 @@
- <aside class="">
+ <aside >
         <div class="aside-header ">
-            <h3><?php echo get_field("title", "option"); ?></h3>
+            <h3><?php echo get_field("aside_title", "option"); ?><span></span></h3>
             <div class="social-icons">
                 <?php if (have_rows('social', 'option')): ?>
                     <?php while (have_rows('social', 'option')): the_row(); ?>
@@ -28,7 +28,7 @@
             </div>
         </div>
         <div class="trending ">
-            <h3><?php echo get_field("trending_title", "option"); ?></h3>
+            <h3><?php echo get_field("trending_title", "option"); ?><span></span></h3>
             <?php
             $trending = get_field('trending', 'option');
 

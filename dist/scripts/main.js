@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+
 (() => {
   const container = document.getElementById("postsContainer");
   const btn = document.getElementById("moreTips");
