@@ -13,6 +13,22 @@ nav {
     align-items: center;
     justify-content: space-between;
     margin: 10px auto;
+    padding-top: 10px;
+
+    .logo {
+      h1 {
+        font-family: var(--primary-font);
+        display: flex;
+        gap: 3px;
+        align-items: center;
+        color: var(--primary);
+
+        span {
+          font-family: var(--material-symbols);
+        }
+      }
+
+    }
 
     .nav_menu {
       display: none;
@@ -24,11 +40,16 @@ nav {
         height: 100%;
         display: flex;
         gap: 12px;
-        .menu-1 a, .menu-2 a, .menu-3 a, .menu-4 a {
-              transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
+
+        .menu-1 a,
+        .menu-2 a,
+        .menu-3 a,
+        .menu-4 a {
+          transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;
+          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+          transition-duration: 150ms;
         }
+
         .menu-1 a:hover {
           color: var(--primary);
         }

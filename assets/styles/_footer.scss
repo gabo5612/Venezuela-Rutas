@@ -1,0 +1,108 @@
+footer {
+    background-color: var(--second-background);
+
+
+    .footer-top {
+        border-bottom: 1px solid var(--line);
+        padding: 20px 0;
+
+        .logo {
+            margin-bottom: 20px;
+
+            h4 {
+                font-family: var(--primary-font);
+                display: flex;
+                gap: 3px;
+                align-items: center;
+                color: var(--primary);
+
+                span {
+                    font-family: var(--material-symbols);
+                }
+            }
+
+        }
+
+        p {
+            margin: 20px 0;
+        }
+
+        p,
+        a {
+            color: var(--grey-text);
+        }
+
+        .footer_menus {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            .footer_menu {
+
+                h4 {
+                    font-size: var(--md);
+                    font-weight: bold;
+                    margin: 10px 0;
+                }
+
+                .footer_menu_items {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+
+                    a {
+                        font-size: var(--sm);
+                    }
+
+                    a:hover {
+                        border-bottom: 1px solid var(--text);
+
+                    }
+                }
+            }
+        }
+    }
+
+    .footer-bottom {
+        text-align: center;
+        font-size: var(--sm);
+        padding: 20px 0;
+        h6 {
+            padding-top: 10px;
+        }
+
+        .material-symbols-rounded {
+            font-size: 12px;
+            color: var(--primary);
+        }
+    }
+
+    @media (min-width:763px) {
+        .footer-top {
+            display: flex;
+            gap: 0;
+
+            .footer_menus {
+                flex-direction: row;
+                gap: 10px;
+                width: 100%;
+                justify-content: space-around;
+            }
+        }
+    }
+
+    @media (min-width:1600px) {
+        .footer-top {
+            padding: 45px 0;
+            p {
+                max-width: 350px;
+            }
+
+            .footer_menus {
+                gap: 120px;
+                width: 60%;
+                justify-content: right;
+            }
+        }
+    }
+}

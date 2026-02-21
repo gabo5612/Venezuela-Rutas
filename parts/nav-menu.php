@@ -2,8 +2,7 @@
     <div class="nav-container container">
     <div>
         <a href="<?php echo home_url(); ?>" class="logo">
-            <!--<img src="<?php echo get_template_directory_uri(); ?>/assets/images/logo.png" alt="Logo Minute Tips"> -->
-           <h1>X Minute.Tips</h1>
+           <h1 class="material-symbols-rounded"><span>timer</span> <?php echo esc_html( get_bloginfo('name') ); ?></h1>
         </a>
 
     </div>
@@ -19,13 +18,9 @@
         ?>
     </div>
     <div class="nav-btn">
-        <button class="darkmode" id="darkModeToggle"><img
-  id="darkModeIcon"
-  src="<?php echo get_template_directory_uri(); ?>/assets/images/nav-menu/moon.png"
-  data-moon="<?php echo get_template_directory_uri(); ?>/assets/images/nav-menu/moon.png"
-  data-sun="<?php echo get_template_directory_uri(); ?>/assets/images/nav-menu/sun.png"
-  alt="Dark Mode"
-/>
+        <button class="darkmode" id="darkModeToggle">
+            <span id="darkModeIcon" class="material-symbols-rounded">dark_mode</span>
+            <span id="lightModeIcon" class="material-symbols-rounded">light_mode</span>
 </button>
         <button class="subscribe-button btn" id="subscribeToggle">Subscribe</button>
     </div>

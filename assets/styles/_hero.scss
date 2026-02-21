@@ -34,6 +34,9 @@
                 height: 24px;
 
             }
+            .material-symbols-rounded{
+                font-size: 12px;
+            }
         }
 
         .hero-text {
@@ -43,7 +46,12 @@
             justify-content: flex-start;
             flex-direction: column;
             gap: 16px;
-
+            .material-symbols-rounded{
+                font-size: 18px;
+            }
+            .btn{
+                display: flex;
+            }
             h2 {
                 font-size: var(--2xl);
             }
@@ -88,6 +96,9 @@
                 a {
                     font-size: var(--lg);
                 }
+                  .material-symbols-rounded{
+                    font-size: 30px;
+                }
             }
 
         }
@@ -100,7 +111,7 @@
             .hero-text {
 
                 gap: 22px;
-
+              
             }
         }
     }

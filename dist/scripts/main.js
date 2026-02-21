@@ -1,10 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
   const toggleBtn = document.getElementById("darkModeToggle");
-  const icon = document.getElementById("darkModeIcon");
+  const iconDark = document.getElementById("darkModeIcon");
+  const iconLight = document.getElementById("lightModeIcon");
+  
 
   function updateIcon() {
     const isDark = document.documentElement.classList.contains("dark");
-    icon.src = isDark ? icon.dataset.sun : icon.dataset.moon;
+    iconDark.style.display = isDark ? "none" : "block";
+    iconLight.style.display = isDark ? "block" : "none";
   }
 
   const savedTheme = localStorage.getItem("theme");

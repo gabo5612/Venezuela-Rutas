@@ -1,19 +1,16 @@
-<?php
-$svg_path = get_template_directory() . '/assets/images/hero/shining.svg';
-$shining = file_exists($svg_path) ? file_get_contents($svg_path) : '';
-?>
+
 <section class="hero-cards card-shadow container card-<?php echo get_sub_field("card_color"); ?>">
 
     <div class="hero-content-container">
-        <div class="hero-tip"><?php echo $shining; ?>
-            <span><?php echo get_sub_field("type_of_card"); ?></span>
+        <div class="hero-tip">
+            <span><span class="material-symbols-rounded">auto_awesome&nbsp;</span><?php echo get_sub_field("type_of_card"); ?></span>
         </div>
         <div class="hero-content">
             <div class="hero-text">
                 <h2><?php echo get_sub_field("title"); ?></h2>
                 <p><?php echo get_sub_field("description"); ?></p>
                 <?php if (get_sub_field("cta")): ?>
-                    <a href="<?php echo get_sub_field("cta_link"); ?>" class="btn btn-<?php echo get_sub_field("cta_color"); ?>"><?php echo get_sub_field("cta"); ?><span>&#8594;</span></a>
+                    <a href="<?php echo get_sub_field("cta_link"); ?>" class="btn btn-<?php echo get_sub_field("cta_color"); ?>"><?php echo get_sub_field("cta"); ?><span class="material-symbols-rounded">arrow_forward</span></a>
                 <?php endif; ?>
             </div>
             <?php if (get_sub_field('hero_image')): ?>
