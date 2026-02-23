@@ -1,0 +1,21 @@
+.category-container{
+    h1{
+        font-size: var(--xl);
+        margin-bottom: 20px;
+    }
+    .categories-list{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+       
+        
+    }
+}
+
+ .category{
+           
+            padding: var(--sm);
+            a{
+                 color: var(--a-white);
+            }
+        }
