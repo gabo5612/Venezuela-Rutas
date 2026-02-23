@@ -124,7 +124,43 @@ table {
   border-spacing: 0;
 }
 /* End Reset CSS */
+:root {
+  --primary-color: #c74a2d;
+  --arena-color: #e2c9a0;
+  --carbon-color: #2e2e2e;
+  --oliva-color: #6b7d4a;
+  --mostaza-color: #f2b705;
+}
 
+body {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  background-color: var(--arena-color);
+  color: var(--carbon-color);
+}
+h1,
+h2,
+h3,
+h4,
+.font-vintage {
+  font-family: "Bree Serif", serif;
+}
+.btn {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px 20px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.shadow-btn {
+  box-shadow: 4px 4px 0px 0px var(--carbon-color);
+  transition: all 0.1s ease;
+   border: 2px solid var(--carbon-color);
+  border-radius: 2px;
+}
+.shadow-btn:active {
+  box-shadow: 0px 0px 0px 0px var(--carbon-color);
+  transform: translate(4px, 4px);
+}
 .hero-section {
   .hero-image {
     object-fit: cover;
