@@ -1,5 +1,6 @@
 .posts-aside-wrapper {
     margin-bottom: 30px;
+
     .posts {
         .section-title {
             margin: 40px 0 40px;
@@ -17,10 +18,10 @@
         }
 
 
-       
+
     }
 
-   
+
     aside {
         h3 {
             font-weight: bold;
@@ -200,105 +201,107 @@
         }
     }
 }
- .posts-container {
-            display: grid;
-            gap: clamp(12px, 2vw, 24px);
-            grid-template-columns: 1fr;
 
-            .post-card {
-                border-radius: var(--single-card);
-                position: relative;
-                overflow: hidden;
-                transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
+.posts-container {
+    display: grid;
+    gap: clamp(12px, 2vw, 24px);
+    grid-template-columns: 1fr;
 
-                .post-category {
-                    position: absolute;
-                    top: 15px;
-                    left: 15px;
-                    padding: 5px 12px;
-                    border-radius: 999px;
-                    color: var(--a-white);
-                    z-index: 10;
-                }
+    .post-card {
+        border-radius: var(--single-card);
+        position: relative;
+        overflow: hidden;
+        transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
 
-                .post-image {
-                    height: 47%;
-                    margin: 1px;
-
-                    img {
-                        border-radius: 20px 20px 0 0;
-                        object-fit: cover;
-                        width: 100%;
-                        transform: scale(1);
-                        transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
-                    }
-
-                }
-
-                .post-content {
-                    padding: var(--xl);
-                    position: relative;
-                    overflow: hidden;
-                    background-color: var(--card);
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
-                    gap: 10px;
-
-                    .post-title {
-                        font-size: var(--xl);
-                        font-weight: 600;
-                        padding-bottom: 15px;
-                        transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1);
-
-                    }
-
-                    .post-author {
-                        display: flex;
-                        align-items: center;
-                        gap: 10px;
-                    }
-
-                    .post-author .author-avatar img {
-                        border-radius: var(--default);
-                    }
-
-
-
-                }
-
-
-
-
-            }
-
-            .post-card:hover {
-                transition-duration: 150ms;
-
-                .post-image img {
-                    transform: scale(1.05);
-
-                }
-
-                .post-title {
-                    color: var(--primary);
-                }
-            }
-
-            @media (min-width: 640px) {
-
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-
-            }
-
-            @media (min-width: 1600px) {
-                .post-card {
-                    .post-image {
-                        height: 55%;
-                    }
-                }
-            }
+        .post-category {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            padding: 5px 12px;
+            border-radius: 999px;
+            color: var(--a-white);
+            z-index: 10;
         }
+
+        .post-image {
+            max-height: 300px;
+            margin: 1px;
+
+            img {
+                border-radius: 20px 20px 0 0;
+                object-fit: cover;
+                width: 100%;
+                transform: scale(1);
+                transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+        }
+
+        .post-video video {
+            object-fit: cover;
+            aspect-ratio: 16 / 9;
+            width: 100%;
+        }
+
+        .post-content {
+            padding: var(--xl);
+            position: relative;
+            overflow: hidden;
+            background-color: var(--card);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: -15px;
+
+            .post-title {
+                font-size: var(--xl);
+                font-weight: 600;
+                padding-bottom: 15px;
+                transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+
+            }
+
+            .post-author {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .post-author .author-avatar img {
+                border-radius: var(--default);
+            }
+
+
+
+        }
+
+
+
+
+    }
+
+    .post-card:hover {
+        transition-duration: 150ms;
+
+        .post-image img {
+            transform: scale(1.05);
+
+        }
+
+        .post-title {
+            color: var(--primary);
+        }
+    }
+
+    @media (min-width: 640px) {
+
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    }
+
+
+}

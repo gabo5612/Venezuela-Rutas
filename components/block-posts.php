@@ -51,8 +51,13 @@
                         }
                         ?>
 
-                        <div class="post-image">
-                            <?php if (has_post_thumbnail()): ?>
+                        <div class="post-image post-video">
+                            <?php if (get_field('video_featured')): ?>
+                                <video autoplay loop muted playsinline>
+                                    <source src="<?php echo esc_url(get_field('video_featured')); ?>" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                             <?php elseif (has_post_thumbnail()): ?>
                                 <?php the_post_thumbnail('medium'); ?>
                             <?php else: ?>
                                 <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/default-post-image.jpg'); ?>" alt="Default Post Image">

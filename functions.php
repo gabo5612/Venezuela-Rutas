@@ -73,47 +73,61 @@ function mag_load_more_tips()
 
     ob_start();
 
-    if ($q->have_posts()) {
-        while ($q->have_posts()) {
-            $q->the_post(); ?>
-            <a href="<?php the_permalink(); ?>" class="post-card card-shadow">
-                 <?php
-                    $categories = get_the_category();
-                    $catIcon = '4'; 
-                    if (!empty($categories)) {
-                        $catName = $categories[0]->name;
+    if ($q->have_posts()):
+                while ($q->have_posts()): $q->the_post(); ?>
+                    <a href="<?php the_permalink(); ?>" class="post-card card-shadow-hover">
+                        <?php
+                        $categories = get_the_category();
+                        $catIcon = '4';
 
-                        if ($catName === 'Tech') {
-                            $catIcon = '1';
-                        } elseif ($catName === 'Hogar') {
-                            $catIcon = '2';
-                        } elseif ($catName === 'Makeup') {
-                            $catIcon = '3';
-                        } else {
-                            $catIcon = '4';
+                        if (!empty($categories)) {
+                            $catName = $categories[0]->name;
+
+                             if ($catName === 'Hogar') {
+                                $catIcon = '1';
+                            } elseif ($catName === 'Tech') {
+                                $catIcon = '2';
+                            } elseif ($catName === 'Lifestyle') {
+                                $catIcon = '3';
+                            } else {
+                                $catIcon = '4';
+                            }
+
+                            echo '<div class="post-category post-icon-' . esc_attr($catIcon) . '">' . esc_html($catName) . '</div>';
                         }
+                        ?>
 
-                        echo '<div class="post-category post-icon-' . esc_attr($catIcon) . '">' . esc_html($catName) . '</div>';
-                    }
-                    ?>
-                <div class="post-image">
-                    <?php if (has_post_thumbnail()): ?>
-                        <?php the_post_thumbnail('medium'); ?>
-                    <?php else: ?>
-                        <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/default-post-image.jpg'); ?>" alt="Default Post Image">
-                    <?php endif; ?>
-                </div>
-                <div class="post-content">
-                   
+                        <div class="post-image post-video">
+                            <?php if (get_field('video_featured')): ?>
+                                <video autoplay loop muted playsinline>
+                                    <source src="<?php echo esc_url(get_field('video_featured')); ?>" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                             <?php elseif (has_post_thumbnail()): ?>
+                                <?php the_post_thumbnail('medium'); ?>
+                            <?php else: ?>
+                                <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/default-post-image.jpg'); ?>" alt="Default Post Image">
+                            <?php endif; ?>
+                        </div>
+                        <article class="post-content">
 
-                    <h3 class="post-title"><?php the_title(); ?></h3>
-                    <p class="post-excerpt"><?php echo esc_html(wp_trim_words(get_the_excerpt(), 20, '...')); ?></p>
-                </div>
-            </a>
-<?php
-        }
-        wp_reset_postdata();
-    }
+                            <h3 class="post-title"><?php the_title(); ?></h3>
+                            <p class="post-excerpt"><?php echo esc_html(wp_trim_words(get_the_excerpt(), 20, '...')); ?></p>
+                            <div class="post-author">
+                                <div class="author-avatar">
+                                    <?php echo get_avatar(get_the_author_meta('ID'), 40); ?>
+                                </div>
+                                <h5 class="author-name">
+                                    <?php echo esc_html(get_the_author()); ?>
+                                </h5>
+                            </div>
+
+                        </article>
+                    </a>
+            <?php endwhile;
+                wp_reset_postdata();
+            endif;
+            
 
     $html = ob_get_clean();
 

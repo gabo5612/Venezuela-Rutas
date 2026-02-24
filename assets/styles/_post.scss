@@ -74,4 +74,14 @@
             }
         }
     }
+    .embed-container{
+        display: flex;
+        justify-content: center;
+        margin-bottom: 40px;
+        iframe{
+                   #embed-video-container{
+            background: transparent;
+           }
+        }
+    }
 }
