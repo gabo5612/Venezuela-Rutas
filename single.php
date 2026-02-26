@@ -26,18 +26,24 @@
                     <a class="btn category category-<?php echo $catIcon; ?>" href="/category/<?php echo esc_html($catName); ?>" target="_black">
                         <?php echo esc_html($catName); ?>
                     </a>
-                    <span class="material-symbols-rounded shareBtn" >Share</span>
-                    <span class="material-symbols-rounded printBtn" >print</span>
+                    <span class="material-symbols-outlined shareBtn" >Share</span>
+                    <span class="material-symbols-outlined printBtn" >print</span>
                 </div>
                 <h1><?php the_title(); ?></h1>
-
+                    <div class="embed-container">
+                <?php if(the_field('embed')): ?>
+                    <div class="embed-container">
+                        <?php the_field('embed'); ?>
+                    </div>
+                <?php endif; ?> 
+                    </div>
                 <div class="post-content">
                     <?php the_content(); ?>
                 </div>
                 <section class="continue-reading ">
                     <div class="share-section share-2">
-                        <h3>Más artículos</h3>   <span class="material-symbols-rounded shareBtn" >Share</span>
-                    <span class="material-symbols-rounded printBtn" >print</span>
+                        <h3>Más artículos</h3>   <span class="material-symbols-outlined shareBtn" >Share</span>
+                    <span class="material-symbols-outlined printBtn" >print</span>
                     </div>
                     <div class="posts-container" id="postsContainer">
                         <?php
@@ -87,13 +93,18 @@
                                     }
                                     ?>
 
-                                    <div class="post-image">
-                                        <?php if (has_post_thumbnail()): ?>
-                                            <?php the_post_thumbnail('medium'); ?>
-                                        <?php else: ?>
-                                            <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/default-post-image.jpg'); ?>" alt="Default Post Image">
-                                        <?php endif; ?>
-                                    </div>
+                                 <div class="post-image post-video">
+                            <?php if (get_field('video_featured')): ?>
+                                <video autoplay loop muted playsinline>
+                                    <source src="<?php echo esc_url(get_field('video_featured')); ?>" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                             <?php elseif (has_post_thumbnail()): ?>
+                                <?php the_post_thumbnail('medium'); ?>
+                            <?php else: ?>
+                                <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/default-post-image.jpg'); ?>" alt="Default Post Image">
+                            <?php endif; ?>
+                        </div>
                                     <article class="post-content">
 
                                         <h3 class="post-title"><?php the_title(); ?></h3>

@@ -1,4 +1,4 @@
-<section>
+<section class="container">
 
   <!-- FILTROS -->
   <ul id="route-filters" class="route-filters"></ul>

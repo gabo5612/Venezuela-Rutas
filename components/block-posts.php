@@ -1,6 +1,6 @@
 
-<div class="posts-aside-wrapper container">
-    <section class="posts">
+<section class="posts-aside-wrapper container">
+    <div class="posts">
         <h2 class="section-title"><?php echo get_sub_field('post_title'); ?></h2>
 
         <div class="posts-container" id="postsContainer">
@@ -12,7 +12,7 @@
                 : 0;
 
             $args = [
-                'post_type'           => 'post',
+                'post_type'           => get_sub_field('post_type'),
                 'post_status'         => 'publish',
                 'posts_per_page'      => 4,
                 'paged'               => 1,
@@ -37,22 +37,25 @@
                         if (!empty($categories)) {
                             $catName = $categories[0]->name;
 
-                             if ($catName === 'Hogar') {
+                             if ($catName === 'Post') {
                                 $catIcon = '1';
-                            } elseif ($catName === 'Tech') {
+                            } elseif ($catName === 'Puntos de interes') {
                                 $catIcon = '2';
-                            } elseif ($catName === 'Lifestyle') {
-                                $catIcon = '3';
                             } else {
-                                $catIcon = '4';
+                                $catIcon = '3';
                             }
 
                             echo '<div class="post-category post-icon-' . esc_attr($catIcon) . '">' . esc_html($catName) . '</div>';
                         }
                         ?>
 
-                        <div class="post-image">
-                            <?php if (has_post_thumbnail()): ?>
+                       <div class="post-image post-video">
+                            <?php if (get_field('video_featured')): ?>
+                                <video autoplay loop muted playsinline>
+                                    <source src="<?php echo esc_url(get_field('video_featured')); ?>" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                             <?php elseif (has_post_thumbnail()): ?>
                                 <?php the_post_thumbnail('medium'); ?>
                             <?php else: ?>
                                 <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/default-post-image.jpg'); ?>" alt="Default Post Image">
@@ -84,6 +87,6 @@
                 <button id="moreTips" class="btn" type="button" data-page="2">Load More Tips</button>
             </div>
         <?php endif; ?>
-    </section>
+    </div>
     <?php get_template_part('parts/aside'); ?>
-</div>
+</section>

@@ -1,6 +1,7 @@
  <aside >
         <div class="aside-header ">
-            <h3><?php echo get_field("aside_title", "option"); ?><span></span></h3>
+            <?php if (get_field("aside_title", "option")): ?>
+            <h3><?php echo get_field("aside_title", "option"); ?><span></span></h3>          
             <div class="social-icons">
                 <?php if (have_rows('social', 'option')): ?>
                     <?php while (have_rows('social', 'option')): the_row(); ?>
@@ -15,7 +16,7 @@
                         <?php if ($url): ?>
                             <a class="sn style-<?php echo esc_attr($style); ?>" href="<?php echo esc_url($url); ?>" target="_blank" rel="noopener noreferrer">
                                 <div class="icon-container ">
-                                    <span class="material-symbols-rounded">
+                                    <span class="material-symbols-outlined">
                                         <?php echo esc_html($icon); ?>
                                     </span>
                                 </div>
@@ -26,6 +27,7 @@
                     <?php endwhile; ?>
                 <?php endif; ?>
             </div>
+             <?php endif; ?>
         </div>
         <div class="trending ">
             <h3><?php echo get_field("trending_title", "option"); ?><span></span></h3>

@@ -3,7 +3,7 @@
         <div class="footer-top">
             <a href="<?php echo home_url(); ?>" class="logo">
                 <div>
-                    <h4 class="material-symbols-rounded"><span>timer</span> <?php echo esc_html(get_bloginfo('name')); ?></h4>
+                    <h4 class="material-symbols-outlined"><span>timer</span> <?php echo esc_html(get_bloginfo('name')); ?></h4>
             </a>
             <p><?php echo esc_html(get_option('blogdescription')); ?></p>
         </div>
@@ -32,7 +32,7 @@
     </div>
     <div class="footer-bottom">
         <h6>&copy; <?php echo date('Y'); ?> <?php echo esc_html(get_bloginfo('name')); ?>.</h6>
-        <h6>Made with <span class="material-symbols-rounded">favorite</span> by <a target="_blank" href="https://ve.linkedin.com/in/gabriel-oniel-arias/">Gabriel Arias</a></h6>
+        <h6>Made with <span class="material-symbols-outlined">favorite</span> by <a target="_blank" href="https://ve.linkedin.com/in/gabriel-oniel-arias/">Gabriel Arias</a></h6>
     </div>
     </div>
 </footer>

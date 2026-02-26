@@ -176,13 +176,15 @@
         display: flex;
         gap: 20px;
         align-items: flex-start;
-
+        .posts{
+            width: 100%;
+        }
         aside {
             position: sticky;
             top: 60px;
             align-self: flex-start;
             height: fit-content;
-
+            width: 30%;
             .social-icons {
                 .sr-only {
                     font-size: var(--md);
@@ -224,19 +226,24 @@
                     z-index: 10;
                 }
 
-                .post-image {
-                    height: 47%;
-                    margin: 1px;
+                 .post-image {
+            max-height: 300px;
+            margin: 1px;
 
-                    img {
-                        border-radius: 20px 20px 0 0;
-                        object-fit: cover;
-                        width: 100%;
-                        transform: scale(1);
-                        transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
-                    }
+            img {
+                border-radius: 20px 20px 0 0;
+                object-fit: cover;
+                width: 100%;
+                transform: scale(1);
+                transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            }
 
-                }
+        }
+                        .post-video video {
+            object-fit: cover;
+            aspect-ratio: 16 / 9;
+            width: 100%;
+        }
 
                 .post-content {
                     padding: var(--xl);
