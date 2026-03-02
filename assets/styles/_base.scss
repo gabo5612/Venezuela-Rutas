@@ -196,3 +196,11 @@ img {
     color: #fff;
   }
 }
+
+#map{
+  width: 100%;
+  height: 450px;
+  @media (min-width:763px) {
+    height: 600px;
+  }
+}

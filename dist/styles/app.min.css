@@ -316,6 +316,16 @@ img {
   color: #fff;
 }
 
+#map {
+  width: 100%;
+  height: 450px;
+}
+@media (min-width: 763px) {
+  #map {
+    height: 600px;
+  }
+}
+
 /* ── Site Nav ──────────────────────────────────────────
    BEM: .site-nav
    Sticky dark header with electric-green accents
@@ -1535,21 +1545,37 @@ body.single .site-nav__share {
 .page-route__checkpoints .cp-content {
   flex: 1;
 }
+.page-route__checkpoints .cp-img {
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.page-route__checkpoints .cp-img img {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  display: block;
+}
 .page-route__checkpoints .cp-name {
   font-size: 0.85rem;
   font-weight: 800;
   color: var(--sand);
 }
-.page-route__checkpoints .cp-dist {
+.page-route__checkpoints .cp-maps-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.35rem;
   font-size: 0.7rem;
-  color: var(--terracotta);
-  font-weight: 700;
-  margin: 0.15rem 0;
+  color: var(--mustard);
+  text-decoration: none;
+  font-weight: 600;
 }
-.page-route__checkpoints .cp-desc {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  line-height: 1.5;
+.page-route__checkpoints .cp-maps-link .material-symbols-outlined {
+  font-size: 0.9rem;
+}
+.page-route__checkpoints .cp-maps-link:hover {
+  color: var(--primary);
 }
 .page-route {
   /* ── Post body (content) ── */

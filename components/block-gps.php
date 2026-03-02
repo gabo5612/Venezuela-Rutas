@@ -4,7 +4,7 @@
   <ul id="route-filters" class="route-filters"></ul>
 
   <!-- MAPA -->
-  <div id="map" style="width: 100%; height: 600px;"></div>
+  <div id="map" ></div>
 
   <script>
     var routes = [];
@@ -55,6 +55,7 @@
             $route_obj = array(
               'title' => $title,
               'points' => $route_points,
+              'route_url' => get_permalink(),
               'blog_url' => $blog ? get_permalink($blog) : '',
               'image_url' => $image_url ? $image_url : '',
               'poi_waypoints' => $poi_waypoints,
@@ -96,7 +97,7 @@
           $poi_obj = array(
             'lat' => $lat,
             'lng' => $lng,
-            'entry_url' => $entry ? get_permalink($entry) : '',
+            'entry_url' => get_permalink(),
             'image_url' => $image ? $image : '',
             'title' => get_the_title(),
             'google_maps_url' => $custom_gmaps_url ? esc_url($custom_gmaps_url) : ''
@@ -183,23 +184,23 @@
           if (isNaN(lat) || isNaN(lng)) return;
 
           var popupHtml = `<strong>${poi.title || ''}</strong><br>`;
-
+        
           if (poi.image_url) {
             popupHtml += `<img src="${poi.image_url}" alt="${poi.title || ''}" style="max-width: 100%; height: auto; margin: 5px 0;"><br>`;
           }
 
           if (poi.entry_url) {
-            popupHtml += `<a href="${poi.entry_url}" target="_blank">Read more</a><br>`;
+            popupHtml += `<a href="${poi.entry_url}" target="_blank">Ver Punto de interés</a><br>`;
           }
 
           if (poi.google_maps_url && poi.google_maps_url !== '') {
-            popupHtml += `<br><a href="${poi.google_maps_url}" target="_blank">View in Google Maps</a><br>`;
+            popupHtml += `<br><a href="${poi.google_maps_url}" target="_blank">Ver en Google Maps</a><br>`;
           } else {
             const googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
-            popupHtml += `<br><a href="${googleMapsLink}" target="_blank" class="map-link-button">View in Google Maps</a><br>`;
+            popupHtml += `<br><a href="${googleMapsLink}" target="_blank" class="map-link-button">Ver en Google Maps</a><br>`;
           }
 
-          popupHtml += "Point of Interest";
+          
 
           L.marker([lat, lng], {
             icon: L.icon({
@@ -272,6 +273,7 @@
           var end = routePoints[routePoints.length - 1];
 
           var routeTitle = route.title || '';
+          var routeUrl = route.route_url || '';
           var blogUrl = route.blog_url || '';
           var imageUrl = route.image_url || '';
           var poiWaypoints = route.poi_waypoints || [];
@@ -282,8 +284,12 @@
             popupHtml += `<img src="${imageUrl}" alt="${routeTitle}" style="max-width: 100%; height: auto; margin-top: 5px; margin-bottom: 5px;"><br>`;
           }
 
+          if (routeUrl) {
+            popupHtml += `<a href="${routeUrl}" target="_blank">Ver Ruta</a><br>`;
+          }
+
           if (blogUrl) {
-            popupHtml += `<a href="${blogUrl}" target="_blank">View related blog post</a><br>`;
+            popupHtml += `<a href="${blogUrl}" target="_blank">Ver Bitácora</a><br>`;
           }
 
           if (routePoints.length >= 2) {
