@@ -1,92 +1,73 @@
+<?php
+$block_title = get_sub_field('post_title') ?: 'Últimas Rutas';
+$post_type   = get_sub_field('post_type')  ?: 'post';
+$per_page    = intval(get_sub_field('posts_per_page')) ?: 4;
 
-<section class="posts-aside-wrapper container">
-    <div class="posts">
-        <h2 class="section-title"><?php echo get_sub_field('post_title'); ?></h2>
+$q = new WP_Query([
+  'post_type'           => $post_type,
+  'post_status'         => 'publish',
+  'posts_per_page'      => $per_page,
+  'paged'               => 1,
+  'ignore_sticky_posts' => true,
+]);
+?>
 
-        <div class="posts-container" id="postsContainer">
-            <?php
-            $queried = get_queried_object();
+<section class="block-posts">
+  <div class="block-posts__inner">
 
-            $current_cat_id = (is_category() && !empty($queried) && isset($queried->term_id))
-                ? (int) $queried->term_id
-                : 0;
-
-            $args = [
-                'post_type'           => get_sub_field('post_type'),
-                'post_status'         => 'publish',
-                'posts_per_page'      => 4,
-                'paged'               => 1,
-                'ignore_sticky_posts' => true,
-            ];
-
-            // Si estamos en un archive de categoría, filtramos por esa categoría
-            if ($current_cat_id) {
-                $args['cat'] = $current_cat_id;
-            }
-
-            $q = new WP_Query($args);
-
-
-            if ($q->have_posts()):
-                while ($q->have_posts()): $q->the_post(); ?>
-                    <a href="<?php the_permalink(); ?>" class="post-card card-shadow-hover">
-                        <?php
-                        $categories = get_the_category();
-                        $catIcon = '4';
-
-                        if (!empty($categories)) {
-                            $catName = $categories[0]->name;
-
-                             if ($catName === 'Post') {
-                                $catIcon = '1';
-                            } elseif ($catName === 'Puntos de interes') {
-                                $catIcon = '2';
-                            } else {
-                                $catIcon = '3';
-                            }
-
-                            echo '<div class="post-category post-icon-' . esc_attr($catIcon) . '">' . esc_html($catName) . '</div>';
-                        }
-                        ?>
-
-                       <div class="post-image post-video">
-                            <?php if (get_field('video_featured')): ?>
-                                <video autoplay loop muted playsinline>
-                                    <source src="<?php echo esc_url(get_field('video_featured')); ?>" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                             <?php elseif (has_post_thumbnail()): ?>
-                                <?php the_post_thumbnail('medium'); ?>
-                            <?php else: ?>
-                                <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/default-post-image.jpg'); ?>" alt="Default Post Image">
-                            <?php endif; ?>
-                        </div>
-                        <article class="post-content">
-
-                            <h3 class="post-title"><?php the_title(); ?></h3>
-                            <p class="post-excerpt"><?php echo esc_html(wp_trim_words(get_the_excerpt(), 20, '...')); ?></p>
-                            <div class="post-author">
-                                <div class="author-avatar">
-                                    <?php echo get_avatar(get_the_author_meta('ID'), 40); ?>
-                                </div>
-                                <h5 class="author-name">
-                                    <?php echo esc_html(get_the_author()); ?>
-                                </h5>
-                            </div>
-
-                        </article>
-                    </a>
-            <?php endwhile;
-                wp_reset_postdata();
-            endif;
-            ?>
-        </div>
-
-        <?php if ($q->max_num_pages > 1): ?>
-            <div class="load-more-container">
-                <button id="moreTips" class="btn" type="button" data-page="2">Load More Tips</button>
-            </div>
-        <?php endif; ?>
+    <div class="section-header">
+      <div>
+        <div class="section-header__eyebrow">Explorar</div>
+        <h2 class="section-header__title"><?php echo esc_html($block_title); ?></h2>
+      </div>
+      <a href="<?php echo esc_url( get_post_type_archive_link($post_type) ?: home_url('/') ); ?>" class="section-header__link">
+        Ver Todas <span class="material-symbols-outlined">arrow_right_alt</span>
+      </a>
     </div>
-    <?php get_template_part('parts/aside'); ?>
+
+    <div class="posts-grid" id="postsContainer">
+      <?php if ($q->have_posts()) : while ($q->have_posts()) : $q->the_post();
+        $thumb = get_the_post_thumbnail_url(null, 'large');
+        $cats  = get_the_category();
+      ?>
+      <a href="<?php the_permalink(); ?>" class="post-card">
+        <div class="post-card__image">
+          <?php if ($thumb) : ?>
+            <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>">
+          <?php elseif (get_field('video_featured')) : ?>
+            <video autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover">
+              <source src="<?php echo esc_url(get_field('video_featured')); ?>" type="video/mp4">
+            </video>
+          <?php else : ?>
+            <div class="post-card__empty"><span class="material-symbols-outlined">terrain</span></div>
+          <?php endif; ?>
+          <?php if ($cats) : ?>
+          <div class="post-card__badge">
+            <span class="badge badge--outline"><?php echo esc_html($cats[0]->name); ?></span>
+          </div>
+          <?php endif; ?>
+        </div>
+        <div class="post-card__body">
+          <div class="post-card__date"><?php echo get_the_date('d M Y'); ?></div>
+          <h4 class="post-card__title"><?php the_title(); ?></h4>
+          <p class="post-card__excerpt"><?php echo esc_html(wp_trim_words(get_the_excerpt(), 20, '...')); ?></p>
+          <div class="post-card__footer">
+            <span class="post-card__author"><?php the_author(); ?></span>
+            <span class="post-card__arrow"><span class="material-symbols-outlined">north_east</span></span>
+          </div>
+        </div>
+      </a>
+      <?php endwhile; wp_reset_postdata(); endif; ?>
+    </div>
+
+    <?php if ($q->max_num_pages > 1) : ?>
+    <div class="load-more-wrap">
+      <button id="moreTips" class="load-more-btn" type="button" data-page="2">
+        Cargar Más
+        <span class="material-symbols-outlined">keyboard_double_arrow_right</span>
+      </button>
+    </div>
+    <?php endif; ?>
+
+  </div>
 </section>

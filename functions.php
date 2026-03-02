@@ -3,20 +3,35 @@
 // Enqueue scripts & styles
 require_once(get_template_directory() . '/functions/enqueue-scripts.php');
 
-
 // ===============================
-// REGISTER MENUS
+// THEME SUPPORT + MENUS
 // ===============================
-function register_my_menus()
-{
+add_action('after_setup_theme', function () {
+    add_theme_support('title-tag');
+    add_theme_support('post-thumbnails');
     register_nav_menus([
         'menu'   => __('Main Menu', 'textdomain'),
         'footer' => __('Footer Menu', 'textdomain'),
     ]);
-}
-add_action('after_setup_theme', 'register_my_menus');
+});
 
-add_theme_support('post-thumbnails');
+// ===============================
+// GOOGLE FONTS
+// ===============================
+add_action('wp_enqueue_scripts', function () {
+    wp_enqueue_style(
+        'google-fonts',
+        'https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,700;1,800;1,900&display=swap',
+        [],
+        null
+    );
+    wp_enqueue_style(
+        'material-symbols',
+        'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap',
+        [],
+        null
+    );
+}, 1);
 
 // ===============================
 // ADD REPEATING CLASSES menu-1..menu-4
@@ -75,41 +90,36 @@ function mag_load_more_tips()
 
     if ($q->have_posts()) {
         while ($q->have_posts()) {
-            $q->the_post(); ?>
-            <a href="<?php the_permalink(); ?>" class="post-card card-shadow">
-                 <?php
-                    $categories = get_the_category();
-                    $catIcon = '4'; 
-                    if (!empty($categories)) {
-                        $catName = $categories[0]->name;
-
-                        if ($catName === 'Tech') {
-                            $catIcon = '1';
-                        } elseif ($catName === 'Hogar') {
-                            $catIcon = '2';
-                        } elseif ($catName === 'Makeup') {
-                            $catIcon = '3';
-                        } else {
-                            $catIcon = '4';
-                        }
-
-                        echo '<div class="post-category post-icon-' . esc_attr($catIcon) . '">' . esc_html($catName) . '</div>';
-                    }
-                    ?>
-                <div class="post-image">
-                    <?php if (has_post_thumbnail()): ?>
-                        <?php the_post_thumbnail('medium'); ?>
-                    <?php else: ?>
-                        <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/default-post-image.jpg'); ?>" alt="Default Post Image">
-                    <?php endif; ?>
-                </div>
-                <div class="post-content">
-                   
-
-                    <h3 class="post-title"><?php the_title(); ?></h3>
-                    <p class="post-excerpt"><?php echo esc_html(wp_trim_words(get_the_excerpt(), 20, '...')); ?></p>
-                </div>
-            </a>
+            $q->the_post();
+            $thumb = get_the_post_thumbnail_url(null, 'large');
+            $cats  = get_the_category();
+            $diff  = get_field('difficulty') ?: '';
+            $dist  = get_field('distance')   ?: '';
+            $time  = get_field('time')       ?: '';
+            ?>
+        <div class="group border border-primary/10 rounded-xl bg-primary/5 hover:border-primary/40 transition-all flex flex-col">
+          <div class="h-48 overflow-hidden rounded-t-xl relative">
+            <?php if ($thumb) : ?>
+              <img class="w-full h-full object-cover transition-transform group-hover:scale-110" src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>">
+            <?php else : ?>
+              <div class="w-full h-full bg-bg-forest flex items-center justify-center"><span class="material-symbols-outlined text-primary/30 text-4xl">terrain</span></div>
+            <?php endif; ?>
+            <?php if ($cats) : ?>
+            <div class="absolute top-3 right-3">
+              <span class="px-2 py-1 bg-bg-forest/80 backdrop-blur-md text-primary text-[10px] font-black uppercase rounded border border-primary/20"><?php echo esc_html($cats[0]->name); ?></span>
+            </div>
+            <?php endif; ?>
+          </div>
+          <div class="p-6 flex-1 flex flex-col">
+            <div class="text-[10px] font-black uppercase text-primary/60 mb-2 tracking-widest"><?php echo get_the_date('d M Y'); ?></div>
+            <h4 class="text-xl font-bold uppercase text-slate-100 mb-3"><?php the_title(); ?></h4>
+            <p class="text-slate-400 text-sm mb-6 flex-1"><?php echo esc_html(wp_trim_words(get_the_excerpt(), 20, '...')); ?></p>
+            <div class="flex items-center justify-between pt-4 border-t border-primary/5">
+              <span class="text-[10px] font-bold text-slate-500 uppercase"><?php the_author(); ?></span>
+              <a href="<?php the_permalink(); ?>" class="text-primary"><span class="material-symbols-outlined">north_east</span></a>
+            </div>
+          </div>
+        </div>
 <?php
         }
         wp_reset_postdata();

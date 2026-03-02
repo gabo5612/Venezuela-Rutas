@@ -1,21 +1,23 @@
-.category-container{
-    h1{
-        font-size: var(--xl);
-        margin-bottom: 20px;
-    }
-    .categories-list{
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-       
-        
-    }
-}
+/* ── Category Page ──────────────────────────────────────
+   BEM: .page-category
+   Dark forest background, filter pills, posts grid
+────────────────────────────────────────────────────── */
 
- .category{
-           
-            padding: var(--sm);
-            a{
-                 color: var(--a-white);
-            }
-        }
+.page-category {
+  background: var(--bg-forest);
+  min-height: 100vh;
+
+  &__filters {
+    width: 93%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2.5rem 0;
+  }
+
+  &__grid {
+    width: 93%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-bottom: 6rem;
+  }
+}

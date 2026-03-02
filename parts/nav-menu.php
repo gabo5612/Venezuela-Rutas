@@ -1,29 +1,40 @@
-<nav>
-    <div class="nav-container container">
-    <div>
-        <a href="<?php echo home_url(); ?>" class="logo">
-           <h1><span class="material-symbols-outlined">Explore</span> <?php echo esc_html( get_bloginfo('name') ); ?></h1>
-        </a>
+<header class="site-nav">
+  <div class="site-nav__inner">
+
+    <!-- Logo -->
+    <a href="<?php echo esc_url( home_url('/') ); ?>" class="site-nav__logo">
+      <span class="material-symbols-outlined">terrain</span>
+      <span class="site-name"><?php echo esc_html( get_bloginfo('name') ); ?></span>
+    </a>
+
+    <!-- Nav links (wp_nav_menu) -->
+    <?php
+    wp_nav_menu([
+      'theme_location' => 'menu',
+      'container'      => 'nav',
+      'container_class'=> 'site-nav__links',
+      'fallback_cb'    => false,
+    ]);
+    ?>
+
+    <!-- Actions -->
+    <div class="site-nav__actions">
+
+      <?php if ( is_single() ) : ?>
+        <button class="site-nav__share"
+                onclick="navigator.share ? navigator.share({title:document.title,url:location.href}) : (navigator.clipboard?.writeText(location.href), alert('Link copiado'))">
+          <span class="material-symbols-outlined">share</span>
+          Compartir
+        </button>
+      <?php endif; ?>
+
+      <a href="<?php echo esc_url( home_url('/') ); ?>#newsletter" class="site-nav__cta">
+        <span class="material-symbols-outlined">explore</span>
+        Explorar
+      </a>
 
     </div>
-        <!-- Menú -->
-    <div class="nav_menu" id="navMenu">
-        <?php
-        wp_nav_menu(array(
-            'theme_location' => 'menu',
-            'container' => false,
-            'menu_class' => 'nav_menu_items',
-            'fallback_cb' => false,
-        ));
-        ?>
-    </div>
-    <div class="nav-btn">
-        <button class="darkmode" id="darkModeToggle">
-            <span id="darkModeIcon" class="material-symbols-outlined">dark_mode</span>
-            <span id="lightModeIcon" class="material-symbols-outlined">light_mode</span>
-</button>
-        <button class="subscribe-button btn" id="subscribeToggle">Subscribe</button>
-    </div>
+  </div>
+</header>
 
-</div>
-</nav>
+<div class="nav-spacer"></div>

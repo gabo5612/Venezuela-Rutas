@@ -1,11 +1,140 @@
 <?php get_template_part('parts/header'); ?>
-    
-    
-    <main>
-        
-        <?php get_template_part('components/block-categories' ); ?>  
-        <?php get_template_part('components/block-posts' ); ?>
 
-    </main>
+<?php
+$queried_cat = get_queried_object();
+$cat_name    = $queried_cat ? $queried_cat->name : 'Rutas';
+$cat_desc    = $queried_cat ? $queried_cat->description : '';
+
+$first_q  = new WP_Query(['category_name' => $queried_cat->slug ?? '', 'posts_per_page' => 1]);
+$hero_img = '';
+if ($first_q->have_posts()) { $first_q->the_post(); $hero_img = get_the_post_thumbnail_url(null, 'large'); wp_reset_postdata(); }
+?>
+
+<div class="page-category">
+
+  <!-- ══ HERO ══════════════════════════════════════════ -->
+  <section class="cat-hero">
+    <div class="cat-hero__bg" <?php if ($hero_img) echo 'style="background-image: url(\'' . esc_url($hero_img) . '\')"'; ?>>
+    </div>
+    <div class="cat-hero__inner">
+      <span class="cat-hero__eyebrow">
+        <span class="material-symbols-outlined">sensors</span>
+        Inteligencia de Campo
+      </span>
+      <h1 class="cat-hero__title"><?php echo esc_html( strtoupper($cat_name) ); ?></h1>
+      <?php if ($cat_desc) : ?>
+        <p class="cat-hero__desc"><?php echo esc_html($cat_desc); ?></p>
+      <?php endif; ?>
+      <div class="cat-hero__actions">
+        <a href="<?php echo esc_url( home_url('/') ); ?>" class="btn btn--primary">Ver Rutas</a>
+        <a href="#" class="btn btn--outline">Ver Atlas</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FILTROS ════════════════════════════════════════ -->
+  <div class="page-category__filters">
+    <div class="filter-pills">
+      <span class="filter-pills__label">Filtrar Terreno:</span>
+      <a href="<?php echo esc_url( home_url('/') ); ?>" class="filter-pills__pill">
+        <span class="material-symbols-outlined">landscape</span> Todos
+      </a>
+      <?php
+      $icons    = ['terrain','wb_sunny','filter_hdr','forest','water','ac_unit','park'];
+      $all_cats = get_categories(['hide_empty' => true]);
+      foreach ($all_cats as $i => $cat) :
+        $is_cur = is_category($cat->term_id);
+        $icon   = $icons[$i % count($icons)];
+      ?>
+      <a href="<?php echo esc_url(get_category_link($cat->term_id)); ?>"
+         class="filter-pills__pill <?php echo $is_cur ? 'filter-pills__pill--active' : ''; ?>">
+        <span class="material-symbols-outlined"><?php echo esc_html($icon); ?></span>
+        <?php echo esc_html($cat->name); ?>
+      </a>
+      <?php endforeach; ?>
+    </div>
+  </div>
+
+  <!-- ══ GRID DE POSTS ══════════════════════════════════ -->
+  <div class="page-category__grid">
+    <div class="posts-grid">
+      <?php
+      $is_first = true;
+      if (have_posts()) : while (have_posts()) : the_post();
+        $thumb = get_the_post_thumbnail_url(null, 'large');
+        $cats  = get_the_category();
+        $diff  = get_field('difficulty') ?: '';
+        $dist  = get_field('distance')   ?: '';
+        $time  = get_field('time')       ?: '';
+
+        if ($is_first) : $is_first = false; ?>
+
+        <!-- Post destacado (spans 2 cols) -->
+        <article class="post-card--featured">
+          <div class="featured-bg" <?php if ($thumb) echo 'style="background-image:url(\'' . esc_url($thumb) . '\')"'; ?>></div>
+          <div class="featured-overlay"></div>
+          <div class="featured-tags">
+            <?php if ($cats) : ?><span class="badge badge--primary"><?php echo esc_html($cats[0]->name); ?></span><?php endif; ?>
+            <?php if ($diff) : ?><span class="badge badge--orange"><?php echo esc_html($diff); ?></span><?php endif; ?>
+          </div>
+          <div class="featured-body">
+            <h3 class="featured-title"><?php the_title(); ?></h3>
+            <p class="featured-excerpt"><?php echo esc_html(wp_trim_words(get_the_excerpt(), 20, '...')); ?></p>
+            <div class="featured-meta">
+              <?php if ($dist) : ?>
+                <div class="featured-stat"><span class="material-symbols-outlined">distance</span><?php echo esc_html($dist); ?></div>
+              <?php endif; ?>
+              <?php if ($time) : ?>
+                <div class="featured-stat"><span class="material-symbols-outlined">schedule</span><?php echo esc_html($time); ?></div>
+              <?php endif; ?>
+              <span class="featured-read">Leer <span class="material-symbols-outlined">arrow_right_alt</span></span>
+            </div>
+          </div>
+          <a href="<?php the_permalink(); ?>" class="featured-link" aria-label="<?php the_title_attribute(); ?>"></a>
+        </article>
+
+        <?php else : ?>
+
+        <!-- Post normal -->
+        <article class="post-card">
+          <div class="post-card__image">
+            <?php if ($thumb) : ?>
+              <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>">
+            <?php else : ?>
+              <div class="post-card__empty"><span class="material-symbols-outlined">terrain</span></div>
+            <?php endif; ?>
+            <?php if ($cats) : ?>
+            <div class="post-card__badge">
+              <span class="badge badge--outline"><?php echo esc_html($cats[0]->name); ?></span>
+            </div>
+            <?php endif; ?>
+          </div>
+          <div class="post-card__body">
+            <div class="post-card__date"><?php echo get_the_date('d M Y'); ?></div>
+            <h4 class="post-card__title"><?php the_title(); ?></h4>
+            <p class="post-card__excerpt"><?php echo esc_html(wp_trim_words(get_the_excerpt(), 20, '...')); ?></p>
+            <div class="post-card__footer">
+              <span class="post-card__author"><?php the_author(); ?></span>
+              <a href="<?php the_permalink(); ?>" class="post-card__arrow">
+                <span class="material-symbols-outlined">north_east</span>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <?php endif; endwhile; endif; ?>
+    </div>
+
+    <?php if ($GLOBALS['wp_query']->max_num_pages > 1) : ?>
+    <div class="load-more-wrap">
+      <button id="moreTips" data-page="2" class="load-more-btn">
+        Cargar Más
+        <span class="material-symbols-outlined">keyboard_double_arrow_right</span>
+      </button>
+    </div>
+    <?php endif; ?>
+  </div>
+
+</div>
 
 <?php get_template_part('parts/footer'); ?>

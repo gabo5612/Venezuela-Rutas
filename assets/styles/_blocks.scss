@@ -1,0 +1,354 @@
+/* ── ACF Blocks ─────────────────────────────────────────
+   Each class matches a block layout name.
+   Add a new ACF layout + new .block-{name} rule here.
+   Block templates live in components/block-{name}.php
+────────────────────────────────────────────────────── */
+
+/* ── Shared block wrapper ── */
+.block {
+  width: 100%;
+
+  &-section {
+    padding: 5rem 0;
+  }
+
+  &-inner {
+    width: 93%;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+}
+
+/* ── block-hero ── */
+.block-hero {
+  padding: 5rem 0;
+  background: var(--background);
+  position: relative;
+  overflow: hidden;
+
+  /* optional dot-grid bg */
+  &--grid::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(
+      circle at 2px 2px,
+      rgba(13, 242, 70, 0.07) 1px,
+      transparent 0
+    );
+    background-size: 24px 24px;
+    pointer-events: none;
+  }
+
+  &__inner {
+    width: 93%;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+
+    @media (min-width: 1024px) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  &__tip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3em 0.75em;
+    background: var(--primary-dim);
+    border: 1px solid var(--primary-border);
+    border-radius: var(--radius-full);
+    font-size: 0.65rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--primary);
+    width: fit-content;
+
+    .material-symbols-outlined {
+      font-size: 0.9rem;
+    }
+  }
+
+  &__title {
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    color: var(--text);
+    line-height: 0.95;
+    margin: 0.75rem 0;
+  }
+
+  &__desc {
+    font-size: 1rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    font-weight: 300;
+    max-width: 480px;
+  }
+
+  &__cta {
+    margin-top: 1.5rem;
+  }
+
+  &__image {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--line);
+
+    img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+
+    &:hover img {
+      transform: scale(1.03);
+    }
+  }
+
+  /* Card color variants (ACF card_color field) */
+  &--black  { background: #0a0a0a; }
+  &--green  { background: var(--bg-forest); }
+  &--warm   { background: var(--bg-warm); }
+}
+
+/* ── block-posts ── */
+.block-posts {
+  padding: 5rem 0;
+
+  &__inner {
+    width: 93%;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+}
+
+/* ── block-gps ── */
+.block-gps {
+  padding: 4rem 0;
+
+  &__inner {
+    width: 93%;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  &__map {
+    height: 480px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+}
+
+/* ── block-categories ── */
+.block-categories {
+  padding: 4rem 0;
+
+  &__inner {
+    width: 93%;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5em 1.25em;
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    font-weight: 700;
+    background: var(--primary-dim);
+    color: var(--primary);
+    border: 1px solid var(--primary-border);
+    transition: background 0.2s;
+
+    &:hover {
+      background: rgba(13, 242, 70, 0.25);
+    }
+  }
+}
+
+/* ── block-content ── */
+.block-content {
+  padding: 4rem 0;
+
+  &__inner {
+    width: 93%;
+    max-width: 800px;
+    margin: 0 auto;
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 1rem;
+      margin-top: 2rem;
+    }
+
+    p {
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+/* ── block-cta ── */
+.block-cta {
+  padding: 5rem 0;
+  background: var(--primary);
+
+  &__inner {
+    width: 93%;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  &__title {
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    color: var(--background);
+    line-height: 1;
+  }
+
+  &__text {
+    font-size: 1rem;
+    color: rgba(10, 10, 10, 0.75);
+    max-width: 480px;
+    line-height: 1.6;
+  }
+
+  &__form {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    max-width: 480px;
+
+    input[type="email"] {
+      flex: 1;
+      min-width: 220px;
+      padding: 0.85rem 1.25rem;
+      border-radius: var(--radius-full);
+      border: none;
+      background: rgba(10, 10, 10, 0.12);
+      color: var(--background);
+      font-family: var(--primary-font);
+      font-size: 0.9rem;
+      outline: none;
+
+      &::placeholder {
+        color: rgba(10, 10, 10, 0.5);
+      }
+    }
+
+    button {
+      padding: 0.85rem 1.75rem;
+      border-radius: var(--radius-full);
+      border: none;
+      background: var(--background);
+      color: var(--primary);
+      font-family: var(--primary-font);
+      font-weight: 900;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: opacity 0.2s;
+
+      &:hover {
+        opacity: 0.88;
+      }
+    }
+  }
+}
+
+/* ── block-features ── */
+.block-features {
+  padding: 5rem 0;
+  background: var(--background);
+
+  &__inner {
+    width: 93%;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+
+    @media (min-width: 640px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  &__item {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: border-color 0.2s;
+
+    &:hover {
+      border-color: rgba(13, 242, 70, 0.35);
+    }
+
+    .feat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius);
+      background: var(--primary-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .material-symbols-outlined {
+        color: var(--primary);
+        font-size: 1.5rem;
+      }
+    }
+
+    .feat-title {
+      font-size: 1rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .feat-text {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+  }
+}

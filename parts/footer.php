@@ -1,42 +1,62 @@
-<footer>
-    <div class="container">
-        <div class="footer-top">
-            <a href="<?php echo home_url(); ?>" class="logo">
-                <div>
-                    <h4 class="material-symbols-outlined"><span>timer</span> <?php echo esc_html(get_bloginfo('name')); ?></h4>
-            </a>
-            <p><?php echo esc_html(get_option('blogdescription')); ?></p>
-        </div>
-        <div class="footer_menus">
-            <div class="footer_menu">
-                <h4>Categories</h4>
-                <?php
-                wp_nav_menu(array(
-                    'theme_location' => 'menu',
-                    'container' => false,
-                    'menu_class' => 'footer_menu_items',
-                ));
-                ?>
-            </div>
-            <div class="footer_menu">
-                <h4>Quick Links</h4>
-                <?php
-                wp_nav_menu(array(
-                    'theme_location' => 'footer',
-                    'container' => false,
-                    'menu_class' => 'footer_menu_items',
-                ));
-                ?>
-            </div>
-        </div>
+<footer class="site-footer">
+
+  <div class="site-footer__top">
+
+    <!-- Brand -->
+    <div class="site-footer__brand">
+      <a href="<?php echo esc_url( home_url('/') ); ?>" class="brand-logo">
+        <span class="material-symbols-outlined">terrain</span>
+        <span class="brand-name"><?php echo esc_html( get_bloginfo('name') ); ?></span>
+      </a>
+      <p class="brand-desc">
+        <?php echo esc_html( get_bloginfo('description') ?: 'Explorando el territorio venezolano. Construido para los exploradores.' ); ?>
+      </p>
+      <div class="brand-social">
+        <a href="#" aria-label="Instagram"><span class="material-symbols-outlined">photo_camera</span></a>
+        <a href="#" aria-label="RSS"><span class="material-symbols-outlined">rss_feed</span></a>
+        <a href="#" aria-label="Share"><span class="material-symbols-outlined">hub</span></a>
+      </div>
     </div>
-    <div class="footer-bottom">
-        <h6>&copy; <?php echo date('Y'); ?> <?php echo esc_html(get_bloginfo('name')); ?>.</h6>
-        <h6>Made with <span class="material-symbols-outlined">favorite</span> by <a target="_blank" href="https://ve.linkedin.com/in/gabriel-oniel-arias/">Gabriel Arias</a></h6>
+
+    <!-- Rutas -->
+    <div class="site-footer__col">
+      <h4>Rutas</h4>
+      <nav class="footer-nav">
+        <?php wp_nav_menu(['theme_location' => 'menu', 'container' => false, 'fallback_cb' => false]); ?>
+      </nav>
     </div>
+
+    <!-- Comunidad -->
+    <div class="site-footer__col">
+      <h4>Comunidad</h4>
+      <nav class="footer-nav">
+        <?php wp_nav_menu(['theme_location' => 'footer', 'container' => false, 'fallback_cb' => false]); ?>
+      </nav>
     </div>
+
+    <!-- Recursos -->
+    <div class="site-footer__col">
+      <h4>Recursos</h4>
+      <ul>
+        <li><a href="#">Guía de Equipo</a></li>
+        <li><a href="#">Seguridad</a></li>
+        <li><a href="#">Contacto</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="site-footer__bottom">
+    <div class="site-footer__bottom-inner">
+      <span>&copy; <?php echo date('Y'); ?> <?php echo esc_html( get_bloginfo('name') ); ?>. Todos los derechos reservados.</span>
+      <span>Hecho con <span class="material-symbols-outlined" style="font-size:12px;color:var(--primary);vertical-align:middle">favorite</span> por
+        <a href="https://ve.linkedin.com/in/gabriel-oniel-arias/" target="_blank" rel="noopener">Gabriel Arias</a>
+      </span>
+    </div>
+  </div>
+
 </footer>
+
 <?php wp_footer(); ?>
 </body>
-
 </html>
