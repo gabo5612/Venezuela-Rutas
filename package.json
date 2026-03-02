@@ -1,0 +1,11 @@
+{
+  "name": "rutas",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "sass --watch --source-map assets/styles/global.scss:dist/styles/global.min.css assets/styles/home.scss:dist/styles/home.min.css assets/styles/single.scss:dist/styles/single.min.css assets/styles/category.scss:dist/styles/category.min.css",
+    "build": "sass --style=compressed --no-source-map assets/styles/global.scss:dist/styles/global.min.css assets/styles/home.scss:dist/styles/home.min.css assets/styles/single.scss:dist/styles/single.min.css assets/styles/category.scss:dist/styles/category.min.css"
+  },
+  "devDependencies": {
+    "sass": "^1.85.0"
+  }
+}
