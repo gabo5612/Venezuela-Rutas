@@ -109,8 +109,59 @@
       transition: transform 0.5s;
     }
 
+    video {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      display: block;
+      object-fit: cover;
+    }
+
     &:hover img {
       transform: scale(1.03);
+    }
+  }
+
+  /* ── Slider (Flickity) ── */
+  &__slider {
+    width: 100%;
+  }
+
+  &__slide {
+    width: 100%;
+  }
+
+  // Flickity overrides
+  .flickity-button {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    color: var(--primary);
+    width: 40px;
+    height: 40px;
+
+    &:hover {
+      background: var(--primary-dim);
+      border-color: var(--primary-border);
+    }
+
+    .flickity-button-icon {
+      fill: var(--primary);
+    }
+  }
+
+  .flickity-page-dots {
+    bottom: 1rem;
+
+    .dot {
+      background: var(--text-faint);
+      opacity: 1;
+      width: 6px;
+      height: 6px;
+
+      &.is-selected {
+        background: var(--primary);
+        width: 18px;
+        border-radius: 3px;
+      }
     }
   }
 

@@ -124,8 +124,8 @@
 
       var map = L.map('map', { zoomControl: false }).setView(fallbackCenter, fallbackZoom);
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>'
       }).addTo(map);
 
       L.control.zoom({ position: 'bottomright' }).addTo(map);
@@ -143,6 +143,22 @@
       // Capas: rutas y POIs (para poder mostrar/ocultar)
       var routesLayer = L.layerGroup().addTo(map);
       var poiLayer = L.layerGroup().addTo(map);
+
+      // --- Iconos custom ---
+      function makePinIcon(color) {
+        return L.divIcon({
+          className: '',
+          html: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="30" viewBox="0 0 22 30">
+            <path d="M11 0C4.925 0 0 4.925 0 11c0 8.25 11 19 11 19S22 19.25 22 11C22 4.925 17.075 0 11 0z" fill="${color}"/>
+            <circle cx="11" cy="11" r="4.5" fill="#0a0a0a"/>
+          </svg>`,
+          iconSize: [22, 30],
+          iconAnchor: [11, 30],
+          popupAnchor: [0, -32]
+        });
+      }
+      var routeIcon = makePinIcon('#0df246');
+      var poiIcon   = makePinIcon('#ff6b00');
 
       // --- Normalizador para comparar tags sin problemas ---
       function norm(s){ return String(s || '').trim().toLowerCase(); }
@@ -202,14 +218,7 @@
 
           
 
-          L.marker([lat, lng], {
-            icon: L.icon({
-              iconUrl: 'https://cdn-icons-png.flaticon.com/512/684/684908.png',
-              iconSize: [25, 25],
-              iconAnchor: [12, 27],
-              popupAnchor: [0, -25]
-            })
-          }).addTo(poiLayer).bindPopup(popupHtml);
+          L.marker([lat, lng], { icon: poiIcon }).addTo(poiLayer).bindPopup(popupHtml);
         });
       }
 
@@ -260,9 +269,9 @@
           if (!matches) return;
 
           var polyline = L.polyline(routePoints, {
-            color: '#FF0000',
-            weight: 4,
-            opacity: 0.7
+            color: '#0df246',
+            weight: 3,
+            opacity: 0.85
           }).addTo(routesLayer);
 
           bounds.extend(polyline.getBounds());
@@ -297,12 +306,10 @@
             const destination = end.join(',');
             const waypoints = poiWaypoints.join('|');
             const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&waypoints=${encodeURIComponent(waypoints)}`;
-            popupHtml += `<br><a href="${googleMapsUrl}" target="_blank" class="map-link-button">Open full route in Google Maps</a>`;
+            popupHtml += `<br><a href="${googleMapsUrl}" target="_blank" class="map-link-button">Abrir ruta en<br>Google Maps</a>`;
           }
 
-          popupHtml += `<br>Route start`;
-
-          L.marker(start).addTo(routesLayer).bindPopup(popupHtml);
+          L.marker(start, { icon: routeIcon }).addTo(routesLayer).bindPopup(popupHtml);
         });
 
         if (drewAny && bounds.isValid()) {
@@ -332,92 +339,5 @@
     });
   </script>
 
-  <style>
-    /* --- UI filtros --- */
-    .route-filters{
-      list-style: none;
-      padding: 0;
-      margin: 0 0 12px 0;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      position: relative;
-      z-index: 9999;
-      pointer-events: auto;
-    }
-    .route-filters li{ margin: 0; }
-    .route-filter{
-      background: #fff;
-      border: 2px solid var(--carbon-color);
-      box-shadow: 4px 4px 0px 0px var(--carbon-color);
-      padding: 6px 10px;
-      cursor: pointer;
-      border-radius: 2px;
-      transition: all 0.1s ease;
-    }
-    .route-filter.is-active{
-      background: var(--primary-color);
-      color: #fff;
-    }
-    .route-filter:active{
-      box-shadow: 0px 0px 0px 0px var(--carbon-color);
-      transform: translate(4px, 4px);
-    }
-
-    /* --- Tus estilos existentes --- */
-    .map-link-button {
-      display: inline-block;
-      background-color: #007bff;
-      color: white !important;
-      padding: 6px 10px;
-      text-decoration: none;
-      border-radius: 4px;
-      margin-top: 5px;
-    }
-    .map-link-button:hover { background-color: #0056b3; }
-
-    #map { position: relative; z-index: 1; }
-
-    #map .leaflet-control-zoom{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      border:none;
-    }
-
-    #map .leaflet-top,
-    #map .leaflet-control-attribution{
-      display:none;
-    }
-
-    #map .leaflet-right{
-      display:flex;
-      flex-direction:column-reverse;
-      align-items:flex-end;
-      bottom: 45px;
-      right: 45px;
-    }
-
-    #map .leaflet-control-zoom-in,
-    #map .leaflet-control-zoom-out,
-    #map .leaflet-bar a{
-      background-color: var(--primary-color);
-      color: white;
-      padding: 5px 5px;
-      cursor: pointer;
-      text-decoration: none;
-      box-shadow: 4px 4px 0px 0px var(--carbon-color);
-      transition: all 0.1s ease;
-      border: 2px solid var(--carbon-color);
-      border-radius: 2px;
-    }
-
-    #map .leaflet-control-zoom-in:active,
-    #map .leaflet-control-zoom-out:active,
-    #map .leaflet-control-locate:active{
-      box-shadow: 0px 0px 0px 0px var(--carbon-color);
-      transform: translate(4px, 4px);
-    }
-  </style>
 
 </section>

@@ -163,12 +163,52 @@ $conditions  = get_field('conditions_alert') ?: '';
         <h2 class="section-header__title" style="color:var(--sand)">Galería</h2>
       </div>
     </div>
-    <div class="gallery-grid">
+    <div class="gallery-flickity js-gallery-flickity">
       <?php foreach ($gallery as $img) : ?>
-        <img src="<?php echo esc_url($img['url']); ?>" alt="<?php echo esc_attr($img['alt']); ?>">
+        <a class="gallery-flickity__cell glightbox"
+           href="<?php echo esc_url($img['url']); ?>"
+           data-gallery="gallery-<?php echo get_the_ID(); ?>"
+           data-alt="<?php echo esc_attr($img['alt']); ?>">
+          <img src="<?php echo esc_url($img['url']); ?>" alt="<?php echo esc_attr($img['alt']); ?>">
+        </a>
       <?php endforeach; ?>
     </div>
   </div>
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.js-gallery-flickity').forEach(function (el) {
+      if (typeof Flickity === 'undefined') return;
+
+      // Bloquear clicks en <a> para que no naveguen ni abran GLightbox por drag
+      el.querySelectorAll('.glightbox').forEach(function (a) {
+        a.addEventListener('click', function (e) { e.preventDefault(); });
+      });
+
+      var flkty = new Flickity(el, {
+        wrapAround:      true,
+        contain:         true,
+        cellAlign:       'left',
+        pageDots:        false,
+        prevNextButtons: true,
+        groupCells:      2,
+        imagesLoaded:    true,
+      });
+
+      // GLightbox: init con array de items (NO con selector)
+      if (typeof GLightbox !== 'undefined') {
+        var items = Array.from(el.querySelectorAll('.glightbox')).map(function (a) {
+          return { href: a.href, type: 'image', description: a.dataset.alt || '' };
+        });
+        var lb = GLightbox({ elements: items, loop: true, touchNavigation: true });
+
+        // Solo abrir en click real, no en drag+release
+        flkty.on('staticClick', function (event, pointer, cellElement, cellIndex) {
+          if (cellIndex !== undefined) lb.openAt(cellIndex);
+        });
+      }
+    });
+  });
+  </script>
   <?php endif; ?>
 
   <!-- ══ RELATED POSTS ══ -->
@@ -233,13 +273,10 @@ $conditions  = get_field('conditions_alert') ?: '';
 document.addEventListener('DOMContentLoaded', function () {
   var lat = <?php echo json_encode(floatval($lat)); ?>;
   var lon = <?php echo json_encode(floatval($lon)); ?>;
-  var map = L.map('route-map', { zoomControl: true, attributionControl: false }).setView([lat, lon], 13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-  var icon = L.divIcon({
-    className: '',
-    html: '<div style="width:16px;height:16px;background:#C74A2D;border-radius:50%;border:2px solid #E2C9A0;box-shadow:0 0 0 4px rgba(199,74,45,.25)"></div>',
-    iconAnchor: [8, 8]
-  });
+  var map = L.map('route-map', { zoomControl: false, attributionControl: false }).setView([lat, lon], 13);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
+  var icon = L.divIcon({ className: '', html: '<div class="map-pin map-pin--start"></div>', iconAnchor: [8, 8] });
   L.marker([lat, lon], { icon: icon }).addTo(map)
     .bindPopup('<?php echo esc_js(get_the_title()); ?>').openPopup();
   <?php foreach ($checkpoints as $cp) :
@@ -250,7 +287,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!$cp_lat || !$cp_lon) continue;
   ?>
   L.circleMarker([<?php echo $cp_lat; ?>, <?php echo $cp_lon; ?>], {
-    radius: 5, color: '#F2B705', fillColor: '#F2B705', fillOpacity: 1, weight: 2
+    radius: 5, color: '#ff6b00', fillColor: '#ff6b00', fillOpacity: 1, weight: 2
   }).addTo(map).bindPopup('<?php echo esc_js($cp_poi->post_title); ?>');
   <?php endforeach; ?>
 });
@@ -374,24 +411,17 @@ document.addEventListener('DOMContentLoaded', function () {
   var routePoints = <?php echo json_encode($route_pts); ?>;
   if (!routePoints.length) return;
 
-  var map = L.map('route-map', { zoomControl: true, attributionControl: false });
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+  var map = L.map('route-map', { zoomControl: false, attributionControl: false });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-  var poly = L.polyline(routePoints, { color: '#0df246', weight: 4, opacity: 0.85 }).addTo(map);
+  var poly = L.polyline(routePoints, { color: '#0df246', weight: 3, opacity: 0.85 }).addTo(map);
   map.fitBounds(poly.getBounds(), { padding: [30, 30] });
 
-  var startIcon = L.divIcon({
-    className: '',
-    html: '<div style="width:14px;height:14px;background:#0df246;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 3px rgba(13,242,70,.3)"></div>',
-    iconAnchor: [7, 7]
-  });
+  var startIcon = L.divIcon({ className: '', html: '<div class="map-pin map-pin--start"></div>', iconAnchor: [7, 7] });
   L.marker(routePoints[0], { icon: startIcon }).addTo(map).bindPopup('Inicio').openPopup();
 
-  var endIcon = L.divIcon({
-    className: '',
-    html: '<div style="width:14px;height:14px;background:#C74A2D;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 3px rgba(199,74,45,.3)"></div>',
-    iconAnchor: [7, 7]
-  });
+  var endIcon = L.divIcon({ className: '', html: '<div class="map-pin map-pin--end"></div>', iconAnchor: [7, 7] });
   L.marker(routePoints[routePoints.length - 1], { icon: endIcon }).addTo(map).bindPopup('Fin');
 
   <?php foreach ((array) $poi_posts as $rpoi) :
@@ -400,7 +430,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!$rplat || !$rplng) continue;
   ?>
   L.circleMarker([<?php echo $rplat; ?>, <?php echo $rplng; ?>], {
-    radius: 6, color: '#F2B705', fillColor: '#F2B705', fillOpacity: 1, weight: 2
+    radius: 6, color: '#ff6b00', fillColor: '#ff6b00', fillOpacity: 1, weight: 2
   }).addTo(map).bindPopup('<?php echo esc_js($rpoi->post_title); ?>');
   <?php endforeach; ?>
 });
@@ -479,13 +509,10 @@ $hero_url    = $poi_img_url ?: get_the_post_thumbnail_url(null, 'full');
 document.addEventListener('DOMContentLoaded', function () {
   var lat = <?php echo json_encode(floatval($poi_lat)); ?>;
   var lng = <?php echo json_encode(floatval($poi_lng)); ?>;
-  var map = L.map('route-map', { zoomControl: true, attributionControl: false }).setView([lat, lng], 15);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-  var icon = L.divIcon({
-    className: '',
-    html: '<div style="width:16px;height:16px;background:#F2B705;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 4px rgba(242,183,5,.25)"></div>',
-    iconAnchor: [8, 8]
-  });
+  var map = L.map('route-map', { zoomControl: false, attributionControl: false }).setView([lat, lng], 15);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
+  var icon = L.divIcon({ className: '', html: '<div class="map-pin map-pin--poi"></div>', iconAnchor: [8, 8] });
   L.marker([lat, lng], { icon: icon }).addTo(map)
     .bindPopup('<?php echo esc_js(get_the_title()); ?>').openPopup();
 });
