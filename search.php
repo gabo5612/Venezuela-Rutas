@@ -53,6 +53,7 @@
           ];
           $type_info = $type_labels[$post_type] ?? ['label' => ucfirst($post_type), 'icon' => 'draft'];
         ?>
+        <a href="<?php the_permalink(); ?>" class="post-card__arrow">
         <article class="post-card search-result-card">
           <div class="post-card__image">
             <?php if ($thumb) : ?>
@@ -81,12 +82,13 @@
                   <?php the_author(); ?>
                 <?php endif; ?>
               </span>
-              <a href="<?php the_permalink(); ?>" class="post-card__arrow">
+              
                 <span class="material-symbols-outlined">north_east</span>
-              </a>
+              
             </div>
           </div>
         </article>
+        </a>
         <?php endwhile; ?>
       </div>
 

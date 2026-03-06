@@ -355,29 +355,60 @@ $related_label = match ($post_type) {
       </div>
     </div>
     <div class="masonry-grid js-masonry" data-gallery-id="gallery-<?php echo get_the_ID(); ?>">
-      <?php foreach ($gallery as $i => $img) : ?>
-      <a class="masonry-grid__item"
-         href="<?php echo esc_url($img['url']); ?>"
-         data-glightbox="gallery: gallery-<?php echo get_the_ID(); ?>; description: <?php echo esc_attr($img['alt']); ?>"
-         data-index="<?php echo $i; ?>">
-        <img src="<?php echo esc_url($img['url']); ?>"
-             alt="<?php echo esc_attr($img['alt']); ?>"
+      <?php foreach ($gallery as $i => $item) :
+        $src    = $item['url'] ?? '';
+        $alt    = $item['alt'] ?? '';
+        $mime   = $item['mime_type'] ?? '';
+        $ext    = strtolower(pathinfo($src, PATHINFO_EXTENSION));
+        $is_vid = strpos($mime, 'video/') === 0 || in_array($ext, ['mp4','webm','ogg','mov'], true);
+        $href   = $is_vid ? $src : ($item['sizes']['large'] ?? $src);
+      ?>
+      <?php if ( $is_vid ) : ?>
+      <div class="masonry-grid__item masonry-grid__item--video js-gal-item"
+           data-type="video"
+           data-src="<?php echo esc_url($src); ?>">
+        <video src="<?php echo esc_url($src); ?>"
+               muted loop playsinline preload="metadata"
+               class="masonry-grid__video"></video>
+        <div class="masonry-grid__overlay masonry-grid__overlay--play">
+          <span class="material-symbols-outlined">play_circle</span>
+        </div>
+      </div>
+      <?php else : ?>
+      <a class="masonry-grid__item js-gal-item"
+         data-type="image"
+         data-src="<?php echo esc_url($href); ?>"
+         href="<?php echo esc_url($href); ?>">
+        <img src="<?php echo esc_url($src); ?>"
+             alt="<?php echo esc_attr($alt); ?>"
              loading="lazy">
         <div class="masonry-grid__overlay">
           <span class="material-symbols-outlined">zoom_in</span>
         </div>
       </a>
+      <?php endif; ?>
       <?php endforeach; ?>
     </div>
   </div>
   <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    if (typeof GLightbox === 'undefined') return;
-    document.querySelectorAll('.js-masonry').forEach(function (grid) {
-      var id = grid.dataset.galleryId;
-      GLightbox({ selector: '[data-glightbox*="' + id + '"]', loop: true, touchNavigation: true });
+  (function () {
+    document.querySelectorAll('.masonry-grid__item--video').forEach(function (item) {
+      var vid = item.querySelector('video');
+      if (!vid) return;
+      item.addEventListener('mouseenter', function () { vid.play(); });
+      item.addEventListener('mouseleave', function () { vid.pause(); vid.currentTime = 0; });
     });
-  });
+    var grid = document.querySelector('#section-gallery .js-masonry');
+    if (grid) {
+      var items = Array.from(grid.querySelectorAll('.js-gal-item'));
+      items.forEach(function (el, idx) {
+        el.addEventListener('click', function (e) {
+          e.preventDefault();
+          if (typeof openGalleryModal === 'function') openGalleryModal(items, idx);
+        });
+      });
+    }
+  }());
   </script>
   <?php endif; ?>
 

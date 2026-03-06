@@ -2982,12 +2982,148 @@ img {
     opacity: 0;
   }
 }
-/* ── Gallery page & masonry grid ─────────────────────────────
+/* ── Gallery block, page & masonry grid ──────────────────────
+   .block-gallery  — bloque ACF flexible content
    .page-gallery   — template página galería
    .gallery-hero   — header de la página
    .gallery-section — cada sección de fotos
-   .masonry-grid   — shared: single.php + page-gallery
+   .masonry-grid   — shared: single.php + gallery
 ──────────────────────────────────────────────────────────── */
+/* ── Block gallery ── */
+.block-gallery {
+  padding: 5rem 0;
+}
+.block-gallery__header {
+  margin-bottom: 3rem;
+}
+.block-gallery__desc {
+  font-size: 1rem;
+  color: var(--text-muted);
+  max-width: 560px;
+  margin-top: 0.75rem;
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* ── GLightbox overrides ── */
+.glightbox-container .gbtn {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(13, 242, 70, 0.3);
+  transition: background 0.2s, border-color 0.2s;
+}
+.glightbox-container .gbtn:hover {
+  background: rgba(13, 242, 70, 0.15);
+  border-color: var(--primary);
+}
+.glightbox-container .gbtn svg path {
+  fill: var(--primary);
+}
+
+/* ── Unified gallery modal ── */
+.gal-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: gal-modal-in 0.2s ease;
+}
+.gal-modal__stage {
+  position: relative;
+  width: 90vw;
+  max-width: 1100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gal-modal__media {
+  max-width: 100%;
+  max-height: 85vh;
+  border-radius: var(--radius-lg);
+  display: block;
+  object-fit: contain;
+  background: #000;
+}
+.gal-modal__close {
+  position: absolute;
+  top: -3rem;
+  right: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+  transition: opacity 0.2s;
+}
+.gal-modal__close:hover {
+  opacity: 0.7;
+}
+.gal-modal__close .material-symbols-outlined {
+  font-size: 1.75rem;
+}
+.gal-modal__counter {
+  position: absolute;
+  top: -3rem;
+  left: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.5);
+}
+.gal-modal__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(13, 242, 70, 0.3);
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--primary);
+  transition: background 0.2s, border-color 0.2s;
+  z-index: 2;
+}
+.gal-modal__nav:hover {
+  background: rgba(13, 242, 70, 0.15);
+  border-color: var(--primary);
+}
+.gal-modal__nav--prev {
+  left: -4rem;
+}
+.gal-modal__nav--next {
+  right: -4rem;
+}
+.gal-modal__nav .material-symbols-outlined {
+  font-size: 1.5rem;
+}
+@media (max-width: 768px) {
+  .gal-modal__nav--prev {
+    left: -0.5rem;
+  }
+  .gal-modal__nav--next {
+    right: -0.5rem;
+  }
+  .gal-modal__nav {
+    background: rgba(0, 0, 0, 0.7);
+  }
+}
+
+@keyframes gal-modal-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 /* ── Masonry grid (shared) ── */
 .masonry-grid {
   columns: 2;
@@ -3031,6 +3167,30 @@ img {
 }
 .masonry-grid__item:hover img {
   transform: scale(1.04);
+}
+.masonry-grid__item--video {
+  cursor: pointer;
+}
+.masonry-grid__video {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.5s ease;
+}
+.masonry-grid__item--video:hover .masonry-grid__video {
+  transform: scale(1.04);
+}
+.masonry-grid__overlay--play .material-symbols-outlined {
+  font-size: 3rem;
+  color: var(--primary);
+  filter: drop-shadow(0 0 8px rgba(13, 242, 70, 0.6));
+}
+.masonry-grid__item--video:hover .masonry-grid__overlay--play {
+  background: rgba(0, 0, 0, 0.3);
+}
+.masonry-grid__item--video:hover .masonry-grid__overlay--play .material-symbols-outlined {
+  opacity: 1;
+  transform: scale(1);
 }
 .masonry-grid__overlay {
   position: absolute;

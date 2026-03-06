@@ -1,116 +1,127 @@
 <?php
+$eyebrow = get_sub_field('gallery_eyebrow') ?: '';
+$title   = get_sub_field('gallery_title')   ?: '';
+$desc    = get_sub_field('gallery_desc')    ?: '';
 
-get_template_part('parts/header');
+// Helper: detect video by mime_type or extension
+function gallery_is_video( $item ) {
+  if ( isset($item['mime_type']) && strpos($item['mime_type'], 'video/') === 0 ) return true;
+  if ( isset($item['url']) ) {
+    $ext = strtolower(pathinfo($item['url'], PATHINFO_EXTENSION));
+    return in_array($ext, ['mp4', 'webm', 'ogg', 'mov'], true);
+  }
+  return false;
+}
 
-$eyebrow  = get_field('gallery_eyebrow') ?: 'Archivo Visual';
-$title    = get_field('gallery_title')   ?: get_the_title();
-$desc     = get_field('gallery_desc')    ?: '';
-$sections = get_field('gallery_sections') ?: [];
-
-// Si no hay secciones, intentar campo de galería simple
-$simple_gallery = get_field('gallery_images') ?: [];
-?>
-
-<div class="page-gallery">
-
-  <!-- ══ HERO HEADER ══════════════════════════════════════════ -->
-  <header class="gallery-hero">
-    <div class="gallery-hero__inner container">
-      <div class="gallery-hero__eyebrow">
-        <span class="material-symbols-outlined">photo_library</span>
-        <?php echo esc_html($eyebrow); ?>
-      </div>
-      <h1 class="gallery-hero__title"><?php echo esc_html($title); ?></h1>
-      <?php if ($desc) : ?>
-      <p class="gallery-hero__desc"><?php echo esc_html($desc); ?></p>
-      <?php endif; ?>
-    </div>
-  </header>
-
-  <!-- ══ SECTIONS ═════════════════════════════════════════════ -->
-  <?php if ($sections) :
-    $global_index = 0;
-    $all_images = [];
-    foreach ($sections as $sec) {
-      foreach (($sec['section_images'] ?: []) as $img) {
-        $all_images[] = $img;
+$sections = [];
+if ( have_rows('gallery_sections') ) {
+  while ( have_rows('gallery_sections') ) { the_row();
+    $raw = get_sub_field('section_images') ?: [];
+    $normalized = [];
+    foreach ( $raw as $item ) {
+      if ( is_array($item) ) {
+        $normalized[] = $item;
+      } else {
+        $normalized[] = [ 'url' => $item, 'alt' => '', 'mime_type' => '', 'sizes' => [] ];
       }
     }
-  ?>
+    if ( $normalized ) {
+      $sections[] = [
+        'title'  => get_sub_field('section_title') ?: '',
+        'images' => $normalized,
+      ];
+    }
+  }
+}
 
-  <?php foreach ($sections as $s => $section) :
-    $images = $section['section_images'] ?: [];
-    if (empty($images)) continue;
-    $sec_title = $section['section_title'] ?: '';
+if ( empty($sections) ) return;
+
+$block_id = uniqid('gallery-blk-');
+?>
+
+<section class="block-gallery">
+
+  <?php if ( $eyebrow || $title ) : ?>
+  <div class="block-gallery__header container">
+    <?php if ( $eyebrow ) : ?>
+    <div class="section-header__eyebrow"><?php echo esc_html($eyebrow); ?></div>
+    <?php endif; ?>
+    <?php if ( $title ) : ?>
+    <h2 class="section-header__title"><?php echo esc_html($title); ?></h2>
+    <?php endif; ?>
+    <?php if ( $desc ) : ?>
+    <p class="block-gallery__desc"><?php echo esc_html($desc); ?></p>
+    <?php endif; ?>
+  </div>
+  <?php endif; ?>
+
+  <?php foreach ( $sections as $s => $section ) :
+    $gid = $block_id . '-' . $s;
   ?>
-  <section class="gallery-section">
-    <?php if ($sec_title) : ?>
+  <div class="gallery-section">
+    <?php if ( $section['title'] ) : ?>
     <div class="gallery-section__header container">
-      <h2 class="gallery-section__title"><?php echo esc_html($sec_title); ?></h2>
+      <h3 class="gallery-section__title"><?php echo esc_html($section['title']); ?></h3>
     </div>
     <?php endif; ?>
 
     <div class="masonry-grid masonry-grid--full js-masonry"
-         data-gallery-id="gallery-section-<?php echo $s; ?>">
-      <?php foreach ($images as $i => $img) :
-        $href = $img['sizes']['large'] ?? $img['url'];
+         data-gallery-id="<?php echo esc_attr($gid); ?>">
+      <?php foreach ( $section['images'] as $i => $item ) :
+        $src    = $item['url'] ?? '';
+        $alt    = $item['alt'] ?? '';
+        $is_vid = gallery_is_video($item);
+        $href   = $is_vid ? $src : ($item['sizes']['large'] ?? $src);
       ?>
-      <a class="masonry-grid__item"
-         href="<?php echo esc_url($href); ?>"
-         data-glightbox="gallery: gallery-section-<?php echo $s; ?>; description: <?php echo esc_attr($img['alt'] ?? ''); ?>"
-         data-index="<?php echo $i; ?>">
-        <img src="<?php echo esc_url($img['url']); ?>"
-             alt="<?php echo esc_attr($img['alt'] ?? ''); ?>"
+      <?php if ( $is_vid ) : ?>
+      <div class="masonry-grid__item masonry-grid__item--video js-gal-item"
+           data-type="video"
+           data-src="<?php echo esc_url($src); ?>">
+        <video src="<?php echo esc_url($src); ?>"
+               muted loop playsinline preload="metadata"
+               class="masonry-grid__video"></video>
+        <div class="masonry-grid__overlay masonry-grid__overlay--play">
+          <span class="material-symbols-outlined">play_circle</span>
+        </div>
+      </div>
+      <?php else : ?>
+      <a class="masonry-grid__item js-gal-item"
+         data-type="image"
+         data-src="<?php echo esc_url($href); ?>"
+         href="<?php echo esc_url($href); ?>">
+        <img src="<?php echo esc_url($src); ?>"
+             alt="<?php echo esc_attr($alt); ?>"
              loading="lazy">
         <div class="masonry-grid__overlay">
           <span class="material-symbols-outlined">zoom_in</span>
         </div>
       </a>
+      <?php endif; ?>
       <?php endforeach; ?>
     </div>
-  </section>
+  </div>
   <?php endforeach; ?>
 
-  <?php elseif ($simple_gallery) : ?>
-
-  <section class="gallery-section">
-    <div class="masonry-grid masonry-grid--full js-masonry"
-         data-gallery-id="gallery-page-<?php echo get_the_ID(); ?>">
-      <?php foreach ($simple_gallery as $i => $img) :
-        $href = $img['sizes']['large'] ?? $img['url'];
-      ?>
-      <a class="masonry-grid__item"
-         href="<?php echo esc_url($href); ?>"
-         data-glightbox="gallery: gallery-page-<?php echo get_the_ID(); ?>; description: <?php echo esc_attr($img['alt'] ?? ''); ?>"
-         data-index="<?php echo $i; ?>">
-        <img src="<?php echo esc_url($img['url']); ?>"
-             alt="<?php echo esc_attr($img['alt'] ?? ''); ?>"
-             loading="lazy">
-        <div class="masonry-grid__overlay">
-          <span class="material-symbols-outlined">zoom_in</span>
-        </div>
-      </a>
-      <?php endforeach; ?>
-    </div>
-  </section>
-
-  <?php else : ?>
-  <div class="gallery-empty container">
-    <span class="material-symbols-outlined">photo_library</span>
-    <p>No hay imágenes todavía.</p>
-  </div>
-  <?php endif; ?>
-
-</div>
+</section>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-  if (typeof GLightbox === 'undefined') return;
-  document.querySelectorAll('.js-masonry').forEach(function (grid) {
-    var id = grid.dataset.galleryId;
-    GLightbox({ selector: '[data-glightbox*="' + id + '"]', loop: true, touchNavigation: true });
+(function () {
+  // Hover preview for video thumbnails
+  document.querySelectorAll('.masonry-grid__item--video').forEach(function (item) {
+    var vid = item.querySelector('video');
+    if (!vid) return;
+    item.addEventListener('mouseenter', function () { vid.play(); });
+    item.addEventListener('mouseleave', function () { vid.pause(); vid.currentTime = 0; });
   });
-});
+  // Unified click → gallery modal
+  document.querySelectorAll('.js-masonry').forEach(function (grid) {
+    var items = Array.from(grid.querySelectorAll('.js-gal-item'));
+    items.forEach(function (el, idx) {
+      el.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (typeof openGalleryModal === 'function') openGalleryModal(items, idx);
+      });
+    });
+  });
+}());
 </script>
-
-<?php get_template_part('parts/footer'); ?>

@@ -3,8 +3,6 @@
 // Enqueue scripts & styles
 require_once(get_template_directory() . '/functions/enqueue-scripts.php');
 
-// ACF field group: Gallery page
-require_once(get_template_directory() . '/functions/register-gallery-fields.php');
 
 // ===============================
 // THEME SUPPORT + MENUS
