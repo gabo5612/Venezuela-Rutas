@@ -9,8 +9,8 @@ function site_scripts() {
   wp_enqueue_style(  'flickity', 'https://unpkg.com/flickity@3/dist/flickity.min.css', [], '3.0.0' );
   wp_enqueue_script( 'flickity', 'https://unpkg.com/flickity@3/dist/flickity.pkgd.min.js', [], '3.0.0', true );
 
-  // ── Leaflet + GLightbox: solo en singles ────────────────
-  if ( is_single() ) {
+  // ── Leaflet + GLightbox: singles, 404 y página galería ──
+  if ( is_single() || is_404() || is_page_template('page-gallery.php') ) {
     wp_enqueue_style(  'leaflet',        'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', [], '1.9.4' );
     wp_enqueue_style(  'leaflet-locate', 'https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.css', ['leaflet'], null );
     wp_enqueue_script( 'leaflet',        'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', [], '1.9.4', true );

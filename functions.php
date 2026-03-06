@@ -3,6 +3,9 @@
 // Enqueue scripts & styles
 require_once(get_template_directory() . '/functions/enqueue-scripts.php');
 
+// ACF field group: Gallery page
+require_once(get_template_directory() . '/functions/register-gallery-fields.php');
+
 // ===============================
 // THEME SUPPORT + MENUS
 // ===============================
@@ -119,6 +122,17 @@ add_action('template_redirect', function () {
     exit;
 });
 
+// ===============================
+// INCLUDE CPTs IN TAG ARCHIVES
+// WordPress only queries 'post' by default in tag archives.
+// This includes routes + point-of-interest so tag filters work.
+// ===============================
+add_action('pre_get_posts', function ($query) {
+    if (!is_admin() && $query->is_main_query() && $query->is_tag()) {
+        $query->set('post_type', ['post', 'routes', 'point-of-interest']);
+    }
+});
+
 add_action('wp_ajax_load_more_tips', 'mag_load_more_tips');
 add_action('wp_ajax_nopriv_load_more_tips', 'mag_load_more_tips');
 
@@ -142,15 +156,20 @@ function mag_load_more_tips()
     if ($q->have_posts()) {
         while ($q->have_posts()) {
             $q->the_post();
-            $thumb = get_the_post_thumbnail_url(null, 'large');
-            $cats  = get_the_category();
+            $thumb    = get_the_post_thumbnail_url(null, 'large');
+            $vid      = get_field('video_featured') ?: '';
+            $cats     = get_the_category();
             $diff  = get_field('difficulty') ?: '';
             $dist  = get_field('distance')   ?: '';
             $time  = get_field('time')       ?: '';
             ?>
         <div class="group border border-primary/10 rounded-xl bg-primary/5 hover:border-primary/40 transition-all flex flex-col">
           <div class="h-48 overflow-hidden rounded-t-xl relative">
-            <?php if ($thumb) : ?>
+            <?php if ($vid) : ?>
+              <video autoplay loop muted playsinline class="w-full h-full object-cover">
+                <source src="<?php echo esc_url($vid); ?>" type="video/mp4">
+              </video>
+            <?php elseif ($thumb) : ?>
               <img class="w-full h-full object-cover transition-transform group-hover:scale-110" src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>">
             <?php else : ?>
               <div class="w-full h-full bg-bg-forest flex items-center justify-center"><span class="material-symbols-outlined text-primary/30 text-4xl">terrain</span></div>
@@ -183,3 +202,4 @@ function mag_load_more_tips()
         'has_more' => ($paged < (int) $q->max_num_pages),
     ]);
 }
+

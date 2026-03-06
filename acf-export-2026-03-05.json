@@ -237,211 +237,6 @@
                         "display": "block",
                         "sub_fields": [
                             {
-                                "key": "field_698dda45acb09",
-                                "label": "Hero Image",
-                                "name": "hero_image",
-                                "aria-label": "",
-                                "type": "image",
-                                "instructions": "",
-                                "required": 0,
-                                "conditional_logic": 0,
-                                "wrapper": {
-                                    "width": "",
-                                    "class": "",
-                                    "id": ""
-                                },
-                                "return_format": "url",
-                                "library": "all",
-                                "min_width": "",
-                                "min_height": "",
-                                "min_size": "",
-                                "max_width": "",
-                                "max_height": "",
-                                "max_size": "",
-                                "mime_types": "",
-                                "allow_in_bindings": 0,
-                                "preview_size": "medium"
-                            },
-                            {
-                                "key": "field_698d1b162a8a0",
-                                "label": "Card Color",
-                                "name": "card_color",
-                                "aria-label": "",
-                                "type": "select",
-                                "instructions": "Color de fondo del bloque",
-                                "required": 0,
-                                "conditional_logic": 0,
-                                "wrapper": {
-                                    "width": "",
-                                    "class": "",
-                                    "id": ""
-                                },
-                                "choices": {
-                                    "black": "Black (oscuro)",
-                                    "green": "Green (bosque)",
-                                    "warm": "Warm (terracota)"
-                                },
-                                "default_value": "black",
-                                "return_format": "value",
-                                "multiple": 0,
-                                "allow_null": 0,
-                                "allow_in_bindings": 1,
-                                "ui": 0,
-                                "ajax": 0,
-                                "placeholder": ""
-                            },
-                            {
-                                "key": "field_698d19b61769d",
-                                "label": "Type of card",
-                                "name": "type_of_card",
-                                "aria-label": "",
-                                "type": "select",
-                                "instructions": "",
-                                "required": 0,
-                                "conditional_logic": 0,
-                                "wrapper": {
-                                    "width": "",
-                                    "class": "",
-                                    "id": ""
-                                },
-                                "choices": {
-                                    "ruta": "Ruta del dÃ­a",
-                                    "poi": "Punto de interÃ©s",
-                                    "post": "Post del dÃ­a"
-                                },
-                                "default_value": "Ruta del dÃ­a",
-                                "return_format": "label",
-                                "multiple": 0,
-                                "allow_null": 0,
-                                "allow_in_bindings": 0,
-                                "ui": 0,
-                                "ajax": 0,
-                                "placeholder": ""
-                            },
-                            {
-                                "key": "field_68098c506068e",
-                                "label": "Title",
-                                "name": "title",
-                                "aria-label": "",
-                                "type": "textarea",
-                                "instructions": "",
-                                "required": 0,
-                                "conditional_logic": 0,
-                                "wrapper": {
-                                    "width": "",
-                                    "class": "",
-                                    "id": ""
-                                },
-                                "default_value": "",
-                                "maxlength": "",
-                                "allow_in_bindings": 1,
-                                "rows": "",
-                                "placeholder": "",
-                                "new_lines": ""
-                            },
-                            {
-                                "key": "field_68098c596068f",
-                                "label": "Description",
-                                "name": "description",
-                                "aria-label": "",
-                                "type": "textarea",
-                                "instructions": "",
-                                "required": 0,
-                                "conditional_logic": 0,
-                                "wrapper": {
-                                    "width": "",
-                                    "class": "",
-                                    "id": ""
-                                },
-                                "default_value": "",
-                                "maxlength": "",
-                                "allow_in_bindings": 1,
-                                "rows": "",
-                                "placeholder": "",
-                                "new_lines": ""
-                            },
-                            {
-                                "key": "field_698a8eb6070cf",
-                                "label": "CTA",
-                                "name": "cta",
-                                "aria-label": "",
-                                "type": "text",
-                                "instructions": "Texto del botÃ³n (dejar vacÃ­o para ocultarlo)",
-                                "required": 0,
-                                "conditional_logic": 0,
-                                "wrapper": {
-                                    "width": "",
-                                    "class": "",
-                                    "id": ""
-                                },
-                                "default_value": "",
-                                "maxlength": "",
-                                "allow_in_bindings": 0,
-                                "placeholder": "",
-                                "prepend": "",
-                                "append": ""
-                            },
-                            {
-                                "key": "field_698d193f32eb3",
-                                "label": "CTA Color",
-                                "name": "cta_color",
-                                "aria-label": "",
-                                "type": "select",
-                                "instructions": "",
-                                "required": 0,
-                                "conditional_logic": [
-                                    [
-                                        {
-                                            "field": "field_698a8eb6070cf",
-                                            "operator": "!=empty"
-                                        }
-                                    ]
-                                ],
-                                "wrapper": {
-                                    "width": "",
-                                    "class": "",
-                                    "id": ""
-                                },
-                                "choices": {
-                                    "primary": "Primary (verde elÃ©ctrico)",
-                                    "outline": "Outline",
-                                    "terracotta": "Terracotta"
-                                },
-                                "default_value": "primary",
-                                "return_format": "value",
-                                "multiple": 0,
-                                "allow_null": 0,
-                                "allow_in_bindings": 0,
-                                "ui": 0,
-                                "ajax": 0,
-                                "placeholder": ""
-                            },
-                            {
-                                "key": "field_698a8e86070ce",
-                                "label": "CTA Link",
-                                "name": "cta_link",
-                                "aria-label": "",
-                                "type": "url",
-                                "instructions": "",
-                                "required": 0,
-                                "conditional_logic": [
-                                    [
-                                        {
-                                            "field": "field_698a8eb6070cf",
-                                            "operator": "!=empty"
-                                        }
-                                    ]
-                                ],
-                                "wrapper": {
-                                    "width": "",
-                                    "class": "",
-                                    "id": ""
-                                },
-                                "default_value": "",
-                                "allow_in_bindings": 0,
-                                "placeholder": ""
-                            },
-                            {
                                 "key": "field_hero_slides00001",
                                 "label": "Slides",
                                 "name": "slides",
@@ -663,7 +458,73 @@
                                         },
                                         "default_value": "",
                                         "allow_in_bindings": 0,
-                                        "placeholder": "https://...",
+                                        "placeholder": "https:\/\/...",
+                                        "parent_repeater": "field_hero_slides00001"
+                                    },
+                                    {
+                                        "key": "field_hero_slide_hilite",
+                                        "label": "Title Highlight (palabra en verde)",
+                                        "name": "title_highlight",
+                                        "aria-label": "",
+                                        "type": "text",
+                                        "instructions": "Última palabra o línea del título que aparece en verde. Se muestra debajo del título principal.",
+                                        "required": 0,
+                                        "conditional_logic": 0,
+                                        "wrapper": {
+                                            "width": "",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "default_value": "",
+                                        "maxlength": "",
+                                        "allow_in_bindings": 0,
+                                        "placeholder": "XTREME",
+                                        "prepend": "",
+                                        "append": "",
+                                        "parent_repeater": "field_hero_slides00001"
+                                    },
+                                    {
+                                        "key": "field_hero_slide_dist0",
+                                        "label": "Stat — Distancia",
+                                        "name": "hero_distance",
+                                        "aria-label": "",
+                                        "type": "text",
+                                        "instructions": "Valor de distancia para la tarjeta de stats (ej: 18km).",
+                                        "required": 0,
+                                        "conditional_logic": 0,
+                                        "wrapper": {
+                                            "width": "50",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "default_value": "",
+                                        "maxlength": "",
+                                        "allow_in_bindings": 0,
+                                        "placeholder": "18km",
+                                        "prepend": "",
+                                        "append": "",
+                                        "parent_repeater": "field_hero_slides00001"
+                                    },
+                                    {
+                                        "key": "field_hero_slide_alti0",
+                                        "label": "Stat — Altitud",
+                                        "name": "hero_altitude",
+                                        "aria-label": "",
+                                        "type": "text",
+                                        "instructions": "Valor de altitud para la tarjeta de stats (ej: 2.1k).",
+                                        "required": 0,
+                                        "conditional_logic": 0,
+                                        "wrapper": {
+                                            "width": "50",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "default_value": "",
+                                        "maxlength": "",
+                                        "allow_in_bindings": 0,
+                                        "placeholder": "2.1k",
+                                        "prepend": "",
+                                        "append": "",
                                         "parent_repeater": "field_hero_slides00001"
                                     }
                                 ]
@@ -806,7 +667,7 @@
                     "layout_6a1bc9f200010": {
                         "key": "layout_6a1bc9f200010",
                         "name": "cta",
-                        "label": "CTA / Newsletter",
+                        "label": "CTA \/ Newsletter",
                         "display": "block",
                         "sub_fields": [
                             {
@@ -897,7 +758,7 @@
                     "layout_6a1bc9f000020": {
                         "key": "layout_6a1bc9f000020",
                         "name": "features",
-                        "label": "Features / 3 columnas",
+                        "label": "Features \/ 3 columnas",
                         "display": "block",
                         "sub_fields": [
                             {
@@ -1503,6 +1364,61 @@
                 "mime_types": "",
                 "insert": "append",
                 "preview_size": "medium"
+            },
+            {
+                "key": "field_69aa0fe6f13a9",
+                "label": "Blog entry",
+                "name": "blog_entry",
+                "aria-label": "",
+                "type": "post_object",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "post_type": [
+                    "post"
+                ],
+                "post_status": [
+                    "publish"
+                ],
+                "taxonomy": "",
+                "return_format": "object",
+                "multiple": 0,
+                "allow_null": 0,
+                "allow_in_bindings": 0,
+                "bidirectional": 0,
+                "ui": 1,
+                "bidirectional_target": []
+            },
+            {
+                "key": "field_69aa1004291af",
+                "label": "Image",
+                "name": "image",
+                "aria-label": "",
+                "type": "image",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "url",
+                "library": "all",
+                "min_width": "",
+                "min_height": "",
+                "min_size": "",
+                "max_width": "",
+                "max_height": "",
+                "max_size": "",
+                "mime_types": "",
+                "allow_in_bindings": 0,
+                "preview_size": "medium"
             }
         ],
         "location": [
@@ -1609,90 +1525,6 @@
                         "parent_repeater": "field_6810040418f06"
                     }
                 ]
-            },
-            {
-                "key": "field_681ac82692b04",
-                "label": "Blog entry",
-                "name": "blog_entry",
-                "aria-label": "",
-                "type": "post_object",
-                "instructions": "",
-                "required": 0,
-                "conditional_logic": 0,
-                "wrapper": {
-                    "width": "",
-                    "class": "",
-                    "id": ""
-                },
-                "post_type": [
-                    "post"
-                ],
-                "post_status": [
-                    "publish"
-                ],
-                "taxonomy": "",
-                "return_format": "object",
-                "multiple": 0,
-                "allow_null": 0,
-                "allow_in_bindings": 0,
-                "bidirectional": 0,
-                "ui": 1,
-                "bidirectional_target": []
-            },
-            {
-                "key": "field_681aca82826c0",
-                "label": "Image",
-                "name": "image",
-                "aria-label": "",
-                "type": "image",
-                "instructions": "",
-                "required": 0,
-                "conditional_logic": 0,
-                "wrapper": {
-                    "width": "",
-                    "class": "",
-                    "id": ""
-                },
-                "return_format": "url",
-                "library": "all",
-                "min_width": "",
-                "min_height": "",
-                "min_size": "",
-                "max_width": "",
-                "max_height": "",
-                "max_size": "",
-                "mime_types": "",
-                "allow_in_bindings": 0,
-                "preview_size": "medium"
-            },
-            {
-                "key": "field_681c04b9163a5",
-                "label": "Point of interest",
-                "name": "route_point_of_interest",
-                "aria-label": "",
-                "type": "post_object",
-                "instructions": "",
-                "required": 0,
-                "conditional_logic": 0,
-                "wrapper": {
-                    "width": "",
-                    "class": "",
-                    "id": ""
-                },
-                "post_type": [
-                    "point-of-interest"
-                ],
-                "post_status": [
-                    "publish"
-                ],
-                "taxonomy": "",
-                "return_format": "object",
-                "multiple": 1,
-                "allow_null": 0,
-                "allow_in_bindings": 0,
-                "bidirectional": 0,
-                "ui": 1,
-                "bidirectional_target": []
             }
         ],
         "location": [
@@ -1734,7 +1566,7 @@
         "menu_order": 0,
         "active": true,
         "post_type": "point-of-interest",
-        "advanced_configuration": false,
+        "advanced_configuration": true,
         "import_source": "",
         "import_date": "",
         "labels": {
@@ -1784,7 +1616,7 @@
         "show_in_nav_menus": true,
         "show_in_rest": true,
         "rest_base": "",
-        "rest_namespace": "wp/v2",
+        "rest_namespace": "wp\/v2",
         "rest_controller_class": "WP_REST_Posts_Controller",
         "menu_position": "",
         "menu_icon": {
@@ -1804,8 +1636,8 @@
             "category",
             "post_tag"
         ],
-        "has_archive": false,
-        "has_archive_slug": "",
+        "has_archive": true,
+        "has_archive_slug": "poi",
         "rewrite": {
             "permalink_rewrite": "post_type_key",
             "with_front": "1",
@@ -1817,30 +1649,7 @@
         "can_export": true,
         "delete_with_user": false,
         "register_meta_box_cb": "",
-        "enter_title_here": "",
-        "location": [
-            [
-                {
-                    "param": "post_type",
-                    "operator": "==",
-                    "value": "post"
-                }
-            ],
-            [
-                {
-                    "param": "post_type",
-                    "operator": "==",
-                    "value": "routes"
-                }
-            ],
-            [
-                {
-                    "param": "post_type",
-                    "operator": "==",
-                    "value": "point-of-interest"
-                }
-            ]
-        ]
+        "enter_title_here": ""
     },
     {
         "key": "post_type_680983cf94e59",
@@ -1898,7 +1707,7 @@
         "show_in_nav_menus": true,
         "show_in_rest": true,
         "rest_base": "",
-        "rest_namespace": "wp/v2",
+        "rest_namespace": "wp\/v2",
         "rest_controller_class": "WP_REST_Posts_Controller",
         "menu_position": "",
         "menu_icon": {
@@ -1918,8 +1727,8 @@
             "category",
             "post_tag"
         ],
-        "has_archive": false,
-        "has_archive_slug": "",
+        "has_archive": true,
+        "has_archive_slug": "routes",
         "rewrite": {
             "permalink_rewrite": "post_type_key",
             "with_front": "1",
@@ -1931,29 +1740,31 @@
         "can_export": true,
         "delete_with_user": false,
         "register_meta_box_cb": "",
-        "enter_title_here": "",
-        "location": [
-            [
-                {
-                    "param": "post_type",
-                    "operator": "==",
-                    "value": "post"
-                }
-            ],
-            [
-                {
-                    "param": "post_type",
-                    "operator": "==",
-                    "value": "routes"
-                }
-            ],
-            [
-                {
-                    "param": "post_type",
-                    "operator": "==",
-                    "value": "point-of-interest"
-                }
-            ]
-        ]
+        "enter_title_here": ""
+    },
+    {
+        "key": "ui_options_page_69986ead92c9b",
+        "title": "Site Settings",
+        "active": true,
+        "menu_order": 0,
+        "page_title": "Site Settings",
+        "menu_slug": "site-settings",
+        "parent_slug": "none",
+        "advanced_configuration": 1,
+        "icon_url": "",
+        "menu_title": "Site customization",
+        "position": 10,
+        "redirect": 0,
+        "description": "",
+        "menu_icon": {
+            "type": "dashicons",
+            "value": "dashicons-admin-generic"
+        },
+        "update_button": "Update",
+        "updated_message": "Options Updated",
+        "capability": "edit_posts",
+        "data_storage": "options",
+        "post_id": "",
+        "autoload": 0
     }
 ]

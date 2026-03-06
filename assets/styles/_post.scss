@@ -16,7 +16,8 @@
     max-height: 560px;
     overflow: hidden;
 
-    img {
+    img,
+    video {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -288,6 +289,26 @@
       font-weight: 600;
       .material-symbols-outlined { font-size: 0.9rem; }
       &:hover { color: var(--primary); }
+    }
+  }
+
+  /* ── Responsive video embed (oembed) ── */
+  .video-embed {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+
+    blockquote {
+      margin: 0 !important;
+    }
+
+    > iframe {
+      width: 100%;
+      max-width: 100%;
+      aspect-ratio: 16 / 9;
+      height: auto;
+      border: 0;
+      border-radius: var(--radius-lg);
     }
   }
 
@@ -573,8 +594,8 @@
   &__related {
     width: 93%;
     max-width: 1200px;
-    margin: 4rem auto 5rem;
-    padding-top: 3rem;
+    margin: 4rem auto 0rem;
+    padding: 3rem 0;
     border-top: 1px solid var(--line-warm);
 
     .related-grid {

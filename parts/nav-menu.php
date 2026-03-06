@@ -4,7 +4,7 @@
     <!-- Logo -->
     <a href="<?php echo esc_url( home_url('/') ); ?>" class="site-nav__logo">
       <span class="material-symbols-outlined">terrain</span>
-      <span class="site-name"><?php echo esc_html( get_bloginfo('name') ); ?></span>
+      <h1 class="site-name"><?php echo esc_html( get_bloginfo('name') ); ?></h1>
     </a>
 
     <!-- Nav links (wp_nav_menu) -->

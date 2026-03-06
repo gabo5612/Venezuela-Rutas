@@ -10,8 +10,9 @@ $post_type = get_post_type();
 //  not on post type — so any CPT can use any field freely.
 // ══════════════════════════════════════════════════════════════
 
-// ── Hero image ──────────────────────────────────────────────
-$thumb = get_the_post_thumbnail_url(null, 'full') ?: get_field('image') ?: '';
+// ── Hero image & featured video ─────────────────────────────
+$thumb          = get_the_post_thumbnail_url(null, 'full') ?: get_field('image') ?: '';
+$video_featured = get_field('video_featured') ?: '';
 
 // ── Route stats ──────────────────────────────────────────────
 $distance   = get_field('distance')   ?: '';
@@ -55,6 +56,9 @@ $gallery = get_field('gallery') ?: [];
 
 // ── Conditions alert (Post group) ───────────────────────────
 $conditions = get_field('conditions_alert') ?: '';
+
+// ── Embed video ──────────────────────────────────────────────
+$embed_video = get_field('embed') ?: '';
 
 // ── Blog / bitacora link ─────────────────────────────────────
 $blog_raw = get_field('blog_entry') ?: null;
@@ -117,9 +121,13 @@ $related_label = match ($post_type) {
 <div class="page-route page-route--<?php echo esc_attr($post_type); ?>">
 
   <!-- ══ HERO ══════════════════════════════════════════════════ -->
-  <?php if ($thumb) : ?>
+  <?php if ($video_featured || $thumb) : ?>
   <div class="page-route__hero">
-    <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>">
+    <?php if ($video_featured) : ?>
+      <video autoplay muted loop playsinline src="<?php echo esc_url($video_featured); ?>"></video>
+    <?php else : ?>
+      <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>">
+    <?php endif; ?>
     <div class="hero-overlay"></div>
   </div>
   <?php endif; ?>
@@ -256,6 +264,12 @@ $related_label = match ($post_type) {
 
     <?php the_content(); ?>
 
+    <?php if ( $embed_video ) : ?>
+    <div class="video-embed">
+      <?php echo $embed_video; ?>
+    </div>
+    <?php endif; ?>
+
     <!-- ── Action buttons ── -->
     <?php if ($gmaps_url || $blog_url || $has_polyline) : ?>
     <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.5rem">
@@ -340,37 +354,28 @@ $related_label = match ($post_type) {
         <h2 class="section-header__title" style="color:var(--sand)">Galería</h2>
       </div>
     </div>
-    <div class="gallery-flickity js-gallery-flickity">
-      <?php foreach ($gallery as $img) : ?>
-      <a class="gallery-flickity__cell glightbox"
+    <div class="masonry-grid js-masonry" data-gallery-id="gallery-<?php echo get_the_ID(); ?>">
+      <?php foreach ($gallery as $i => $img) : ?>
+      <a class="masonry-grid__item"
          href="<?php echo esc_url($img['url']); ?>"
-         data-gallery="gallery-<?php echo get_the_ID(); ?>"
-         data-alt="<?php echo esc_attr($img['alt']); ?>">
-        <img src="<?php echo esc_url($img['url']); ?>" alt="<?php echo esc_attr($img['alt']); ?>">
+         data-glightbox="gallery: gallery-<?php echo get_the_ID(); ?>; description: <?php echo esc_attr($img['alt']); ?>"
+         data-index="<?php echo $i; ?>">
+        <img src="<?php echo esc_url($img['url']); ?>"
+             alt="<?php echo esc_attr($img['alt']); ?>"
+             loading="lazy">
+        <div class="masonry-grid__overlay">
+          <span class="material-symbols-outlined">zoom_in</span>
+        </div>
       </a>
       <?php endforeach; ?>
     </div>
   </div>
   <script>
   document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.js-gallery-flickity').forEach(function (el) {
-      if (typeof Flickity === 'undefined') return;
-      el.querySelectorAll('.glightbox').forEach(function (a) {
-        a.addEventListener('click', function (e) { e.preventDefault(); });
-      });
-      var flkty = new Flickity(el, {
-        wrapAround: true, contain: true, cellAlign: 'left',
-        pageDots: false, prevNextButtons: true, groupCells: 2, imagesLoaded: true,
-      });
-      if (typeof GLightbox !== 'undefined') {
-        var items = Array.from(el.querySelectorAll('.glightbox')).map(function (a) {
-          return { href: a.href, type: 'image', description: a.dataset.alt || '' };
-        });
-        var lb = GLightbox({ elements: items, loop: true, touchNavigation: true });
-        flkty.on('staticClick', function (event, pointer, cellElement, cellIndex) {
-          if (cellIndex !== undefined) lb.openAt(cellIndex);
-        });
-      }
+    if (typeof GLightbox === 'undefined') return;
+    document.querySelectorAll('.js-masonry').forEach(function (grid) {
+      var id = grid.dataset.galleryId;
+      GLightbox({ selector: '[data-glightbox*="' + id + '"]', loop: true, touchNavigation: true });
     });
   });
   </script>
