@@ -11,10 +11,18 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  position: relative;
   transition: border-color 0.2s;
 
   &:hover {
     border-color: rgba(13, 242, 70, 0.4);
+  }
+
+  // Stretched invisible link covering the whole card
+  &__link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
   }
 
   &__image {
@@ -96,17 +104,26 @@
     border-top: 1px solid var(--line);
   }
 
-  &__author {
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--text-faint);
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+
+    .badge {
+      font-size: 0.6rem;
+      padding: 0.2rem 0.5rem;
+    }
   }
 
   &__arrow {
     color: var(--primary);
     display: flex;
     align-items: center;
+    position: relative;
+    z-index: 2;
 
     .material-symbols-outlined {
       font-size: 1.25rem;

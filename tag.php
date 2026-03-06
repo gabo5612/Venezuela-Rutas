@@ -94,8 +94,8 @@ $tag_desc    = $queried_tag ? $queried_tag->description : '';
         <?php else : ?>
 
         <!-- Post normal -->
-         <a href="<?php the_permalink(); ?>" class="post-card__arrow">
-        <article class="post-card">
+        <div class="post-card" data-animate="fade-up">
+          <a href="<?php the_permalink(); ?>" class="post-card__link" aria-label="<?php the_title_attribute(); ?>"></a>
           <div class="post-card__image">
             <?php if ($thumb) : ?>
               <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>">
@@ -113,14 +113,17 @@ $tag_desc    = $queried_tag ? $queried_tag->description : '';
             <h4 class="post-card__title"><?php the_title(); ?></h4>
             <p class="post-card__excerpt"><?php echo esc_html(wp_trim_words(get_the_excerpt(), 20, '...')); ?></p>
             <div class="post-card__footer">
-              <span class="post-card__author"><?php the_author(); ?></span>
-              
+              <div class="post-card__tags">
+                <?php foreach (array_slice(wp_get_post_terms(get_the_ID(), 'post_tag'), 0, 2) as $pt) : ?>
+                  <a href="<?php echo esc_url(get_term_link($pt)); ?>" class="badge badge--outline"><?php echo esc_html($pt->name); ?></a>
+                <?php endforeach; ?>
+              </div>
+              <span class="post-card__arrow">
                 <span class="material-symbols-outlined">north_east</span>
-             
+              </span>
             </div>
           </div>
-        </article>
-        </a>
+        </div>
         <?php endif; endwhile; else : ?>
         <p style="color:var(--text-muted);padding:2rem 0;">No hay entradas con esta etiqueta.</p>
         <?php endif; ?>

@@ -1,0 +1,64 @@
+// ══════════════════════════════════════════════════════════════
+//  Entry Animation System
+//  - Hero: CSS keyframes on page load (above the fold)
+//  - Everything else: IntersectionObserver + [data-animate]
+// ══════════════════════════════════════════════════════════════
+
+// ── Keyframes ───────────────────────────────────────────────
+@keyframes anim-fade-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes anim-fade-left {
+  from { opacity: 0; transform: translateX(36px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes anim-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+// ── Scroll-triggered base ────────────────────────────────────
+[data-animate] {
+  opacity: 0;
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+
+  // Default + explicit fade-up
+  &,
+  &[data-animate="fade-up"] { transform: translateY(40px); }
+
+  // Variants
+  &[data-animate="fade-left"]  { transform: translateX(48px); }
+  &[data-animate="fade-right"] { transform: translateX(-48px); }
+  &[data-animate="scale"]      { transform: scale(0.95); }
+  &[data-animate="fade"]       { transform: none; }
+
+  &.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// ── Hero: page-load keyframe animations ──────────────────────
+// Applied directly — no IO needed (already in viewport)
+.block-hero__tip   { animation: anim-fade-up   0.55s ease 0.05s both; }
+.block-hero__title { animation: anim-fade-up   0.70s ease 0.20s both; }
+.block-hero__desc  { animation: anim-fade-up   0.65s ease 0.38s both; }
+.block-hero__cta   { animation: anim-fade-up   0.60s ease 0.52s both; }
+.block-hero__media { animation: anim-fade-left 0.80s ease 0.15s both; }
+.block-hero__stats-card { animation: anim-fade-up 0.55s ease 0.65s both; }
+
+// Stagger is handled in JS (main.js) via sibling index × 100ms
+
+// ── Material Symbols: hidden until font is ready ─────────────
+// display:none prevents ligature text from taking space before font loads.
+// Once fonts-loaded is on <body>, icons fade in smoothly.
+.material-symbols-outlined {
+  display: none;
+}
+.fonts-loaded .material-symbols-outlined {
+  display: inline;
+  animation: anim-fade-in 0.35s ease both;
+}

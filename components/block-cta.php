@@ -6,7 +6,7 @@ $cta_url  = get_sub_field('cta_url')   ?: '#newsletter';
 ?>
 
 <section class="block-cta" id="newsletter">
-  <div class="block-cta__inner">
+  <div class="block-cta__inner" data-animate="fade-up">
     <h2 class="block-cta__title"><?php echo esc_html($heading); ?></h2>
     <p class="block-cta__text"><?php echo esc_html($subtext); ?></p>
     <div class="block-cta__form">

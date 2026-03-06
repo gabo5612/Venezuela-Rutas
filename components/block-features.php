@@ -5,7 +5,7 @@ $heading = get_sub_field('heading') ?: 'Por qué Rutas';
 <section class="block-features">
   <div class="block-features__inner">
 
-    <div class="section-header">
+    <div class="section-header" data-animate="fade-up" data-animate-delay="100">
       <div>
         <div class="section-header__eyebrow">Protocolo de Misión</div>
         <h2 class="section-header__title"><?php echo esc_html($heading); ?></h2>
@@ -19,7 +19,7 @@ $heading = get_sub_field('heading') ?: 'Por qué Rutas';
         $title = get_sub_field('title') ?: '';
         $text  = get_sub_field('text')  ?: '';
       ?>
-      <div class="block-features__item">
+      <div class="block-features__item" data-animate="fade-up">
         <div class="feat-icon">
           <span class="material-symbols-outlined"><?php echo esc_html($icon); ?></span>
         </div>

@@ -70,7 +70,7 @@ $gmaps_url = get_field('has_a_google_maps_card') ?: '';
 // ── Taxonomy ─────────────────────────────────────────────────
 $cats     = get_the_category();
 $cat_name = $cats ? $cats[0]->name : '';
-$tags     = wp_get_post_terms(get_the_ID(), 'post_tag', ['fields' => 'names']);
+$tags = wp_get_post_terms(get_the_ID(), 'post_tag');
 if (is_wp_error($tags)) $tags = [];
 
 // ── Derived flags ────────────────────────────────────────────
@@ -155,7 +155,7 @@ $related_label = match ($post_type) {
 
   <!-- ══ STATS BAR ═════════════════════════════════════════════ -->
   <?php if ($has_stats) : ?>
-  <div class="page-route__stats">
+  <div class="page-route__stats" data-animate="fade-up">
     <?php if ($distance) : ?>
     <div class="page-route__stat">
       <span class="stat-icon material-symbols-outlined">distance</span>
@@ -189,7 +189,7 @@ $related_label = match ($post_type) {
 
   <!-- ══ WEATHER ════════════════════════════════════════════════ -->
   <?php if ($has_weather) : ?>
-  <div class="page-route__weather"
+  <div class="page-route__weather" data-animate="fade-up"
        data-lat="<?php echo esc_attr($weather_lat); ?>"
        data-lon="<?php echo esc_attr($weather_lon); ?>">
     <div class="weather-state weather-state--loading">
@@ -227,7 +227,7 @@ $related_label = match ($post_type) {
 
   <!-- ══ ALERT ══════════════════════════════════════════════════ -->
   <?php if ($conditions) : ?>
-  <div class="page-route__alert">
+  <div class="page-route__alert" data-animate="fade-up">
     <span class="material-symbols-outlined">warning</span>
     <?php echo esc_html($conditions); ?>
   </div>
@@ -245,7 +245,7 @@ $related_label = match ($post_type) {
         <span class="badge badge--terracotta"><?php echo esc_html($cat_name); ?></span>
       <?php endif; ?>
       <?php foreach ($tags as $tag) : ?>
-        <span class="badge badge--terracotta"><?php echo esc_html($tag); ?></span>
+        <a href="<?php echo esc_url(get_term_link($tag)); ?>" class="badge badge--terracotta"><?php echo esc_html($tag->name); ?></a>
       <?php endforeach; ?>
       <?php if ($location) : ?>
         <span style="font-size:.75rem;color:var(--text-muted);display:flex;align-items:center;gap:.3rem">
@@ -294,7 +294,7 @@ $related_label = match ($post_type) {
 
   <!-- ══ MAP + CHECKPOINTS ════════════════════════════════════ -->
   <?php if ($has_map) : ?>
-  <div id="section-map" class="page-route__map-section <?php echo !$has_checkpoints ? 'page-route__map-section--full' : ''; ?>">
+  <div id="section-map" class="page-route__map-section <?php echo !$has_checkpoints ? 'page-route__map-section--full' : ''; ?>" data-animate="fade-up">
     <div class="page-route__map-wrap" <?php echo !$has_checkpoints ? 'style="max-width:100%"' : ''; ?>>
       <div id="route-map"></div>
       <?php if ($mobile_maps_url) : ?>
@@ -414,7 +414,7 @@ $related_label = match ($post_type) {
 
   <!-- ══ RELATED ════════════════════════════════════════════════ -->
   <div class="page-route__related">
-    <div class="section-header">
+    <div class="section-header" data-animate="fade-up" data-animate-delay="100">
       <div>
         <div class="section-header__eyebrow">Continúa Explorando</div>
         <h2 class="section-header__title" style="color:var(--sand)"><?php echo esc_html($related_label); ?></h2>
@@ -445,7 +445,8 @@ $related_label = match ($post_type) {
           $r_thumb = get_the_post_thumbnail_url(null, 'medium') ?: get_field('image') ?: '';
           $r_cats    = get_the_category();
       ?>
-      <a href="<?php the_permalink(); ?>" class="post-card">
+      <div class="post-card" data-animate="fade-up">
+        <a href="<?php the_permalink(); ?>" class="post-card__link" aria-label="<?php the_title_attribute(); ?>"></a>
         <div class="post-card__image">
           <?php if ($r_thumb) : ?>
             <img src="<?php echo esc_url($r_thumb); ?>" alt="<?php the_title_attribute(); ?>">
@@ -462,13 +463,17 @@ $related_label = match ($post_type) {
           <div class="post-card__date"><?php echo get_the_date('d M Y'); ?></div>
           <h4 class="post-card__title" style="color:var(--sand)"><?php the_title(); ?></h4>
           <div class="post-card__footer">
-            <span class="post-card__author"><?php the_author(); ?></span>
+            <div class="post-card__tags">
+              <?php foreach (array_slice(wp_get_post_terms(get_the_ID(), 'post_tag'), 0, 2) as $rt) : ?>
+                <a href="<?php echo esc_url(get_term_link($rt)); ?>" class="badge badge--outline"><?php echo esc_html($rt->name); ?></a>
+              <?php endforeach; ?>
+            </div>
             <span class="post-card__arrow" style="color:var(--terracotta)">
               <span class="material-symbols-outlined">north_east</span>
             </span>
           </div>
         </div>
-      </a>
+      </div>
       <?php
         endwhile;
         wp_reset_postdata();

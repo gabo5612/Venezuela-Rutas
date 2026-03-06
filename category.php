@@ -70,7 +70,7 @@ if ($first_q->have_posts()) { $first_q->the_post(); $hero_img = get_the_post_thu
         if ($is_first) : $is_first = false; ?>
 
         <!-- Post destacado (spans 2 cols) -->
-        <article class="post-card--featured">
+        <article class="post-card--featured" data-animate="scale">
           <div class="featured-bg" <?php if ($thumb) echo 'style="background-image:url(\'' . esc_url($thumb) . '\')"'; ?>></div>
           <div class="featured-overlay"></div>
           <div class="featured-tags">
@@ -96,7 +96,8 @@ if ($first_q->have_posts()) { $first_q->the_post(); $hero_img = get_the_post_thu
         <?php else : ?>
 
         <!-- Post normal -->
-        <article class="post-card">
+        <div class="post-card" data-animate="fade-up">
+          <a href="<?php the_permalink(); ?>" class="post-card__link" aria-label="<?php the_title_attribute(); ?>"></a>
           <div class="post-card__image">
             <?php if ($thumb) : ?>
               <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>">
@@ -114,13 +115,17 @@ if ($first_q->have_posts()) { $first_q->the_post(); $hero_img = get_the_post_thu
             <h4 class="post-card__title"><?php the_title(); ?></h4>
             <p class="post-card__excerpt"><?php echo esc_html(wp_trim_words(get_the_excerpt(), 20, '...')); ?></p>
             <div class="post-card__footer">
-              <span class="post-card__author"><?php the_author(); ?></span>
-              <a href="<?php the_permalink(); ?>" class="post-card__arrow">
+              <div class="post-card__tags">
+                <?php foreach (array_slice(wp_get_post_terms(get_the_ID(), 'post_tag'), 0, 2) as $pt) : ?>
+                  <a href="<?php echo esc_url(get_term_link($pt)); ?>" class="badge badge--outline"><?php echo esc_html($pt->name); ?></a>
+                <?php endforeach; ?>
+              </div>
+              <span class="post-card__arrow">
                 <span class="material-symbols-outlined">north_east</span>
-              </a>
+              </span>
             </div>
           </div>
-        </article>
+        </div>
 
         <?php endif; endwhile; endif; ?>
     </div>

@@ -82,6 +82,35 @@ window.openGalleryModal = function (items, startIndex) {
   render(startIndex || 0);
 };
 
+// ── Material Symbols: fade in once font is ready ────────────
+document.fonts.ready.then(function () {
+  document.body.classList.add('fonts-loaded');
+});
+
+// ── Scroll entry animations ──────────────────────────────────
+// Delayed init: ensures browser paints opacity:0 before observing.
+// Stagger: calculated from sibling index in JS (not CSS vars).
+setTimeout(function () {
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      var el    = entry.target;
+      var base  = parseInt(el.dataset.animateDelay || 0, 10);
+
+      // Auto-stagger: find position among [data-animate] siblings
+      var parent   = el.parentElement;
+      var siblings = parent ? Array.from(parent.querySelectorAll(':scope > [data-animate]')) : [];
+      var idx      = siblings.length > 1 ? siblings.indexOf(el) : 0;
+      var delay    = base + idx * 100;
+
+      setTimeout(function () { el.classList.add('is-visible'); }, delay);
+      io.unobserve(el);
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('[data-animate]').forEach(function (el) { io.observe(el); });
+}, 80);
+
 // ── Cache Material Symbols CSS in localStorage (eliminates layout shift on repeat visits) ──
 (function () {
   if (localStorage.getItem('vr_icons')) return;

@@ -15,7 +15,7 @@ $q = new WP_Query([
 <section class="block-posts">
   <div class="block-posts__inner">
 
-    <div class="section-header">
+    <div class="section-header" data-animate="fade-up" data-animate-delay="100">
       <div>
         <div class="section-header__eyebrow">Explorar</div>
         <h2 class="section-header__title"><?php echo esc_html($block_title); ?></h2>
@@ -30,7 +30,8 @@ $q = new WP_Query([
         $thumb = get_the_post_thumbnail_url(null, 'large');
         $cats  = get_the_category();
       ?>
-      <a href="<?php the_permalink(); ?>" class="post-card">
+      <div class="post-card" data-animate="fade-up">
+        <a href="<?php the_permalink(); ?>" class="post-card__link" aria-label="<?php the_title_attribute(); ?>"></a>
         <div class="post-card__image">
           <?php if ($thumb) : ?>
             <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>">
@@ -52,11 +53,15 @@ $q = new WP_Query([
           <h4 class="post-card__title"><?php the_title(); ?></h4>
           <p class="post-card__excerpt"><?php echo esc_html(wp_trim_words(get_the_excerpt(), 20, '...')); ?></p>
           <div class="post-card__footer">
-            <span class="post-card__author"><?php the_author(); ?></span>
+            <div class="post-card__tags">
+              <?php foreach (array_slice(wp_get_post_terms(get_the_ID(), 'post_tag'), 0, 2) as $pt) : ?>
+                <a href="<?php echo esc_url(get_term_link($pt)); ?>" class="badge badge--outline"><?php echo esc_html($pt->name); ?></a>
+              <?php endforeach; ?>
+            </div>
             <span class="post-card__arrow"><span class="material-symbols-outlined">north_east</span></span>
           </div>
         </div>
-      </a>
+      </div>
       <?php endwhile; wp_reset_postdata(); endif; ?>
     </div>
 

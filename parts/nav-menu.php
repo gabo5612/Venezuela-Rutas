@@ -18,7 +18,7 @@
     ?>
 
     <!-- Actions -->
-    <div class="site-nav__actions">
+    <div class="site-nav__actions" >
 
       <?php if ( is_single() ) : ?>
         <button class="site-nav__share"
@@ -28,7 +28,7 @@
         </button>
       <?php endif; ?>
 
-      <a href="<?php echo esc_url( home_url('/') ); ?>#newsletter" class="site-nav__cta">
+      <a href="<?php echo esc_url( home_url('/') ); ?>#newsletter" class="site-nav__cta" data-animate="fade-up" data-animate-delay="200">
         <span class="material-symbols-outlined">explore</span>
         Explorar
       </a>

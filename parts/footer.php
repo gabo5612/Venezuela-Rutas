@@ -3,7 +3,7 @@
   <div class="site-footer__top">
 
     <!-- Brand -->
-    <div class="site-footer__brand">
+    <div class="site-footer__brand" data-animate="fade-up">
       <a href="<?php echo esc_url( home_url('/') ); ?>" class="brand-logo">
         <span class="material-symbols-outlined">terrain</span>
         <span class="brand-name"><?php echo esc_html( get_bloginfo('name') ); ?></span>
@@ -19,7 +19,7 @@
     </div>
 
     <!-- Rutas -->
-    <div class="site-footer__col">
+    <div class="site-footer__col" data-animate="fade-up">
       <h4>Rutas</h4>
       <nav class="footer-nav">
         <?php wp_nav_menu(['theme_location' => 'menu', 'container' => false, 'fallback_cb' => false]); ?>
@@ -27,7 +27,7 @@
     </div>
 
     <!-- Comunidad -->
-    <div class="site-footer__col">
+    <div class="site-footer__col" data-animate="fade-up">
       <h4>Comunidad</h4>
       <nav class="footer-nav">
         <?php wp_nav_menu(['theme_location' => 'footer', 'container' => false, 'fallback_cb' => false]); ?>
@@ -35,7 +35,7 @@
     </div>
 
     <!-- Recursos -->
-    <div class="site-footer__col">
+    <div class="site-footer__col" data-animate="fade-up">
       <h4>Recursos</h4>
       <ul>
         <li><a href="#">Guía de Equipo</a></li>
