@@ -82,6 +82,15 @@ window.openGalleryModal = function (items, startIndex) {
   render(startIndex || 0);
 };
 
+// ── Cache Material Symbols CSS in localStorage (eliminates layout shift on repeat visits) ──
+(function () {
+  if (localStorage.getItem('vr_icons')) return;
+  fetch('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block', { mode: 'cors' })
+    .then(function (r) { return r.text(); })
+    .then(function (css) { try { localStorage.setItem('vr_icons', css); } catch (e) {} })
+    .catch(function () {});
+}());
+
 document.addEventListener("DOMContentLoaded", function () {
   const toggleBtn = document.getElementById("darkModeToggle");
   const iconDark = document.getElementById("darkModeIcon");
