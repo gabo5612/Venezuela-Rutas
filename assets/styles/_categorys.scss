@@ -1,0 +1,23 @@
+/* ── Category Page ──────────────────────────────────────
+   BEM: .page-category
+   Dark forest background, filter pills, posts grid
+────────────────────────────────────────────────────── */
+
+.page-category {
+  background: var(--bg-forest);
+  min-height: 100vh;
+
+  &__filters {
+    width: 93%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2.5rem 0;
+  }
+
+  &__grid {
+    width: 93%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-bottom: 6rem;
+  }
+}

@@ -1,0 +1,1770 @@
+[
+    {
+        "key": "group_69986f01ac718",
+        "title": "Aside",
+        "fields": [
+            {
+                "key": "field_69986f0139753",
+                "label": "Social Title",
+                "name": "aside_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_69986f4739754",
+                "label": "Social",
+                "name": "social",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "table",
+                "pagination": 0,
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "Add Row",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_69986f5039755",
+                        "label": "Icon",
+                        "name": "icon",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "Material Symbol name (ej: photo_camera)",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "placeholder": "photo_camera",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_69986f4739754"
+                    },
+                    {
+                        "key": "field_69986f5b39756",
+                        "label": "URL",
+                        "name": "url",
+                        "aria-label": "",
+                        "type": "url",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "allow_in_bindings": 0,
+                        "placeholder": "",
+                        "parent_repeater": "field_69986f4739754"
+                    },
+                    {
+                        "key": "field_69986f6339757",
+                        "label": "Social Network",
+                        "name": "social_network",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_69986f4739754"
+                    },
+                    {
+                        "key": "field_69986f6b39758",
+                        "label": "Style",
+                        "name": "style",
+                        "aria-label": "",
+                        "type": "select",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "choices": {
+                            "1": "Style 1",
+                            "2": "Style 2",
+                            "3": "Style 3",
+                            "4": "Style 4"
+                        },
+                        "default_value": 1,
+                        "return_format": "value",
+                        "multiple": 0,
+                        "allow_null": 0,
+                        "allow_in_bindings": 0,
+                        "ui": 0,
+                        "ajax": 0,
+                        "placeholder": "",
+                        "parent_repeater": "field_69986f4739754"
+                    }
+                ]
+            },
+            {
+                "key": "field_69986fb9efc20",
+                "label": "Trending title",
+                "name": "trending_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_69986fc8efc21",
+                "label": "Trending",
+                "name": "trending",
+                "aria-label": "",
+                "type": "post_object",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "post_type": [
+                    "post"
+                ],
+                "post_status": [
+                    "publish"
+                ],
+                "taxonomy": "",
+                "return_format": "object",
+                "multiple": 1,
+                "allow_null": 0,
+                "allow_in_bindings": 0,
+                "bidirectional": 0,
+                "ui": 1,
+                "bidirectional_target": []
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "options_page",
+                    "operator": "==",
+                    "value": "site-settings"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0
+    },
+    {
+        "key": "group_68098c0c767b1",
+        "title": "Blocks",
+        "fields": [
+            {
+                "key": "field_68098c0c6068c",
+                "label": "Blocks",
+                "name": "blocks",
+                "aria-label": "",
+                "type": "flexible_content",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layouts": {
+                    "layout_68098c13ba975": {
+                        "key": "layout_68098c13ba975",
+                        "name": "hero",
+                        "label": "Hero",
+                        "display": "block",
+                        "sub_fields": [
+                            {
+                                "key": "field_hero_slides00001",
+                                "label": "Slides",
+                                "name": "slides",
+                                "aria-label": "",
+                                "type": "repeater",
+                                "instructions": "Agrega uno o mas slides. Si hay mas de uno se activa el slider automaticamente.",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "layout": "block",
+                                "pagination": 0,
+                                "min": 0,
+                                "max": 0,
+                                "collapsed": "",
+                                "button_label": "Agregar slide",
+                                "rows_per_page": 20,
+                                "sub_fields": [
+                                    {
+                                        "key": "field_hero_slide_type01",
+                                        "label": "Type of card",
+                                        "name": "type",
+                                        "aria-label": "",
+                                        "type": "select",
+                                        "instructions": "",
+                                        "required": 0,
+                                        "conditional_logic": 0,
+                                        "wrapper": {
+                                            "width": "",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "choices": {
+                                            "ruta": "Ruta del dia",
+                                            "poi": "Punto de interes",
+                                            "post": "Post del dia"
+                                        },
+                                        "default_value": "ruta",
+                                        "return_format": "label",
+                                        "multiple": 0,
+                                        "allow_null": 1,
+                                        "allow_in_bindings": 0,
+                                        "ui": 0,
+                                        "ajax": 0,
+                                        "placeholder": "",
+                                        "parent_repeater": "field_hero_slides00001"
+                                    },
+                                    {
+                                        "key": "field_hero_slide_title1",
+                                        "label": "Title",
+                                        "name": "title",
+                                        "aria-label": "",
+                                        "type": "textarea",
+                                        "instructions": "",
+                                        "required": 0,
+                                        "conditional_logic": 0,
+                                        "wrapper": {
+                                            "width": "",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "default_value": "",
+                                        "maxlength": "",
+                                        "allow_in_bindings": 1,
+                                        "rows": "",
+                                        "placeholder": "",
+                                        "new_lines": "",
+                                        "parent_repeater": "field_hero_slides00001"
+                                    },
+                                    {
+                                        "key": "field_hero_slide_desc01",
+                                        "label": "Description",
+                                        "name": "description",
+                                        "aria-label": "",
+                                        "type": "textarea",
+                                        "instructions": "",
+                                        "required": 0,
+                                        "conditional_logic": 0,
+                                        "wrapper": {
+                                            "width": "",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "default_value": "",
+                                        "maxlength": "",
+                                        "allow_in_bindings": 1,
+                                        "rows": "",
+                                        "placeholder": "",
+                                        "new_lines": "",
+                                        "parent_repeater": "field_hero_slides00001"
+                                    },
+                                    {
+                                        "key": "field_hero_slide_cta001",
+                                        "label": "CTA",
+                                        "name": "cta",
+                                        "aria-label": "",
+                                        "type": "text",
+                                        "instructions": "Texto del boton (dejar vacio para ocultarlo)",
+                                        "required": 0,
+                                        "conditional_logic": 0,
+                                        "wrapper": {
+                                            "width": "",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "default_value": "",
+                                        "maxlength": "",
+                                        "allow_in_bindings": 0,
+                                        "placeholder": "",
+                                        "prepend": "",
+                                        "append": "",
+                                        "parent_repeater": "field_hero_slides00001"
+                                    },
+                                    {
+                                        "key": "field_hero_slide_ctacol",
+                                        "label": "CTA Color",
+                                        "name": "cta_color",
+                                        "aria-label": "",
+                                        "type": "select",
+                                        "instructions": "",
+                                        "required": 0,
+                                        "conditional_logic": [
+                                            [
+                                                {
+                                                    "field": "field_hero_slide_cta001",
+                                                    "operator": "!=empty"
+                                                }
+                                            ]
+                                        ],
+                                        "wrapper": {
+                                            "width": "",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "choices": {
+                                            "primary": "Primary (verde electrico)",
+                                            "outline": "Outline",
+                                            "terracotta": "Terracotta"
+                                        },
+                                        "default_value": "primary",
+                                        "return_format": "value",
+                                        "multiple": 0,
+                                        "allow_null": 0,
+                                        "allow_in_bindings": 0,
+                                        "ui": 0,
+                                        "ajax": 0,
+                                        "placeholder": "",
+                                        "parent_repeater": "field_hero_slides00001"
+                                    },
+                                    {
+                                        "key": "field_hero_slide_ctalin",
+                                        "label": "CTA Link",
+                                        "name": "cta_link",
+                                        "aria-label": "",
+                                        "type": "url",
+                                        "instructions": "",
+                                        "required": 0,
+                                        "conditional_logic": [
+                                            [
+                                                {
+                                                    "field": "field_hero_slide_cta001",
+                                                    "operator": "!=empty"
+                                                }
+                                            ]
+                                        ],
+                                        "wrapper": {
+                                            "width": "",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "default_value": "",
+                                        "allow_in_bindings": 0,
+                                        "placeholder": "",
+                                        "parent_repeater": "field_hero_slides00001"
+                                    },
+                                    {
+                                        "key": "field_hero_slide_img001",
+                                        "label": "Hero Image",
+                                        "name": "hero_image",
+                                        "aria-label": "",
+                                        "type": "image",
+                                        "instructions": "",
+                                        "required": 0,
+                                        "conditional_logic": 0,
+                                        "wrapper": {
+                                            "width": "",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "return_format": "url",
+                                        "library": "all",
+                                        "min_width": "",
+                                        "min_height": "",
+                                        "min_size": "",
+                                        "max_width": "",
+                                        "max_height": "",
+                                        "max_size": "",
+                                        "mime_types": "",
+                                        "allow_in_bindings": 0,
+                                        "preview_size": "medium",
+                                        "parent_repeater": "field_hero_slides00001"
+                                    },
+                                    {
+                                        "key": "field_hero_slide_vid001",
+                                        "label": "Hero Video (URL)",
+                                        "name": "hero_video",
+                                        "aria-label": "",
+                                        "type": "url",
+                                        "instructions": "URL del video MP4 para reproducir en loop. Si se rellena, tiene prioridad sobre la imagen.",
+                                        "required": 0,
+                                        "conditional_logic": 0,
+                                        "wrapper": {
+                                            "width": "",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "default_value": "",
+                                        "allow_in_bindings": 0,
+                                        "placeholder": "https:\/\/...",
+                                        "parent_repeater": "field_hero_slides00001"
+                                    },
+                                    {
+                                        "key": "field_hero_slide_hilite",
+                                        "label": "Title Highlight (palabra en verde)",
+                                        "name": "title_highlight",
+                                        "aria-label": "",
+                                        "type": "text",
+                                        "instructions": "Última palabra o línea del título que aparece en verde. Se muestra debajo del título principal.",
+                                        "required": 0,
+                                        "conditional_logic": 0,
+                                        "wrapper": {
+                                            "width": "",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "default_value": "",
+                                        "maxlength": "",
+                                        "allow_in_bindings": 0,
+                                        "placeholder": "XTREME",
+                                        "prepend": "",
+                                        "append": "",
+                                        "parent_repeater": "field_hero_slides00001"
+                                    },
+                                    {
+                                        "key": "field_hero_slide_dist0",
+                                        "label": "Stat — Distancia",
+                                        "name": "hero_distance",
+                                        "aria-label": "",
+                                        "type": "text",
+                                        "instructions": "Valor de distancia para la tarjeta de stats (ej: 18km).",
+                                        "required": 0,
+                                        "conditional_logic": 0,
+                                        "wrapper": {
+                                            "width": "50",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "default_value": "",
+                                        "maxlength": "",
+                                        "allow_in_bindings": 0,
+                                        "placeholder": "18km",
+                                        "prepend": "",
+                                        "append": "",
+                                        "parent_repeater": "field_hero_slides00001"
+                                    },
+                                    {
+                                        "key": "field_hero_slide_alti0",
+                                        "label": "Stat — Altitud",
+                                        "name": "hero_altitude",
+                                        "aria-label": "",
+                                        "type": "text",
+                                        "instructions": "Valor de altitud para la tarjeta de stats (ej: 2.1k).",
+                                        "required": 0,
+                                        "conditional_logic": 0,
+                                        "wrapper": {
+                                            "width": "50",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "default_value": "",
+                                        "maxlength": "",
+                                        "allow_in_bindings": 0,
+                                        "placeholder": "2.1k",
+                                        "prepend": "",
+                                        "append": "",
+                                        "parent_repeater": "field_hero_slides00001"
+                                    }
+                                ]
+                            }
+                        ],
+                        "min": "",
+                        "max": ""
+                    },
+                    "layout_699da7eba277b": {
+                        "key": "layout_699da7eba277b",
+                        "name": "gps",
+                        "label": "GPS",
+                        "display": "block",
+                        "sub_fields": [],
+                        "min": "",
+                        "max": ""
+                    },
+                    "layout_680991c6b30d2": {
+                        "key": "layout_680991c6b30d2",
+                        "name": "content",
+                        "label": "Content",
+                        "display": "block",
+                        "sub_fields": [
+                            {
+                                "key": "field_680991cdb30d4",
+                                "label": "Full content",
+                                "name": "full_content",
+                                "aria-label": "",
+                                "type": "wysiwyg",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "allow_in_bindings": 0,
+                                "tabs": "all",
+                                "toolbar": "full",
+                                "media_upload": 1,
+                                "delay": 0
+                            }
+                        ],
+                        "min": "",
+                        "max": ""
+                    },
+                    "layout_698e8a355423d": {
+                        "key": "layout_698e8a355423d",
+                        "name": "posts",
+                        "label": "Posts",
+                        "display": "block",
+                        "sub_fields": [
+                            {
+                                "key": "field_6997a68d52ce3",
+                                "label": "Posts title",
+                                "name": "post_title",
+                                "aria-label": "",
+                                "type": "text",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "maxlength": "",
+                                "allow_in_bindings": 0,
+                                "placeholder": "Ãltimas Rutas",
+                                "prepend": "",
+                                "append": ""
+                            },
+                            {
+                                "key": "field_699da8d51567d",
+                                "label": "Post Type",
+                                "name": "post_type",
+                                "aria-label": "",
+                                "type": "select",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "choices": {
+                                    "post": "Post",
+                                    "routes": "Routes",
+                                    "point-of-interest": "POI"
+                                },
+                                "default_value": "post",
+                                "return_format": "value",
+                                "multiple": 0,
+                                "allow_null": 0,
+                                "allow_in_bindings": 0,
+                                "ui": 0,
+                                "ajax": 0,
+                                "placeholder": ""
+                            },
+                            {
+                                "key": "field_6a1bc9f200001",
+                                "label": "Posts per page",
+                                "name": "posts_per_page",
+                                "aria-label": "",
+                                "type": "number",
+                                "instructions": "CuÃ¡ntos posts mostrar (por defecto 4)",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": 4,
+                                "min": 1,
+                                "max": 12,
+                                "step": 1,
+                                "allow_in_bindings": 0,
+                                "placeholder": "",
+                                "prepend": "",
+                                "append": ""
+                            }
+                        ],
+                        "min": "",
+                        "max": ""
+                    },
+                    "layout_6999f16b15171": {
+                        "key": "layout_6999f16b15171",
+                        "name": "categories",
+                        "label": "Categories",
+                        "display": "block",
+                        "sub_fields": [],
+                        "min": "",
+                        "max": ""
+                    },
+                    "layout_6a1bc9f200010": {
+                        "key": "layout_6a1bc9f200010",
+                        "name": "cta",
+                        "label": "CTA \/ Newsletter",
+                        "display": "block",
+                        "sub_fields": [
+                            {
+                                "key": "field_6a1bc9f200011",
+                                "label": "Heading",
+                                "name": "heading",
+                                "aria-label": "",
+                                "type": "text",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "Â¿Tienes una Ruta?",
+                                "maxlength": "",
+                                "allow_in_bindings": 0,
+                                "placeholder": "",
+                                "prepend": "",
+                                "append": ""
+                            },
+                            {
+                                "key": "field_6a1bc9f200012",
+                                "label": "Subtext",
+                                "name": "subtext",
+                                "aria-label": "",
+                                "type": "textarea",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "Comparte tu aventura con la comunidad venezolana.",
+                                "maxlength": "",
+                                "allow_in_bindings": 0,
+                                "placeholder": "",
+                                "new_lines": "br",
+                                "rows": 3
+                            },
+                            {
+                                "key": "field_6a1bc9f200013",
+                                "label": "CTA Label",
+                                "name": "cta_label",
+                                "aria-label": "",
+                                "type": "text",
+                                "instructions": "Texto del botÃ³n",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "Enviar Ruta",
+                                "maxlength": "",
+                                "allow_in_bindings": 0,
+                                "placeholder": "",
+                                "prepend": "",
+                                "append": ""
+                            },
+                            {
+                                "key": "field_6a1bc9f200014",
+                                "label": "CTA URL",
+                                "name": "cta_url",
+                                "aria-label": "",
+                                "type": "url",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "allow_in_bindings": 0,
+                                "placeholder": "#newsletter"
+                            }
+                        ],
+                        "min": "",
+                        "max": ""
+                    },
+                    "layout_6a1bc9f000020": {
+                        "key": "layout_6a1bc9f000020",
+                        "name": "features",
+                        "label": "Features \/ 3 columnas",
+                        "display": "block",
+                        "sub_fields": [
+                            {
+                                "key": "field_6a1bc9f000021",
+                                "label": "Heading",
+                                "name": "heading",
+                                "aria-label": "",
+                                "type": "text",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "Por quÃ© Rutas",
+                                "maxlength": "",
+                                "allow_in_bindings": 0,
+                                "placeholder": "",
+                                "prepend": "",
+                                "append": ""
+                            },
+                            {
+                                "key": "field_6a1bc9f000022",
+                                "label": "Items",
+                                "name": "items",
+                                "aria-label": "",
+                                "type": "repeater",
+                                "instructions": "MÃ¡ximo 3 items recomendado",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "layout": "block",
+                                "pagination": 0,
+                                "min": 0,
+                                "max": 6,
+                                "collapsed": "",
+                                "button_label": "Agregar Ã­tem",
+                                "rows_per_page": 20,
+                                "sub_fields": [
+                                    {
+                                        "key": "field_6a1bc9f000023",
+                                        "label": "Icon",
+                                        "name": "icon",
+                                        "aria-label": "",
+                                        "type": "text",
+                                        "instructions": "Nombre del Material Symbol (ej: terrain, explore, map)",
+                                        "required": 0,
+                                        "conditional_logic": 0,
+                                        "wrapper": {
+                                            "width": "",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "default_value": "terrain",
+                                        "maxlength": "",
+                                        "allow_in_bindings": 0,
+                                        "placeholder": "terrain",
+                                        "prepend": "",
+                                        "append": "",
+                                        "parent_repeater": "field_6a1bc9f000022"
+                                    },
+                                    {
+                                        "key": "field_6a1bc9f000024",
+                                        "label": "Title",
+                                        "name": "title",
+                                        "aria-label": "",
+                                        "type": "text",
+                                        "instructions": "",
+                                        "required": 0,
+                                        "conditional_logic": 0,
+                                        "wrapper": {
+                                            "width": "",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "default_value": "",
+                                        "maxlength": "",
+                                        "allow_in_bindings": 0,
+                                        "placeholder": "",
+                                        "prepend": "",
+                                        "append": "",
+                                        "parent_repeater": "field_6a1bc9f000022"
+                                    },
+                                    {
+                                        "key": "field_6a1bc9f000025",
+                                        "label": "Text",
+                                        "name": "text",
+                                        "aria-label": "",
+                                        "type": "textarea",
+                                        "instructions": "",
+                                        "required": 0,
+                                        "conditional_logic": 0,
+                                        "wrapper": {
+                                            "width": "",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "default_value": "",
+                                        "maxlength": "",
+                                        "allow_in_bindings": 0,
+                                        "placeholder": "",
+                                        "new_lines": "br",
+                                        "rows": 3,
+                                        "parent_repeater": "field_6a1bc9f000022"
+                                    }
+                                ]
+                            }
+                        ],
+                        "min": "",
+                        "max": ""
+                    }
+                },
+                "min": "",
+                "max": "",
+                "button_label": "Add Block"
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "point-of-interest"
+                }
+            ],
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "post"
+                }
+            ],
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "page"
+                }
+            ],
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "routes"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0
+    },
+    {
+        "key": "group_6999f1d1004ee",
+        "title": "Categories",
+        "fields": [
+            {
+                "key": "field_6999f538c26ef",
+                "label": "Title",
+                "name": "cat_title",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_6999f1d1cdcbd",
+                "label": "Categories",
+                "name": "categories",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "row",
+                "pagination": 0,
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "Add Row",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_6999f2b97181c",
+                        "label": "Categorie URL",
+                        "name": "categorie",
+                        "aria-label": "",
+                        "type": "link",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "array",
+                        "allow_in_bindings": 0,
+                        "parent_repeater": "field_6999f1d1cdcbd"
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "options_page",
+                    "operator": "==",
+                    "value": "site-settings"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0
+    },
+    {
+        "key": "group_681bff743868e",
+        "title": "Point of interest",
+        "fields": [
+            {
+                "key": "field_68278d44934fb",
+                "label": "Has a Google Maps Card?",
+                "name": "has_a_google_maps_card",
+                "aria-label": "",
+                "type": "link",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "url",
+                "allow_in_bindings": 0
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "post"
+                }
+            ],
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "routes"
+                }
+            ],
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "point-of-interest"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0
+    },
+    {
+        "key": "group_699b2f3bdb329",
+        "title": "Post",
+        "fields": [
+            {
+                "key": "field_699b2f3cc17fe",
+                "label": "Embed",
+                "name": "embed",
+                "aria-label": "",
+                "type": "oembed",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "width": "",
+                "height": "",
+                "allow_in_bindings": 0
+            },
+            {
+                "key": "field_699b2f50c17ff",
+                "label": "Video Featured",
+                "name": "video_featured",
+                "aria-label": "",
+                "type": "file",
+                "instructions": "Videos in 16:9",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "url",
+                "library": "all",
+                "min_size": "",
+                "max_size": "",
+                "mime_types": "",
+                "allow_in_bindings": 1
+            },
+            {
+                "key": "field_6a2route00001",
+                "label": "Distancia",
+                "name": "distance",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Ej: 12 km",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "25",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "12 km",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_6a2route00002",
+                "label": "Elevación",
+                "name": "elevation",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Ej: 1200 m",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "25",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "1200 m",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_6a2route00003",
+                "label": "Dificultad",
+                "name": "difficulty",
+                "aria-label": "",
+                "type": "select",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "25",
+                    "class": "",
+                    "id": ""
+                },
+                "choices": {
+                    "Fácil": "Fácil",
+                    "Moderado": "Moderado",
+                    "Difí­cil": "Difí­cil",
+                    "Extremo": "Extremo"
+                },
+                "default_value": false,
+                "return_format": "value",
+                "multiple": 0,
+                "allow_null": 1,
+                "allow_in_bindings": 0,
+                "ui": 0,
+                "ajax": 0,
+                "placeholder": ""
+            },
+            {
+                "key": "field_6a2route00004",
+                "label": "Tiempo estimado",
+                "name": "time",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Ej: 4-6 h",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "25",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "4-6 h",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_6a2route00005",
+                "label": "Latitud",
+                "name": "latitude",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Coordenada decimal. Ej: 10.4806",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "33",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "10.4806",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_6a2route00006",
+                "label": "Longitud",
+                "name": "longitude",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Coordenada decimal. Ej: -66.9036",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "33",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "-66.9036",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_6a2route00007",
+                "label": "Ubicación",
+                "name": "location",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Nombre del lugar. Ej: Parque Nacional El Ãvila, Caracas",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "34",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "Parque Nacional El Ãvila",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_6a2route00008",
+                "label": "Alerta de condiciones",
+                "name": "conditions_alert",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "Mensaje de advertencia que aparece en banner rojo. Dejar vacÃ­o para ocultarlo.",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "Ej: Acceso restringido en Ã©poca de lluvia. Consultar condiciones antes de partir.",
+                "new_lines": "br",
+                "rows": 3
+            },
+            {
+                "key": "field_6a2route00009",
+                "label": "Checkpoints",
+                "name": "checkpoints",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "Puntos de referencia a lo largo de la ruta",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "block",
+                "pagination": 0,
+                "min": 0,
+                "max": 0,
+                "collapsed": "field_6a2route00009a",
+                "button_label": "Agregar Checkpoint",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_69a5fb89a2926",
+                        "label": "POI",
+                        "name": "poi",
+                        "aria-label": "",
+                        "type": "post_object",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "post_type": [
+                            "point-of-interest"
+                        ],
+                        "post_status": [
+                            "publish"
+                        ],
+                        "taxonomy": "",
+                        "return_format": "object",
+                        "multiple": 0,
+                        "allow_null": 0,
+                        "allow_in_bindings": 0,
+                        "bidirectional": 0,
+                        "ui": 1,
+                        "bidirectional_target": [],
+                        "parent_repeater": "field_6a2route00009"
+                    }
+                ]
+            },
+            {
+                "key": "field_6a2route00010",
+                "label": "Galerí­a",
+                "name": "gallery",
+                "aria-label": "",
+                "type": "gallery",
+                "instructions": "Fotos de la ruta. Se muestran en grilla en la pÃ¡gina del post.",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "array",
+                "library": "all",
+                "min": "",
+                "max": "",
+                "min_width": "",
+                "min_height": "",
+                "min_size": "",
+                "max_width": "",
+                "max_height": "",
+                "max_size": "",
+                "mime_types": "",
+                "insert": "append",
+                "preview_size": "medium"
+            },
+            {
+                "key": "field_69aa0fe6f13a9",
+                "label": "Blog entry",
+                "name": "blog_entry",
+                "aria-label": "",
+                "type": "post_object",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "post_type": [
+                    "post"
+                ],
+                "post_status": [
+                    "publish"
+                ],
+                "taxonomy": "",
+                "return_format": "object",
+                "multiple": 0,
+                "allow_null": 0,
+                "allow_in_bindings": 0,
+                "bidirectional": 0,
+                "ui": 1,
+                "bidirectional_target": []
+            },
+            {
+                "key": "field_69aa1004291af",
+                "label": "Image",
+                "name": "image",
+                "aria-label": "",
+                "type": "image",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "url",
+                "library": "all",
+                "min_width": "",
+                "min_height": "",
+                "min_size": "",
+                "max_width": "",
+                "max_height": "",
+                "max_size": "",
+                "mime_types": "",
+                "allow_in_bindings": 0,
+                "preview_size": "medium"
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "post"
+                }
+            ],
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "routes"
+                }
+            ],
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "point-of-interest"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0
+    },
+    {
+        "key": "group_6809843001d05",
+        "title": "Routes",
+        "fields": [
+            {
+                "key": "field_6810040418f06",
+                "label": "Points",
+                "name": "points",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "block",
+                "pagination": 1,
+                "rows_per_page": 2,
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "Add Row",
+                "sub_fields": [
+                    {
+                        "key": "field_6810040f18f07",
+                        "label": "Latitude",
+                        "name": "latitude",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_6810040418f06"
+                    },
+                    {
+                        "key": "field_6810041918f08",
+                        "label": "Longitude",
+                        "name": "longitude",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_6810040418f06"
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "post"
+                }
+            ],
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "routes"
+                }
+            ],
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "point-of-interest"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0
+    },
+    {
+        "key": "post_type_681bf7cd4eeeb",
+        "title": "Point of interest",
+        "menu_order": 0,
+        "active": true,
+        "post_type": "point-of-interest",
+        "advanced_configuration": true,
+        "import_source": "",
+        "import_date": "",
+        "labels": {
+            "name": "Point of interest",
+            "singular_name": "Point of interest",
+            "menu_name": "Point of interes",
+            "all_items": "All Point of interes",
+            "edit_item": "Edit Point of interest",
+            "view_item": "View Point of interest",
+            "view_items": "View Point of interes",
+            "add_new_item": "Add New Point of interest",
+            "add_new": "Add New Point of interest",
+            "new_item": "New Point of interest",
+            "parent_item_colon": "Parent Point of interest:",
+            "search_items": "Search Point of interes",
+            "not_found": "No point of interes found",
+            "not_found_in_trash": "No point of interes found in Trash",
+            "archives": "Point of interest Archives",
+            "attributes": "Point of interest Attributes",
+            "featured_image": "",
+            "set_featured_image": "",
+            "remove_featured_image": "",
+            "use_featured_image": "",
+            "insert_into_item": "Insert into point of interest",
+            "uploaded_to_this_item": "Uploaded to this point of interest",
+            "filter_items_list": "Filter point of interes list",
+            "filter_by_date": "Filter point of interes by date",
+            "items_list_navigation": "Point of interes list navigation",
+            "items_list": "Point of interes list",
+            "item_published": "Point of interest published.",
+            "item_published_privately": "Point of interest published privately.",
+            "item_reverted_to_draft": "Point of interest reverted to draft.",
+            "item_scheduled": "Point of interest scheduled.",
+            "item_updated": "Point of interest updated.",
+            "item_link": "Point of interest Link",
+            "item_link_description": "A link to a point of interest."
+        },
+        "description": "",
+        "public": true,
+        "hierarchical": false,
+        "exclude_from_search": false,
+        "publicly_queryable": true,
+        "show_ui": true,
+        "show_in_menu": true,
+        "admin_menu_parent": "",
+        "show_in_admin_bar": true,
+        "show_in_nav_menus": true,
+        "show_in_rest": true,
+        "rest_base": "",
+        "rest_namespace": "wp\/v2",
+        "rest_controller_class": "WP_REST_Posts_Controller",
+        "menu_position": "",
+        "menu_icon": {
+            "type": "dashicons",
+            "value": "dashicons-admin-post"
+        },
+        "rename_capabilities": false,
+        "singular_capability_name": "post",
+        "plural_capability_name": "posts",
+        "supports": [
+            "title",
+            "editor",
+            "thumbnail",
+            "custom-fields"
+        ],
+        "taxonomies": [
+            "category",
+            "post_tag"
+        ],
+        "has_archive": true,
+        "has_archive_slug": "poi",
+        "rewrite": {
+            "permalink_rewrite": "post_type_key",
+            "with_front": "1",
+            "feeds": "0",
+            "pages": "1"
+        },
+        "query_var": "post_type_key",
+        "query_var_name": "",
+        "can_export": true,
+        "delete_with_user": false,
+        "register_meta_box_cb": "",
+        "enter_title_here": ""
+    },
+    {
+        "key": "post_type_680983cf94e59",
+        "title": "Routes",
+        "menu_order": 0,
+        "active": true,
+        "post_type": "routes",
+        "advanced_configuration": true,
+        "import_source": "",
+        "import_date": "",
+        "labels": {
+            "name": "Routes",
+            "singular_name": "route",
+            "menu_name": "Rutas",
+            "all_items": "All Rutas",
+            "edit_item": "Edit ruta",
+            "view_item": "View ruta",
+            "view_items": "View Rutas",
+            "add_new_item": "Add New ruta",
+            "add_new": "Add New ruta",
+            "new_item": "New ruta",
+            "parent_item_colon": "Parent ruta:",
+            "search_items": "Search Rutas",
+            "not_found": "No rutas found",
+            "not_found_in_trash": "No rutas found in Trash",
+            "archives": "ruta Archives",
+            "attributes": "ruta Attributes",
+            "featured_image": "",
+            "set_featured_image": "",
+            "remove_featured_image": "",
+            "use_featured_image": "",
+            "insert_into_item": "Insert into ruta",
+            "uploaded_to_this_item": "Uploaded to this ruta",
+            "filter_items_list": "Filter rutas list",
+            "filter_by_date": "Filter rutas by date",
+            "items_list_navigation": "Rutas list navigation",
+            "items_list": "Rutas list",
+            "item_published": "ruta published.",
+            "item_published_privately": "ruta published privately.",
+            "item_reverted_to_draft": "ruta reverted to draft.",
+            "item_scheduled": "ruta scheduled.",
+            "item_updated": "ruta updated.",
+            "item_link": "ruta Link",
+            "item_link_description": "A link to a ruta."
+        },
+        "description": "",
+        "public": true,
+        "hierarchical": false,
+        "exclude_from_search": false,
+        "publicly_queryable": true,
+        "show_ui": true,
+        "show_in_menu": true,
+        "admin_menu_parent": "",
+        "show_in_admin_bar": true,
+        "show_in_nav_menus": true,
+        "show_in_rest": true,
+        "rest_base": "",
+        "rest_namespace": "wp\/v2",
+        "rest_controller_class": "WP_REST_Posts_Controller",
+        "menu_position": "",
+        "menu_icon": {
+            "type": "dashicons",
+            "value": "dashicons-admin-post"
+        },
+        "rename_capabilities": false,
+        "singular_capability_name": "post",
+        "plural_capability_name": "posts",
+        "supports": [
+            "title",
+            "editor",
+            "thumbnail",
+            "custom-fields"
+        ],
+        "taxonomies": [
+            "category",
+            "post_tag"
+        ],
+        "has_archive": true,
+        "has_archive_slug": "routes",
+        "rewrite": {
+            "permalink_rewrite": "post_type_key",
+            "with_front": "1",
+            "feeds": "0",
+            "pages": "1"
+        },
+        "query_var": "post_type_key",
+        "query_var_name": "",
+        "can_export": true,
+        "delete_with_user": false,
+        "register_meta_box_cb": "",
+        "enter_title_here": ""
+    },
+    {
+        "key": "ui_options_page_69986ead92c9b",
+        "title": "Site Settings",
+        "active": true,
+        "menu_order": 0,
+        "page_title": "Site Settings",
+        "menu_slug": "site-settings",
+        "parent_slug": "none",
+        "advanced_configuration": 1,
+        "icon_url": "",
+        "menu_title": "Site customization",
+        "position": 10,
+        "redirect": 0,
+        "description": "",
+        "menu_icon": {
+            "type": "dashicons",
+            "value": "dashicons-admin-generic"
+        },
+        "update_button": "Update",
+        "updated_message": "Options Updated",
+        "capability": "edit_posts",
+        "data_storage": "options",
+        "post_id": "",
+        "autoload": 0
+    }
+]

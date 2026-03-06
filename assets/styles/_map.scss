@@ -1,0 +1,188 @@
+/* ── Leaflet Map — global overrides ─────────────────────────
+   Applies to #map (home/GPS block) and #route-map (single pages).
+   Tokens from _base.scss: --primary, --bg-card, --line, etc.
+──────────────────────────────────────────────────────────── */
+
+/* ── Containers ── */
+#map,
+#route-map {
+  position: relative;
+  z-index: 1;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+/* ── Popup wrapper ── */
+.leaflet-popup-content-wrapper {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--box-shadow) !important;
+}
+
+.leaflet-popup-tip {
+  background: var(--bg-card) !important;
+}
+
+.leaflet-popup-content {
+  color: var(--text) !important;
+  font-family: var(--primary-font) !important;
+  font-size: 0.85rem !important;
+  line-height: 1.6 !important;
+  margin: 0.9rem 1rem !important;
+  max-width: 150px !important;
+  strong {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  a:not(.map-link-button) {
+    color: var(--primary) !important;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+
+  img {
+    border-radius: var(--radius);
+    margin: 0.5rem 0;
+  }
+}
+
+.leaflet-popup-close-button {
+  color: var(--text-muted) !important;
+  font-size: 1.1rem !important;
+  padding: 0.3rem 0.5rem !important;
+}
+
+/* ── Controles (zoom + locate) ── */
+.leaflet-top,
+.leaflet-control-attribution {
+  display: none;
+}
+
+.leaflet-right {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+  bottom: 45px;
+  right: 45px;
+}
+
+.leaflet-control-zoom {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: none !important;
+}
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out,
+.leaflet-bar a {
+  background: var(--bg-card) !important;
+  color: var(--primary) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--radius) !important;
+  width: 36px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  font-size: 1.1rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-decoration: none !important;
+  transition: background 0.2s, border-color 0.2s !important;
+
+  &:hover {
+    background: var(--primary-dim) !important;
+    border-color: var(--primary-border) !important;
+  }
+}
+
+/* ── Botón "Abrir en Google Maps" ── */
+.map-link-button {
+  display: inline-block;
+  background: var(--primary);
+  color: var(--background) !important;
+  padding: 0.45em 1em;
+  text-decoration: none;
+  border-radius: var(--radius-full);
+  font-family: var(--primary-font);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 0.6rem;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+/* ── Marcadores de punto (divIcon con clase CSS) ── */
+.map-pin {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(10, 10, 10, 0.8);
+
+  &--start {
+    background: var(--primary);
+    box-shadow: 0 0 0 3px rgba(13, 242, 70, 0.3);
+  }
+
+  &--end {
+    background: var(--terracotta);
+    box-shadow: 0 0 0 3px rgba(199, 74, 45, 0.3);
+  }
+
+  &--poi {
+    background: var(--accent-orange);
+    box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.25);
+  }
+}
+
+/* ── Filtros de ruta (home GPS block) ── */
+.route-filters {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 9999;
+  pointer-events: auto;
+
+  li {
+    margin: 0;
+  }
+}
+
+.route-filter {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  color: var(--text-muted);
+  padding: 0.4em 1.1em;
+  cursor: pointer;
+  border-radius: var(--radius-full);
+  font-family: var(--primary-font);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+
+  &:hover,
+  &.is-active {
+    background: var(--primary-dim);
+    color: var(--primary);
+    border-color: var(--primary-border);
+  }
+}

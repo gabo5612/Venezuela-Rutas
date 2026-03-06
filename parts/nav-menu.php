@@ -1,24 +1,40 @@
-<nav>
+<header class="site-nav">
+  <div class="site-nav__inner">
+
+    <!-- Logo -->
+    <a href="<?php echo esc_url( home_url('/') ); ?>" class="site-nav__logo">
+      <span class="material-symbols-outlined">terrain</span>
+      <h1 class="site-name"><?php echo esc_html( get_bloginfo('name') ); ?></h1>
+    </a>
+
+    <!-- Nav links (wp_nav_menu) -->
     <?php
-    $route_assets = get_template_directory_uri() . '/assets/';
-    $open_menu = $route_assets . 'nav-menu/menu.svg';
-    $close_menu = $route_assets . 'nav-menu/close-menu.svg'; 
+    wp_nav_menu([
+      'theme_location' => 'menu',
+      'container'      => 'nav',
+      'container_class'=> 'site-nav__links',
+      'fallback_cb'    => false,
+    ]);
     ?>
 
-    
-    <div class="menu-toggle" id="menuToggle">
-        <img src="<?php echo esc_url($open_menu); ?>" alt="Open Menu" class="menu-icon open-menu">
-        <img src="<?php echo esc_url($close_menu); ?>" alt="Close Menu" class="menu-icon close-menu">
-    </div>
+    <!-- Actions -->
+    <div class="site-nav__actions">
 
-    <!-- Menú -->
-    <div class="nav_menu" id="navMenu">
-        <?php
-        wp_nav_menu(array(
-            'theme_location' => 'menu',
-            'container' => false,
-            'menu_class' => 'nav_menu_items',
-        ));
-        ?>
+      <?php if ( is_single() ) : ?>
+        <button class="site-nav__share"
+                onclick="navigator.share ? navigator.share({title:document.title,url:location.href}) : (navigator.clipboard?.writeText(location.href), alert('Link copiado'))">
+          <span class="material-symbols-outlined">share</span>
+          Compartir
+        </button>
+      <?php endif; ?>
+
+      <a href="<?php echo esc_url( home_url('/') ); ?>#newsletter" class="site-nav__cta">
+        <span class="material-symbols-outlined">explore</span>
+        Explorar
+      </a>
+
     </div>
-</nav>
+  </div>
+</header>
+
+<div class="nav-spacer"></div>

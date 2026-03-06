@@ -1,9 +1,10 @@
 <?php get_template_part('parts/header'); ?>
 
-    <main>
+<main>
 
-        <?php get_template_part('components/blocks' ); ?>
+  <!-- ══ ACF BLOCKS (page builder sections) ═══════════ -->
+  <?php get_template_part('components/blocks'); ?>
 
-    </main>
+</main>
 
 <?php get_template_part('parts/footer'); ?>

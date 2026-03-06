@@ -1,0 +1,101 @@
+/* ── Posts Page Layout ──────────────────────────────────
+   Used on homepage post sections and category archive
+────────────────────────────────────────────────────── */
+
+.posts-section {
+  padding: 5rem 0;
+  background: var(--background);
+
+  &--forest {
+    background: var(--bg-forest);
+  }
+
+  &__inner {
+    width: 93%;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+}
+
+/* ── Horizontal scroll live feed ── */
+.live-feed {
+  padding: 5rem 0;
+  background: var(--background);
+  overflow: hidden;
+
+  &__inner {
+    width: 93%;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  &__track {
+    display: flex;
+    gap: 1.25rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__card {
+    flex: 0 0 280px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    transition: border-color 0.2s;
+
+    &:hover {
+      border-color: rgba(13, 242, 70, 0.4);
+    }
+
+    .feed-image {
+      height: 160px;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s;
+      }
+
+      .live-feed__card:hover & img {
+        transform: scale(1.05);
+      }
+    }
+
+    .feed-body {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      flex: 1;
+    }
+
+    .feed-date {
+      font-size: 0.6rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--primary);
+      opacity: 0.6;
+    }
+
+    .feed-title {
+      font-size: 0.9rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--text);
+      line-height: 1.2;
+    }
+  }
+}

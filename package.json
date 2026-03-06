@@ -1,0 +1,11 @@
+{
+  "name": "rutas",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "sass ./assets/styles/app.scss:./dist/styles/app.min.css --watch --style=expanded --source-map",
+    "build": "sass ./assets/styles/app.scss:./dist/styles/app.min.css --style=compressed --no-source-map"
+  },
+  "devDependencies": {
+    "sass": "^1.77.8"
+  }
+}

@@ -1,0 +1,145 @@
+/* ── Site Nav ──────────────────────────────────────────
+   BEM: .site-nav
+   Sticky dark header with electric-green accents
+────────────────────────────────────────────────────── */
+
+.site-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line);
+  height: 64px;
+  display: flex;
+  align-items: center;
+
+  &__inner {
+    width: 93%;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--text);
+
+    .material-symbols-outlined {
+      color: var(--primary);
+      font-size: 1.5rem;
+    }
+
+    .site-name {
+      font-weight: 900;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+  }
+
+  &__links {
+    display: none;
+    align-items: center;
+    gap: 1.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    @media (min-width: 768px) {
+      display: flex;
+    }
+
+    li a {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      transition: color 0.2s;
+
+      &:hover {
+        color: var(--primary);
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__share {
+    display: none;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--primary-dim);
+    border: 1px solid var(--primary-border);
+    border-radius: var(--radius-full);
+    padding: 0.4em 1em;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--primary);
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover {
+      background: rgba(13, 242, 70, 0.25);
+    }
+
+    .material-symbols-outlined {
+      font-size: 1rem;
+    }
+  }
+
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--primary);
+    color: var(--background);
+    border-radius: var(--radius-full);
+    padding: 0.5em 1.25em;
+    font-size: 0.7rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: opacity 0.2s, transform 0.2s;
+
+    &:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+
+    .material-symbols-outlined {
+      font-size: 1rem;
+    }
+  }
+
+}
+
+/* Show share button only on single posts */
+body.single .site-nav__share {
+  @media (min-width:763px) {
+     display: flex;
+  }
+ 
+  
+}
+
+/* Nav spacer: push content below fixed nav */
+.nav-spacer {
+  height: 64px;
+}
