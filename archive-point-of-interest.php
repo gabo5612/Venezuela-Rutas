@@ -74,7 +74,8 @@
         <?php else : ?>
 
         <!-- POI normal -->
-        <article class="post-card">
+        <div class="post-card" data-animate="fade-up">
+          <a href="<?php the_permalink(); ?>" class="post-card__link" aria-label="<?php the_title_attribute(); ?>"></a>
           <div class="post-card__image">
             <?php if ($thumb) : ?>
               <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>">
@@ -92,17 +93,17 @@
             <h4 class="post-card__title"><?php the_title(); ?></h4>
             <p class="post-card__excerpt"><?php echo esc_html(wp_trim_words(get_the_excerpt(), 18, '...')); ?></p>
             <div class="post-card__footer">
-              <?php if ($location) : ?>
-                <span class="post-card__author"><?php echo esc_html($location); ?></span>
-              <?php else : ?>
-                <span class="post-card__author"><?php the_author(); ?></span>
-              <?php endif; ?>
-              <a href="<?php the_permalink(); ?>" class="post-card__arrow">
+              <div class="post-card__tags">
+                <?php foreach (array_slice(wp_get_post_terms(get_the_ID(), 'post_tag'), 0, 2) as $pt) : ?>
+                  <a href="<?php echo esc_url(get_term_link($pt)); ?>" class="badge badge--outline"><?php echo esc_html($pt->name); ?></a>
+                <?php endforeach; ?>
+              </div>
+              <span class="post-card__arrow">
                 <span class="material-symbols-outlined">north_east</span>
-              </a>
+              </span>
             </div>
           </div>
-        </article>
+        </div>
 
         <?php endif; endwhile; else : ?>
         <p style="color:var(--text-muted);padding:2rem 0;">No hay puntos de interés disponibles.</p>

@@ -83,8 +83,13 @@ window.openGalleryModal = function (items, startIndex) {
 };
 
 // ── Material Symbols: fade in once font is ready ────────────
-document.fonts.ready.then(function () {
+// fonts.load() waits for this specific font instead of all fonts,
+// avoiding the race condition where fonts.ready resolves too early.
+document.fonts.load("1em 'Material Symbols Outlined'").then(function () {
   document.body.classList.add('fonts-loaded');
+}).catch(function () {
+  // Fallback: show icons anyway after 2s if font fails to load
+  setTimeout(function () { document.body.classList.add('fonts-loaded'); }, 2000);
 });
 
 // ── Scroll entry animations ──────────────────────────────────

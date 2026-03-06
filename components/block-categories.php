@@ -12,17 +12,17 @@ $block_title = get_field('cat_title', 'option') ?: 'Categorías';
       </div>
     </div>
 
-    <?php if (have_rows('categories', 'option')) : ?>
+    <?php if (have_rows('categories')) : ?>
     <div class="block-categories__list">
-      <?php while (have_rows('categories', 'option')) : the_row();
-        $link = get_sub_field('categorie');
-        if (!$link) continue;
+      <?php while (have_rows('categories')) : the_row();
+        $tag  = get_sub_field('post_tag');
+        $icon = get_sub_field('icon') ?: 'terrain';
+        if (!$tag) continue;
       ?>
-      <a href="<?php echo esc_url($link['url']); ?>"
-         target="<?php echo esc_attr($link['target'] ?: '_self'); ?>"
+      <a href="<?php echo esc_url(get_term_link($tag)); ?>"
          class="block-categories__item" data-animate="fade-up">
-        <span class="material-symbols-outlined">terrain</span>
-        <?php echo esc_html($link['title']); ?>
+        <span class="material-symbols-outlined"><?php echo esc_html($icon); ?></span>
+        <?php echo esc_html($tag->name); ?>
       </a>
       <?php endwhile; ?>
     </div>
