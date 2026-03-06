@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
       wrapAround:      true,
       autoPlay:        false,
       adaptiveHeight:  true,
-      prevNextButtons: true,
+      prevNextButtons: false,
       pageDots:        true,
       cellAlign:       'left',
       imagesLoaded:    true,

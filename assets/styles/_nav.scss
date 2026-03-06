@@ -127,11 +127,16 @@
       font-size: 1rem;
     }
   }
+
 }
 
 /* Show share button only on single posts */
 body.single .site-nav__share {
-  display: flex;
+  @media (min-width:763px) {
+     display: flex;
+  }
+ 
+  
 }
 
 /* Nav spacer: push content below fixed nav */

@@ -68,6 +68,57 @@ add_action('wp_enqueue_scripts', function () {
     ]);
 });
 
+// ===============================
+// GPX DOWNLOAD  (?gpx=1 on any post with GPS points)
+// ===============================
+add_action('template_redirect', function () {
+    if (empty($_GET['gpx']) || $_GET['gpx'] !== '1') return;
+    if (!is_singular()) return;
+
+    $post_id = get_queried_object_id();
+    $points  = get_field('points', $post_id);
+    if (empty($points)) wp_die('Esta entrada no tiene puntos GPS.');
+
+    $pts = [];
+    foreach ($points as $p) {
+        $lat = floatval($p['latitude']  ?? 0);
+        $lng = floatval($p['longitude'] ?? 0);
+        if ($lat && $lng) $pts[] = [$lat, $lng];
+    }
+    if (empty($pts)) wp_die('No se encontraron coordenadas válidas.');
+
+    $title    = get_the_title($post_id);
+    $filename = sanitize_title($title) . '.gpx';
+    $date     = get_the_date('c', $post_id);
+
+    header('Content-Type: application/gpx+xml; charset=utf-8');
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+    header('Cache-Control: no-cache, no-store, must-revalidate');
+    header('Pragma: no-cache');
+
+    $name = htmlspecialchars($title, ENT_XML1 | ENT_QUOTES, 'UTF-8');
+
+    echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+    echo '<gpx version="1.1" creator="Venezuela Rutas"' . "\n";
+    echo '  xmlns="http://www.topografix.com/GPX/1/1"' . "\n";
+    echo '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"' . "\n";
+    echo '  xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">' . "\n";
+    echo '  <metadata>' . "\n";
+    echo '    <name>' . $name . '</name>' . "\n";
+    echo '    <time>' . esc_html($date) . '</time>' . "\n";
+    echo '  </metadata>' . "\n";
+    echo '  <trk>' . "\n";
+    echo '    <name>' . $name . '</name>' . "\n";
+    echo '    <trkseg>' . "\n";
+    foreach ($pts as $pt) {
+        echo '      <trkpt lat="' . $pt[0] . '" lon="' . $pt[1] . '"></trkpt>' . "\n";
+    }
+    echo '    </trkseg>' . "\n";
+    echo '  </trk>' . "\n";
+    echo '</gpx>';
+    exit;
+});
+
 add_action('wp_ajax_load_more_tips', 'mag_load_more_tips');
 add_action('wp_ajax_nopriv_load_more_tips', 'mag_load_more_tips');
 

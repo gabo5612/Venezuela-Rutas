@@ -43,8 +43,8 @@
           $poi_posts = get_field('route_point_of_interest');
           if (!empty($poi_posts)) {
             foreach ((array) $poi_posts as $poi) {
-              $poi_lat = get_field('interest_latitude', $poi);
-              $poi_lng = get_field('interest_longitude', $poi);
+              $poi_lat = get_field('latitude', $poi);
+              $poi_lng = get_field('longitude', $poi);
               if (!empty($poi_lat) && !empty($poi_lng)) {
                 $poi_waypoints[] = $poi_lat . ',' . $poi_lng;
               }
@@ -87,10 +87,9 @@
 
     if ($poi_query->have_posts()) :
       while ($poi_query->have_posts()) : $poi_query->the_post();
-        $lat = get_field('interest_latitude');
-        $lng = get_field('interest_longitude');
-        $entry = get_field('interest_entry');
-        $image = get_field('interest_image');
+        $lat = get_field('latitude');
+        $lng = get_field('longitude');
+        $image = get_field('image') ?: get_the_post_thumbnail_url(null, 'medium');
         $custom_gmaps_url = get_field('has_a_google_maps_card');
 
         if (!empty($lat) && !empty($lng)) {
