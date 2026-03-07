@@ -28,7 +28,7 @@ add_action('wp_enqueue_scripts', function () {
     );
     wp_enqueue_style(
         'material-symbols',
-        'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap',
+        'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block',
         [],
         null
     );
@@ -154,37 +154,40 @@ function mag_load_more_tips()
     if ($q->have_posts()) {
         while ($q->have_posts()) {
             $q->the_post();
-            $thumb    = get_the_post_thumbnail_url(null, 'large');
-            $vid      = get_field('video_featured') ?: '';
-            $cats     = get_the_category();
-            $diff  = get_field('difficulty') ?: '';
-            $dist  = get_field('distance')   ?: '';
-            $time  = get_field('time')       ?: '';
+            $thumb = get_the_post_thumbnail_url(null, 'large');
+            $vid   = get_field('video_featured') ?: '';
+            $cats  = get_the_category();
+            $tags  = wp_get_post_terms(get_the_ID(), 'post_tag');
             ?>
-        <div class="group border border-primary/10 rounded-xl bg-primary/5 hover:border-primary/40 transition-all flex flex-col">
-          <div class="h-48 overflow-hidden rounded-t-xl relative">
-            <?php if ($vid) : ?>
-              <video autoplay loop muted playsinline class="w-full h-full object-cover">
+        <div class="post-card">
+          <a href="<?php the_permalink(); ?>" class="post-card__link" aria-label="<?php the_title_attribute(); ?>"></a>
+          <div class="post-card__image">
+            <?php if ($thumb) : ?>
+              <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>">
+            <?php elseif ($vid) : ?>
+              <video autoplay loop muted playsinline style="width:100%;height:100%;object-fit:cover">
                 <source src="<?php echo esc_url($vid); ?>" type="video/mp4">
               </video>
-            <?php elseif ($thumb) : ?>
-              <img class="w-full h-full object-cover transition-transform group-hover:scale-110" src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>">
             <?php else : ?>
-              <div class="w-full h-full bg-bg-forest flex items-center justify-center"><span class="material-symbols-outlined text-primary/30 text-4xl">terrain</span></div>
+              <div class="post-card__empty"><span class="material-symbols-outlined">terrain</span></div>
             <?php endif; ?>
             <?php if ($cats) : ?>
-            <div class="absolute top-3 right-3">
-              <span class="px-2 py-1 bg-bg-forest/80 backdrop-blur-md text-primary text-[10px] font-black uppercase rounded border border-primary/20"><?php echo esc_html($cats[0]->name); ?></span>
+            <div class="post-card__badge">
+              <span class="badge badge--outline"><?php echo esc_html($cats[0]->name); ?></span>
             </div>
             <?php endif; ?>
           </div>
-          <div class="p-6 flex-1 flex flex-col">
-            <div class="text-[10px] font-black uppercase text-primary/60 mb-2 tracking-widest"><?php echo get_the_date('d M Y'); ?></div>
-            <h4 class="text-xl font-bold uppercase text-slate-100 mb-3"><?php the_title(); ?></h4>
-            <p class="text-slate-400 text-sm mb-6 flex-1"><?php echo esc_html(wp_trim_words(get_the_excerpt(), 20, '...')); ?></p>
-            <div class="flex items-center justify-between pt-4 border-t border-primary/5">
-              <span class="text-[10px] font-bold text-slate-500 uppercase"><?php the_author(); ?></span>
-              <a href="<?php the_permalink(); ?>" class="text-primary"><span class="material-symbols-outlined">north_east</span></a>
+          <div class="post-card__body">
+            <div class="post-card__date"><?php echo get_the_date('d M Y'); ?></div>
+            <h4 class="post-card__title"><?php the_title(); ?></h4>
+            <p class="post-card__excerpt"><?php echo esc_html(wp_trim_words(get_the_excerpt(), 20, '...')); ?></p>
+            <div class="post-card__footer">
+              <div class="post-card__tags">
+                <?php foreach (array_slice($tags, 0, 2) as $pt) : ?>
+                  <a href="<?php echo esc_url(get_term_link($pt)); ?>" class="badge badge--outline" style="position:relative;z-index:2"><?php echo esc_html($pt->name); ?></a>
+                <?php endforeach; ?>
+              </div>
+              <span class="post-card__arrow"><span class="material-symbols-outlined">north_east</span></span>
             </div>
           </div>
         </div>

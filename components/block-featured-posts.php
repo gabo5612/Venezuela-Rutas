@@ -2,7 +2,7 @@
 $eyebrow    = get_sub_field('eyebrow')    ?: 'Editorial';
 $title      = get_sub_field('fp_title')   ?: 'Bitácora de Campo';
 $link_label = get_sub_field('link_label') ?: 'Leer Todo';
-$link_url   = get_sub_field('link_url')   ?: '';
+$link_url   = get_sub_field('link_url')   ?: '/post';
 
 $fp_posts = get_sub_field('fp_posts') ?: [];
 if (!$fp_posts) return;
@@ -25,19 +25,19 @@ if (!$fp_posts) return;
 
     <div class="fp-grid">
       <?php foreach ($fp_posts as $row) :
-        $post  = $row['post_object'];
-        if (!$post) continue;
+        $fp_post = $row['post_object'];
+        if (!$fp_post) continue;
 
-        $thumb   = get_the_post_thumbnail_url($post->ID, 'large');
-        $excerpt = get_the_excerpt($post->ID);
-        $date    = get_the_date('d M Y', $post->ID);
+        $thumb   = get_the_post_thumbnail_url($fp_post->ID, 'large');
+        $excerpt = get_the_excerpt($fp_post->ID);
+        $date    = get_the_date('d M Y', $fp_post->ID);
       ?>
       <article class="fp-card" data-animate="fade-up">
-        <a href="<?php echo esc_url(get_permalink($post->ID)); ?>" class="fp-card__link" aria-label="<?php echo esc_attr($post->post_title); ?>"></a>
+        <a href="<?php echo esc_url(get_permalink($fp_post->ID)); ?>" class="fp-card__link" aria-label="<?php echo esc_attr($fp_post->post_title); ?>"></a>
 
         <div class="fp-card__image">
           <?php if ($thumb) : ?>
-            <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr($post->post_title); ?>">
+            <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr($fp_post->post_title); ?>">
           <?php else : ?>
             <div class="fp-card__empty"><span class="material-symbols-outlined">terrain</span></div>
           <?php endif; ?>
@@ -45,7 +45,7 @@ if (!$fp_posts) return;
         </div>
 
         <div class="fp-card__body">
-          <h3 class="fp-card__title"><?php echo esc_html($post->post_title); ?></h3>
+          <h3 class="fp-card__title"><?php echo esc_html($fp_post->post_title); ?></h3>
           <?php if ($excerpt) : ?>
           <p class="fp-card__excerpt"><?php echo esc_html(wp_trim_words($excerpt, 22, '...')); ?></p>
           <?php endif; ?>

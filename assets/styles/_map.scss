@@ -13,6 +13,16 @@
   border: 1px solid var(--line);
 }
 
+/* ── GPS block map: dim by default, brighten on interaction ── */
+#map {
+  filter: brightness(0.6) saturate(0.5);
+  transition: filter 0.5s ease;
+
+  &.is-active {
+    filter: brightness(1) saturate(1);
+  }
+}
+
 /* ── Popup wrapper ── */
 .leaflet-popup-content-wrapper {
   background: var(--bg-card) !important;
@@ -104,6 +114,28 @@
   }
 }
 
+/* ── Leaflet touch bar borders ── */
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* ── Locate control arrow ── */
+.leaflet-control-locate a {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+
+  &:hover {
+    background: var(--primary) !important;
+    opacity: 0.85;
+  }
+}
+
+.leaflet-control-locate-location-arrow {
+  background-color: var(--background) !important;
+}
+
 /* ── Botón "Abrir en Google Maps" ── */
 .map-link-button {
   display: inline-block;
@@ -148,24 +180,23 @@
   }
 }
 
-/* ── Filtros de ruta (home GPS block) ── */
-.route-filters {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1rem 0;
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+/* ── Filtros GPS (píldoras + dropdown agrupado) ── */
+.gps-filters {
+  margin-bottom: 1rem;
   position: relative;
   z-index: 100;
-  pointer-events: auto;
-
-  li {
-    margin: 0;
-  }
+  scroll-margin-top: 75px;
 }
 
-.route-filter {
+.gps-filters__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+// Píldora base (Todos, Solo POIs, Filtrar▾)
+.gps-pill {
   background: var(--bg-card);
   border: 1px solid var(--line);
   color: var(--text-muted);
@@ -178,6 +209,104 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+
+  &:hover,
+  &.is-active {
+    background: var(--primary-dim);
+    color: var(--primary);
+    border-color: var(--primary-border);
+  }
+
+  &__arrow {
+    display: inline-block;
+    transition: transform 0.2s;
+  }
+
+  &--dropdown.is-open &__arrow {
+    transform: rotate(180deg);
+  }
+}
+
+// Grupo-píldora: label + expand juntos
+.gps-dropdown {
+  position: relative;
+}
+
+.gps-group-pill {
+  display: flex;
+  align-items: stretch;
+
+  .gps-pill--group {
+    border-radius: var(--radius-full) 0 0 var(--radius-full);
+    border-right: none;
+    padding-right: 0.7em;
+  }
+
+  .gps-pill__expand {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-left: none;
+    border-radius: 0 var(--radius-full) var(--radius-full) 0;
+    color: var(--text-muted);
+    padding: 0.4em 0.7em;
+    cursor: pointer;
+    font-size: 0.65rem;
+    line-height: 1;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+
+    &:hover,
+    &.is-active {
+      background: var(--primary-dim);
+      color: var(--primary);
+      border-color: var(--primary-border);
+    }
+
+    &.is-open {
+      background: var(--primary-dim);
+      color: var(--primary);
+      transform: none; // la rotación la hace CSS en el texto ▾
+    }
+  }
+}
+
+// Panel sub-tags
+.gps-panel {
+  display: none;
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  min-width: 180px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--box-shadow);
+  padding: 0.6rem;
+  z-index: 200;
+  display: none;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+
+  &.is-open {
+    display: flex;
+  }
+}
+
+// Tag individual dentro del panel
+.gps-tag {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--text-muted);
+  padding: 0.3em 0.8em;
+  cursor: pointer;
+  border-radius: var(--radius-full);
+  font-family: var(--primary-font);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  white-space: nowrap;
 
   &:hover,
   &.is-active {

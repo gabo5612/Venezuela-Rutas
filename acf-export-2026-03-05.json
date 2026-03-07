@@ -326,7 +326,72 @@
                         "name": "gps",
                         "label": "GPS",
                         "display": "block",
-                        "sub_fields": [],
+                        "sub_fields": [
+                            {
+                                "key": "field_gps_filter_groups",
+                                "label": "Grupos de Filtros",
+                                "name": "filter_groups",
+                                "aria-label": "",
+                                "type": "repeater",
+                                "instructions": "Define grupos de tags para el menú desplegable del mapa. Cada grupo aparece como una sección en el panel de filtros.",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "layout": "block",
+                                "pagination": 0,
+                                "min": 0,
+                                "max": 0,
+                                "collapsed": "",
+                                "button_label": "Agregar Grupo",
+                                "sub_fields": [
+                                    {
+                                        "key": "field_gps_group_label",
+                                        "label": "Nombre del Grupo",
+                                        "name": "group_label",
+                                        "aria-label": "",
+                                        "type": "text",
+                                        "instructions": "Ej: Senderismo, Montaña, Costas",
+                                        "required": 1,
+                                        "conditional_logic": 0,
+                                        "wrapper": {
+                                            "width": "30",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "default_value": "",
+                                        "maxlength": "",
+                                        "placeholder": "Nombre del grupo"
+                                    },
+                                    {
+                                        "key": "field_gps_group_tags",
+                                        "label": "Tags del Grupo",
+                                        "name": "group_tags",
+                                        "aria-label": "",
+                                        "type": "taxonomy",
+                                        "instructions": "Selecciona los tags que pertenecen a este grupo",
+                                        "required": 0,
+                                        "conditional_logic": 0,
+                                        "wrapper": {
+                                            "width": "70",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "taxonomy": "post_tag",
+                                        "add_term": 0,
+                                        "save_terms": 0,
+                                        "load_terms": 0,
+                                        "return_format": "object",
+                                        "field_type": "multi_select",
+                                        "allow_null": 1,
+                                        "multiple": 1
+                                    }
+                                ]
+                            }
+                        ],
                         "min": "",
                         "max": ""
                     },
@@ -905,7 +970,11 @@
                                 "instructions": "",
                                 "required": 0,
                                 "conditional_logic": 0,
-                                "wrapper": { "width": "50", "class": "", "id": "" },
+                                "wrapper": {
+                                    "width": "50",
+                                    "class": "",
+                                    "id": ""
+                                },
                                 "default_value": "Editorial",
                                 "maxlength": "",
                                 "allow_in_bindings": 0,
@@ -922,7 +991,11 @@
                                 "instructions": "",
                                 "required": 0,
                                 "conditional_logic": 0,
-                                "wrapper": { "width": "50", "class": "", "id": "" },
+                                "wrapper": {
+                                    "width": "50",
+                                    "class": "",
+                                    "id": ""
+                                },
                                 "default_value": "Bitácora de Campo",
                                 "maxlength": "",
                                 "allow_in_bindings": 0,
@@ -939,7 +1012,11 @@
                                 "instructions": "",
                                 "required": 0,
                                 "conditional_logic": 0,
-                                "wrapper": { "width": "25", "class": "", "id": "" },
+                                "wrapper": {
+                                    "width": "25",
+                                    "class": "",
+                                    "id": ""
+                                },
                                 "default_value": "Leer Todo",
                                 "maxlength": "",
                                 "allow_in_bindings": 0,
@@ -956,10 +1033,14 @@
                                 "instructions": "Dejar vacío para usar el enlace del archivo del CPT",
                                 "required": 0,
                                 "conditional_logic": 0,
-                                "wrapper": { "width": "75", "class": "", "id": "" },
+                                "wrapper": {
+                                    "width": "75",
+                                    "class": "",
+                                    "id": ""
+                                },
                                 "default_value": "",
                                 "allow_in_bindings": 0,
-                                "placeholder": "https://"
+                                "placeholder": "https:\/\/"
                             },
                             {
                                 "key": "field_fp_posts_repeater",
@@ -970,7 +1051,11 @@
                                 "instructions": "Selecciona hasta 2 posts a destacar",
                                 "required": 0,
                                 "conditional_logic": 0,
-                                "wrapper": { "width": "", "class": "", "id": "" },
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
                                 "layout": "table",
                                 "pagination": 0,
                                 "min": 0,
@@ -989,16 +1074,27 @@
                                         "instructions": "",
                                         "required": 0,
                                         "conditional_logic": 0,
-                                        "wrapper": { "width": "", "class": "", "id": "" },
-                                        "post_type": ["post", "routes", "point-of-interest"],
-                                        "post_status": ["publish"],
+                                        "wrapper": {
+                                            "width": "",
+                                            "class": "",
+                                            "id": ""
+                                        },
+                                        "post_type": [
+                                            "post",
+                                            "routes",
+                                            "point-of-interest"
+                                        ],
+                                        "post_status": [
+                                            "publish"
+                                        ],
                                         "taxonomy": "",
                                         "return_format": "object",
                                         "multiple": 0,
                                         "allow_null": 0,
                                         "allow_in_bindings": 0,
                                         "ui": 1,
-                                        "parent_repeater": "field_fp_posts_repeater"
+                                        "parent_repeater": "field_fp_posts_repeater",
+                                        "bidirectional_target": []
                                     }
                                 ]
                             }

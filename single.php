@@ -112,9 +112,9 @@ if ($gmaps_url) {
 
 // ── Related posts label ──────────────────────────────────────
 $related_label = match ($post_type) {
-    'routes'            => 'Más Rutas GPS',
-    'point-of-interest' => 'Más Puntos de Interés',
-    default             => 'Rutas Similares',
+    'routes'            => 'Rutas GPS',
+    'point-of-interest' => 'Puntos de Interés',
+    default             => 'Post Similares',
 };
 ?>
 
@@ -502,7 +502,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var routePoints = <?php echo json_encode($route_pts); ?>;
   if (!routePoints.length) return;
   var map = L.map('route-map', { zoomControl: false, attributionControl: false });
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
   L.control.zoom({ position: 'bottomright' }).addTo(map);
   var poly = L.polyline(routePoints, { color: '#0df246', weight: 3, opacity: 0.85 }).addTo(map);
   map.fitBounds(poly.getBounds(), { padding: [30, 30] });
@@ -515,7 +515,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var lon  = <?php echo json_encode(floatval($lon)); ?>;
   var zoom = <?php echo $post_type === 'point-of-interest' ? 15 : 13; ?>;
   var map  = L.map('route-map', { zoomControl: false, attributionControl: false }).setView([lat, lon], zoom);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
   L.control.zoom({ position: 'bottomright' }).addTo(map);
   var pinClass = '<?php echo $post_type === "point-of-interest" ? "map-pin--poi" : "map-pin--start"; ?>';
   var icon = L.divIcon({ className: '', html: '<div class="map-pin ' + pinClass + '"></div>', iconAnchor: [8, 8] });

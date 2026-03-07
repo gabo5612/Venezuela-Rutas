@@ -28,7 +28,7 @@
         </button>
       <?php endif; ?>
 
-      <a href="<?php echo esc_url( home_url('/') ); ?>#newsletter" class="site-nav__cta" data-animate="fade-up" data-animate-delay="200">
+      <a href="<?php echo esc_url( home_url('/') ); ?>#gps-filters" class="site-nav__cta" data-animate="fade-up" data-animate-delay="200">
         <span class="material-symbols-outlined">explore</span>
         Explorar
       </a>

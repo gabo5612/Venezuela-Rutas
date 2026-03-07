@@ -21,7 +21,7 @@ $tag_desc    = $queried_tag ? $queried_tag->description : '';
         <p class="cat-hero__desc"><?php echo esc_html($tag_desc); ?></p>
       <?php endif; ?>
       <div class="cat-hero__actions">
-        <a href="<?php echo esc_url(home_url('/')); ?>" class="btn btn--primary">Ver Rutas</a>
+        <a href="<?php echo esc_url(home_url('/')); ?>#gps-filters" class="btn btn--primary">Ver Rutas</a>
       </div>
     </div>
   </section>

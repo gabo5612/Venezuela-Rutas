@@ -1,17 +1,42 @@
 <section class="container">
 
   <!-- FILTROS -->
-  <ul id="route-filters" class="route-filters"></ul>
+  <div id="gps-filters" class="gps-filters"></div>
 
   <!-- MAPA -->
   <div id="map" ></div>
+
+  <script>
+    var filterGroups = [];
+    <?php
+    if (have_rows('filter_groups')) :
+      while (have_rows('filter_groups')) : the_row();
+        $group_label = get_sub_field('group_label');
+        $group_tags  = get_sub_field('group_tags'); // array of term objects or names
+        $tag_names   = [];
+        if (!empty($group_tags)) {
+          foreach ((array) $group_tags as $t) {
+            if (is_object($t)) {
+              $tag_names[] = $t->name;
+            } elseif (is_string($t)) {
+              $tag_names[] = $t;
+            }
+          }
+        }
+        if ($group_label && !empty($tag_names)) {
+          echo "filterGroups.push(" . json_encode(['label' => $group_label, 'tags' => $tag_names]) . ");\n";
+        }
+      endwhile;
+    endif;
+    ?>
+  </script>
 
   <script>
     var routes = [];
     <?php
     $args = array(
       'post_type'      => 'routes',
-      'posts_per_page' => 10,
+      'posts_per_page' => -1,
     );
 
     $routes_query = new WP_Query($args);
@@ -121,11 +146,30 @@
       var fallbackCenter = [9.2443, -65.9320];
       var fallbackZoom = 12;
 
+      var mapEl = document.getElementById('map');
       var map = L.map('map', { zoomControl: false }).setView(fallbackCenter, fallbackZoom);
 
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>'
-      }).addTo(map);
+      var tileAttrib = '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>';
+      var tileDark  = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',  { attribution: tileAttrib });
+      var tileLight = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: tileAttrib });
+      var mapActive = false;
+
+      tileDark.addTo(map);
+
+      function activateMap() {
+        if (mapActive) return;
+        mapActive = true;
+        mapEl.classList.add('is-active');
+        map.removeLayer(tileDark);
+        tileLight.addTo(map);
+      }
+
+      // Registrar listeners DESPUÉS de la carga inicial para evitar
+      // que fitBounds/setView disparen movestart/zoomstart prematuramente
+      function attachMapListeners() {
+        map.on('mousedown touchstart', activateMap);
+        mapEl.addEventListener('mouseenter', activateMap, { once: true });
+      }
 
       L.control.zoom({ position: 'bottomright' }).addTo(map);
 
@@ -163,9 +207,9 @@
       function norm(s){ return String(s || '').trim().toLowerCase(); }
 
       // --- FILTROS UI ---
-      var filtersEl = document.getElementById('route-filters');
+      var filtersEl = document.getElementById('gps-filters');
 
-      // extraer tags únicos
+      // Extraer tags únicos presentes en rutas cargadas
       var tagSet = new Set();
       routes.forEach(function (r) {
         (r.tags || []).forEach(function (t) {
@@ -174,20 +218,98 @@
         });
       });
 
-      var tags = Array.from(tagSet).sort();
+      // Construir grupos válidos (solo con tags que existan en rutas)
+      var validGroups = [];
+      filterGroups.forEach(function (group) {
+        var validTags = (group.tags || []).filter(function (t) {
+          return tagSet.has(String(t || '').trim());
+        });
+        if (group.label && validTags.length > 0) {
+          validGroups.push({ label: group.label, tags: validTags });
+        }
+      });
 
-      // ✅ Botones: Todos, Solo POIs, luego tags
-      var filterButtons = ['Todos', 'Solo POIs'].concat(tags);
+      // Construir HTML de filtros
+      // Píldoras fijas
+      var html = '<button type="button" class="gps-pill is-active" data-filter="all" data-filter-type="all">Todos</button>';
+      html += '<button type="button" class="gps-pill" data-filter="pois" data-filter-type="pois">Solo POIs</button>';
 
-      filtersEl.innerHTML = filterButtons.map(function (t, idx) {
-        var isActive = idx === 0 ? 'is-active' : '';
-        var value =
-          (t === 'Todos') ? 'all' :
-          (t === 'Solo POIs') ? 'pois' :
-          t; // tag
+      // Grupo como píldora con sub-tags desplegables
+      validGroups.forEach(function (group, i) {
+        var groupId = 'gps-group-' + i;
+        var groupTagsNorm = group.tags.map(norm).join(',');
+        html += `<div class="gps-dropdown" id="${groupId}-wrap">
+          <div class="gps-group-pill">
+            <button type="button" class="gps-pill gps-pill--group" data-filter-type="group" data-group-tags="${groupTagsNorm}" data-group-id="${groupId}">${group.label}</button><button type="button" class="gps-pill__expand" data-group-id="${groupId}" aria-label="Ver sub-filtros">▾</button>
+          </div>
+          <div class="gps-panel" id="${groupId}-panel">`;
+        group.tags.forEach(function (t) {
+          html += `<button type="button" class="gps-tag" data-filter-type="tag" data-filter="${t}">${t}</button>`;
+        });
+        html += `</div></div>`;
+      });
 
-        return `<li><button type="button" class="route-filter ${isActive}" data-tag="${value}">${t}</button></li>`;
-      }).join('');
+      filtersEl.innerHTML = `<div class="gps-filters__inner">${html}</div>`;
+
+      // Panels: abrir/cerrar expand arrows
+      filtersEl.querySelectorAll('.gps-pill__expand').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var gid    = btn.dataset.groupId;
+          var panel  = document.getElementById(gid + '-panel');
+          var isOpen = panel.classList.toggle('is-open');
+          btn.classList.toggle('is-open', isOpen);
+          // Cerrar los demás
+          filtersEl.querySelectorAll('.gps-panel').forEach(function (p) {
+            if (p !== panel) {
+              p.classList.remove('is-open');
+              var otherId = p.id.replace('-panel', '');
+              var otherBtn = filtersEl.querySelector(`.gps-pill__expand[data-group-id="${otherId}"]`);
+              if (otherBtn) otherBtn.classList.remove('is-open');
+            }
+          });
+        });
+      });
+
+      // Cerrar todos los panels al hacer click fuera (sin bloquear clicks en tags)
+      document.addEventListener('click', function (e) {
+        if (!filtersEl.contains(e.target)) {
+          filtersEl.querySelectorAll('.gps-panel').forEach(function (p) { p.classList.remove('is-open'); });
+          filtersEl.querySelectorAll('.gps-pill__expand').forEach(function (b) { b.classList.remove('is-open'); });
+        }
+      });
+
+      // Marcar visualmente el filtro activo
+      function setActiveFilter(filterType, filterValue) {
+        filtersEl.querySelectorAll('.gps-pill, .gps-pill__expand').forEach(function (b) { b.classList.remove('is-active'); });
+        filtersEl.querySelectorAll('.gps-tag').forEach(function (b) { b.classList.remove('is-active'); });
+
+        if (filterType === 'all' || filterType === 'pois') {
+          var pill = filtersEl.querySelector(`.gps-pill[data-filter="${filterValue}"]`);
+          if (pill) pill.classList.add('is-active');
+        } else if (filterType === 'group') {
+          var groupBtn = filtersEl.querySelector(`.gps-pill--group[data-group-id="${filterValue}"]`);
+          if (groupBtn) {
+            groupBtn.classList.add('is-active');
+            var expandBtn = filtersEl.querySelector(`.gps-pill__expand[data-group-id="${filterValue}"]`);
+            if (expandBtn) expandBtn.classList.add('is-active');
+          }
+        } else if (filterType === 'tag') {
+          var tagBtn = filtersEl.querySelector(`.gps-tag[data-filter="${filterValue}"]`);
+          if (tagBtn) {
+            tagBtn.classList.add('is-active');
+            // Marcar también el grupo padre
+            var parentDrop = tagBtn.closest('.gps-dropdown');
+            if (parentDrop) {
+              var gid = parentDrop.id.replace('-wrap', '');
+              var parentPill = filtersEl.querySelector(`.gps-pill--group[data-group-id="${gid}"]`);
+              var parentExpand = filtersEl.querySelector(`.gps-pill__expand[data-group-id="${gid}"]`);
+              if (parentPill) parentPill.classList.add('is-active');
+              if (parentExpand) parentExpand.classList.add('is-active');
+            }
+          }
+        }
+      }
 
       // --- DIBUJAR POIs (siempre, pero en su layer) ---
       function drawPOIs() {
@@ -222,11 +344,13 @@
       }
 
       // --- DIBUJAR RUTAS (SEGÚN FILTRO) ---
-      function drawRoutes(filterTagRaw) {
-        var filterTag = norm(filterTagRaw);
+      // mode: 'all' | 'pois' | 'group' | 'tag'
+      // activeTags: array de strings normalizados (para group/tag)
+      function drawRoutes(mode, activeTags) {
+        activeTags = (activeTags || []).map(norm);
 
         // mostrar/ocultar capas según modo
-        if (filterTag === 'pois') {
+        if (mode === 'pois') {
           routesLayer.clearLayers();
           // POIs visibles
           if (!map.hasLayer(poiLayer)) poiLayer.addTo(map);
@@ -264,7 +388,9 @@
           if (routePoints.length === 0) return;
 
           var routeTagsNorm = (route.tags || []).map(norm);
-          var matches = (filterTag === 'all') || routeTagsNorm.includes(filterTag);
+          var matches = (mode === 'all') ||
+                        (mode === 'group' && activeTags.some(function (t) { return routeTagsNorm.includes(t); })) ||
+                        (mode === 'tag'   && activeTags.some(function (t) { return routeTagsNorm.includes(t); }));
           if (!matches) return;
 
           var polyline = L.polyline(routePoints, {
@@ -320,20 +446,58 @@
 
       // Click filtros
       filtersEl.addEventListener('click', function (e) {
-        var btn = e.target.closest('.route-filter');
+        var btn = e.target.closest('[data-filter-type]');
         if (!btn) return;
+        if (btn.classList.contains('gps-pill__expand')) return;
 
-        filtersEl.querySelectorAll('.route-filter').forEach(function (b) {
-          b.classList.remove('is-active');
-        });
-        btn.classList.add('is-active');
+        // Activar el mapa al interactuar con filtros (mobile + desktop)
+        activateMap();
 
-        drawRoutes(btn.dataset.tag);
+        var filterType  = btn.dataset.filterType;
+        var filterValue = btn.dataset.filter || btn.dataset.groupId;
+
+        // Toggle: si ya está activo, volver a "Todos"
+        if (btn.classList.contains('is-active') && filterType !== 'all') {
+          setActiveFilter('all', 'all');
+          drawRoutes('all', []);
+          btn.blur(); // limpiar estado visual en mobile
+          return;
+        }
+
+        setActiveFilter(filterType, filterValue);
+
+        // Cerrar panel si viene de un sub-tag
+        if (filterType === 'tag') {
+          var parentPanel = btn.closest('.gps-panel');
+          if (parentPanel) parentPanel.classList.remove('is-open');
+          var dropWrap = btn.closest('.gps-dropdown');
+          if (dropWrap) {
+            var gid = dropWrap.id.replace('-wrap', '');
+            var expandBtn = filtersEl.querySelector(`.gps-pill__expand[data-group-id="${gid}"]`);
+            if (expandBtn) expandBtn.classList.remove('is-open');
+          }
+        }
+
+        // Llamar drawRoutes
+        if (filterType === 'all') {
+          drawRoutes('all', []);
+        } else if (filterType === 'pois') {
+          drawRoutes('pois', []);
+        } else if (filterType === 'group') {
+          var groupTagsRaw = btn.dataset.groupTags || '';
+          drawRoutes('group', groupTagsRaw.split(','));
+        } else if (filterType === 'tag') {
+          drawRoutes('tag', [norm(filterValue)]);
+        }
+
+        btn.blur(); // limpiar estado :focus/:hover en mobile tras seleccionar
       });
 
-      // Primera carga
+      // Primera carga — los listeners se registran después para que
+      // fitBounds/setView no activen el mapa prematuramente
       drawPOIs();
-      drawRoutes('all');
+      drawRoutes('all', []);
+      setTimeout(attachMapListeners, 600);
 
     });
   </script>
