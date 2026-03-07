@@ -7,6 +7,27 @@
   <div id="map" ></div>
 
   <script>
+    <?php
+    // ── Prefiltro por contexto (tag.php, archive CPT, URL param) ──────────
+    $gps_prefilter = ['type' => 'all', 'value' => ''];
+
+    $url_gps = isset($_GET['gps']) ? sanitize_text_field(wp_unslash($_GET['gps'])) : '';
+    if ($url_gps === 'pois') {
+      $gps_prefilter = ['type' => 'pois', 'value' => 'pois'];
+    } elseif ($url_gps) {
+      $gps_prefilter = ['type' => 'tag', 'value' => $url_gps];
+    } elseif (is_tag()) {
+      $current_tag = get_queried_object();
+      $gps_prefilter = ['type' => 'tag', 'value' => $current_tag->name];
+    } elseif (is_post_type_archive('point-of-interest')) {
+      $gps_prefilter = ['type' => 'pois', 'value' => 'pois'];
+    }
+    // routes archive → modo 'all' por defecto (no hace falta caso especial)
+    ?>
+    var gpsPrefilter = <?php echo wp_json_encode($gps_prefilter); ?>;
+  </script>
+
+  <script>
     var filterGroups = [];
     <?php
     if (have_rows('filter_groups')) :
@@ -444,6 +465,20 @@
         }
       }
 
+      // ── Sincronizar URL sin recargar la página ───────────────────────────
+      function updateUrl(filterType, filterValue) {
+        var params = new URLSearchParams(window.location.search);
+        if (filterType === 'all') {
+          params.delete('gps');
+        } else if (filterType === 'pois') {
+          params.set('gps', 'pois');
+        } else if (filterType === 'tag') {
+          params.set('gps', filterValue);
+        }
+        var newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '') + window.location.hash;
+        history.replaceState(null, '', newUrl);
+      }
+
       // Click filtros
       filtersEl.addEventListener('click', function (e) {
         var btn = e.target.closest('[data-filter-type]');
@@ -460,7 +495,8 @@
         if (btn.classList.contains('is-active') && filterType !== 'all') {
           setActiveFilter('all', 'all');
           drawRoutes('all', []);
-          btn.blur(); // limpiar estado visual en mobile
+          updateUrl('all', '');
+          btn.blur();
           return;
         }
 
@@ -478,25 +514,54 @@
           }
         }
 
-        // Llamar drawRoutes
+        // Llamar drawRoutes + sincronizar URL
         if (filterType === 'all') {
           drawRoutes('all', []);
+          updateUrl('all', '');
         } else if (filterType === 'pois') {
           drawRoutes('pois', []);
+          updateUrl('pois', '');
         } else if (filterType === 'group') {
           var groupTagsRaw = btn.dataset.groupTags || '';
           drawRoutes('group', groupTagsRaw.split(','));
+          // grupos no sincronizan URL
         } else if (filterType === 'tag') {
           drawRoutes('tag', [norm(filterValue)]);
+          updateUrl('tag', filterValue);
         }
 
-        btn.blur(); // limpiar estado :focus/:hover en mobile tras seleccionar
+        btn.blur();
       });
 
-      // Primera carga — los listeners se registran después para que
-      // fitBounds/setView no activen el mapa prematuramente
+      // ── Primera carga ─────────────────────────────────────────────────────
       drawPOIs();
-      drawRoutes('all', []);
+
+      // URL param tiene prioridad sobre contexto PHP
+      var urlGps = new URLSearchParams(window.location.search).get('gps');
+      var prefilter = urlGps
+        ? (urlGps === 'pois' ? { type: 'pois', value: 'pois' } : { type: 'tag', value: urlGps })
+        : (gpsPrefilter || { type: 'all', value: '' });
+
+      if (prefilter.type && prefilter.type !== 'all') {
+        // Aplicar prefiltro
+        if (prefilter.type === 'pois') {
+          setActiveFilter('pois', 'pois');
+          drawRoutes('pois', []);
+        } else if (prefilter.type === 'tag') {
+          setActiveFilter('tag', prefilter.value);
+          drawRoutes('tag', [norm(prefilter.value)]);
+        }
+        activateMap();
+        // Scroll al mapa con offset del header fijo
+        setTimeout(function () {
+          var offsetTop = filtersEl.getBoundingClientRect().top + window.scrollY - 75;
+          window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+        }, 400);
+      } else {
+        drawRoutes('all', []);
+      }
+
+      // Los listeners se registran después para que fitBounds no active el mapa
       setTimeout(attachMapListeners, 600);
 
     });
