@@ -132,6 +132,13 @@ add_action('pre_get_posts', function ($query) {
 });
 
 
+// ── Invalidar transients del bloque GPS al guardar rutas o POIs ─
+add_action('save_post', function ($post_id) {
+    $type = get_post_type($post_id);
+    if ($type === 'routes')           delete_transient('gps_block_routes');
+    if ($type === 'point-of-interest') delete_transient('gps_block_pois');
+});
+
 add_action('wp_ajax_load_more_tips', 'mag_load_more_tips');
 add_action('wp_ajax_nopriv_load_more_tips', 'mag_load_more_tips');
 

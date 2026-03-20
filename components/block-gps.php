@@ -53,110 +53,85 @@
   </script>
 
   <script>
-    var routes = [];
     <?php
-    $args = array(
-      'post_type'      => 'routes',
-      'posts_per_page' => -1,
-    );
-
-    $routes_query = new WP_Query($args);
-
-    if ($routes_query->have_posts()) :
-      while ($routes_query->have_posts()) : $routes_query->the_post();
-
-        $points    = get_field('points');
-        $title     = get_the_title();
-        $blog      = get_field('blog_entry');
-        $image_url = get_field('image');
-
-        // ✅ TAGS (cambia 'post_tag' por tu taxonomía si aplica)
-        $tags = wp_get_post_terms(get_the_ID(), 'post_tag', ['fields' => 'names']);
-        if (is_wp_error($tags) || empty($tags)) { $tags = []; }
-
-        if ($points) :
-          $route_points = [];
-          foreach ($points as $point) {
-            $lat = $point['latitude'];
-            $lng = $point['longitude'];
-            if (!empty($lat) && !empty($lng)) {
-              $route_points[] = [$lat, $lng];
+    // ── Transient: rutas ─────────────────────────────────────────
+    $routes_data = get_transient('gps_block_routes');
+    if ($routes_data === false) {
+      $routes_data = [];
+      $routes_query = new WP_Query(['post_type' => 'routes', 'posts_per_page' => -1]);
+      if ($routes_query->have_posts()) :
+        while ($routes_query->have_posts()) : $routes_query->the_post();
+          $points    = get_field('points');
+          $blog      = get_field('blog_entry');
+          $image_url = get_field('image');
+          $tags      = wp_get_post_terms(get_the_ID(), 'post_tag', ['fields' => 'names']);
+          if (is_wp_error($tags)) $tags = [];
+          if ($points) :
+            $route_points  = [];
+            $poi_waypoints = [];
+            foreach ($points as $p) {
+              if (!empty($p['latitude']) && !empty($p['longitude']))
+                $route_points[] = [$p['latitude'], $p['longitude']];
             }
-          }
-
-          // Waypoints POI (para tu link de Google Maps)
-          $poi_waypoints = [];
-          $poi_posts = get_field('route_point_of_interest');
-          if (!empty($poi_posts)) {
-            foreach ((array) $poi_posts as $poi) {
-              $poi_lat = get_field('latitude', $poi);
-              $poi_lng = get_field('longitude', $poi);
-              if (!empty($poi_lat) && !empty($poi_lng)) {
-                $poi_waypoints[] = $poi_lat . ',' . $poi_lng;
+            $poi_posts = get_field('route_point_of_interest');
+            if (!empty($poi_posts)) {
+              foreach ((array) $poi_posts as $poi) {
+                $plat = get_field('latitude', $poi);
+                $plng = get_field('longitude', $poi);
+                if (!empty($plat) && !empty($plng)) $poi_waypoints[] = $plat . ',' . $plng;
               }
             }
+            if (count($route_points) > 0) {
+              $routes_data[] = [
+                'title'        => get_the_title(),
+                'points'       => $route_points,
+                'route_url'    => get_permalink(),
+                'blog_url'     => $blog ? get_permalink($blog) : '',
+                'image_url'    => $image_url ?: '',
+                'poi_waypoints'=> $poi_waypoints,
+                'tags'         => $tags,
+              ];
+            }
+          endif;
+        endwhile;
+        wp_reset_postdata();
+      endif;
+      set_transient('gps_block_routes', $routes_data, 12 * HOUR_IN_SECONDS);
+    }
+
+    // ── Transient: POIs ──────────────────────────────────────────
+    $pois_data = get_transient('gps_block_pois');
+    if ($pois_data === false) {
+      $pois_data  = [];
+      $poi_query  = new WP_Query(['post_type' => 'point-of-interest', 'posts_per_page' => -1, 'post_status' => 'publish']);
+      if ($poi_query->have_posts()) :
+        while ($poi_query->have_posts()) : $poi_query->the_post();
+          $lat   = get_field('latitude');
+          $lng   = get_field('longitude');
+          $image = get_field('image') ?: get_the_post_thumbnail_url(null, 'medium');
+          $gmaps = get_field('has_a_google_maps_card');
+          if (!empty($lat) && !empty($lng)) {
+            $pois_data[] = [
+              'lat'             => $lat,
+              'lng'             => $lng,
+              'entry_url'       => get_permalink(),
+              'image_url'       => $image ?: '',
+              'title'           => get_the_title(),
+              'google_maps_url' => $gmaps ? esc_url($gmaps) : '',
+            ];
           }
-
-          if (count($route_points) > 0) {
-            $route_obj = array(
-              'title' => $title,
-              'points' => $route_points,
-              'route_url' => get_permalink(),
-              'blog_url' => $blog ? get_permalink($blog) : '',
-              'image_url' => $image_url ? $image_url : '',
-              'poi_waypoints' => $poi_waypoints,
-              'tags' => $tags
-            );
-            echo "routes.push(" . json_encode($route_obj) . ");\n";
-          }
-
-        endif;
-
-      endwhile;
-      wp_reset_postdata();
-    else :
-      echo "console.error('No routes found.');";
-    endif;
+        endwhile;
+        wp_reset_postdata();
+      endif;
+      set_transient('gps_block_pois', $pois_data, 12 * HOUR_IN_SECONDS);
+    }
     ?>
+    var routes           = <?php echo wp_json_encode($routes_data); ?>;
+    var pointsOfInterest = <?php echo wp_json_encode($pois_data); ?>;
   </script>
 
   <script>
-    var pointsOfInterest = [];
-    <?php
-    $poi_args = array(
-      'post_type'      => 'point-of-interest',
-      'posts_per_page' => -1,
-      'post_status'    => 'publish',
-    );
-
-    $poi_query = new WP_Query($poi_args);
-
-    if ($poi_query->have_posts()) :
-      while ($poi_query->have_posts()) : $poi_query->the_post();
-        $lat = get_field('latitude');
-        $lng = get_field('longitude');
-        $image = get_field('image') ?: get_the_post_thumbnail_url(null, 'medium');
-        $custom_gmaps_url = get_field('has_a_google_maps_card');
-
-        if (!empty($lat) && !empty($lng)) {
-          $poi_obj = array(
-            'lat' => $lat,
-            'lng' => $lng,
-            'entry_url' => get_permalink(),
-            'image_url' => $image ? $image : '',
-            'title' => get_the_title(),
-            'google_maps_url' => $custom_gmaps_url ? esc_url($custom_gmaps_url) : ''
-          );
-          echo "pointsOfInterest.push(" . json_encode($poi_obj) . ");\n";
-        }
-      endwhile;
-      wp_reset_postdata();
-    endif;
-    ?>
-  </script>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    function initGpsMap() {
 
       if (!routes || routes.length === 0) {
         console.error('No routes to display.');
@@ -563,8 +538,18 @@
 
       // Los listeners se registran después para que fitBounds no active el mapa
       setTimeout(attachMapListeners, 600);
+    }
 
-    });
+    // ── Lazy init: arranca cuando el mapa entra en viewport ──────
+    var _mapInited = false;
+    var _observer  = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting && !_mapInited) {
+        _mapInited = true;
+        _observer.disconnect();
+        initGpsMap();
+      }
+    }, { rootMargin: '200px' });
+    _observer.observe(document.getElementById('map'));
   </script>
 
 
