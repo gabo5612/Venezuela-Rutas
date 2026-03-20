@@ -29,6 +29,7 @@ if (!$fp_posts) return;
         if (!$fp_post) continue;
 
         $thumb   = get_the_post_thumbnail_url($fp_post->ID, 'large');
+        $video   = get_field('video_featured', $fp_post->ID) ?: '';
         $excerpt = get_the_excerpt($fp_post->ID);
         $date    = get_the_date('d M Y', $fp_post->ID);
       ?>
@@ -36,7 +37,9 @@ if (!$fp_posts) return;
         <a href="<?php echo esc_url(get_permalink($fp_post->ID)); ?>" class="fp-card__link" aria-label="<?php echo esc_attr($fp_post->post_title); ?>"></a>
 
         <div class="fp-card__image">
-          <?php if ($thumb) : ?>
+          <?php if ($video) : ?>
+            <video autoplay muted loop playsinline src="<?php echo esc_url($video); ?>"></video>
+          <?php elseif ($thumb) : ?>
             <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr($fp_post->post_title); ?>">
           <?php else : ?>
             <div class="fp-card__empty"><span class="material-symbols-outlined">terrain</span></div>

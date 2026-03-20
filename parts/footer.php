@@ -1,9 +1,27 @@
 <?php
-// CTA global: en POI → /nuevo-poi, en el resto → /nueva-ruta
-$is_poi_context = is_singular('point-of-interest') || is_post_type_archive('point-of-interest') || is_page_template('pages/page-suggest-route.php');
-$cta_url  = $is_poi_context ? home_url('/nuevo-poi')   : home_url('/nueva-ruta');
-$cta_lbl  = $is_poi_context ? 'Sugerir un POI'        : 'Sugerir una Ruta';
-$cta_icon = $is_poi_context ? 'location_on'            : 'add_location';
+$is_guide_context = is_post_type_archive('guide') || is_tax('guide-zone') || (is_singular() && get_post_type() === 'guide');
+$is_poi_context   = !$is_guide_context && (is_singular('point-of-interest') || is_post_type_archive('point-of-interest') || is_page_template('pages/page-suggest-route.php'));
+
+if ($is_guide_context) :
+  $mailto = 'mailto:patacaliente@gmail.com?subject=' . rawurlencode('Quiero ser guia PataCaliente');
+?>
+<section class="global-cta" data-animate="fade-up">
+  <div class="global-cta__inner">
+    <div class="global-cta__text">
+      <span class="global-cta__eyebrow">Directorio</span>
+      <h2 class="global-cta__title">¿Eres guía local?</h2>
+      <p class="global-cta__desc">Únete al directorio de PataCaliente y conecta con exploradores que buscan guías en Venezuela.</p>
+    </div>
+    <a href="<?php echo esc_url($mailto); ?>" class="btn btn--primary global-cta__btn">
+      <span class="material-symbols-outlined">mail</span>
+      Quiero ser guía
+    </a>
+  </div>
+</section>
+<?php else :
+  $cta_url  = $is_poi_context ? home_url('/nuevo-poi') : home_url('/nueva-ruta');
+  $cta_lbl  = $is_poi_context ? 'Sugerir un POI'       : 'Sugerir una Ruta';
+  $cta_icon = $is_poi_context ? 'location_on'           : 'add_location';
 ?>
 <section class="global-cta" data-animate="fade-up">
   <div class="global-cta__inner">
@@ -18,6 +36,7 @@ $cta_icon = $is_poi_context ? 'location_on'            : 'add_location';
     </a>
   </div>
 </section>
+<?php endif; ?>
 
 <footer class="site-footer">
 

@@ -28,11 +28,17 @@ $location = get_field('location')  ?: '';
 // ── GPS polyline points (Routes group) ──────────────────────
 $points    = get_field('points') ?: [];
 $route_pts = [];
+$ele_data  = [];   // [ [lat,lng], ele ] paralelo a route_pts
 foreach ($points as $p) {
     $plat = floatval($p['latitude']  ?? 0);
     $plng = floatval($p['longitude'] ?? 0);
-    if ($plat && $plng) $route_pts[] = [$plat, $plng];
+    if ($plat && $plng) {
+        $route_pts[] = [$plat, $plng];
+        $ele = isset($p['elevation']) && $p['elevation'] !== '' ? floatval($p['elevation']) : null;
+        $ele_data[]  = $ele;
+    }
 }
+$has_elevation = count(array_filter($ele_data, fn($e) => $e !== null)) > 1;
 
 // ── Checkpoints (Post group) ─────────────────────────────────
 $checkpoints = get_field('checkpoints') ?: [];
@@ -66,6 +72,22 @@ $blog_url = $blog_raw ? get_permalink($blog_raw) : '';
 
 // ── Google Maps link ─────────────────────────────────────────
 $gmaps_url = get_field('has_a_google_maps_card') ?: '';
+
+// ── Guide profile fields ──────────────────────────────────────
+$guide_whatsapp  = get_field('guide_whatsapp')   ?: '';
+$guide_email     = get_field('guide_email')      ?: '';
+$guide_instagram = get_field('guide_instagram')  ?: '';
+$guide_price     = get_field('guide_price_from') ?: '';
+$guide_featured  = get_field('guide_is_featured') ?: false;
+$guide_specialty = get_field('guide_specialty')  ?: [];
+$has_guide_contact = $guide_whatsapp || $guide_email || $guide_instagram;
+
+// ── Sponsor (routes) ─────────────────────────────────────────
+$sponsor_name  = get_field('sponsor_name')  ?: '';
+$sponsor_logo  = get_field('sponsor_logo')  ?: '';
+$sponsor_url   = get_field('sponsor_url')   ?: '';
+$sponsor_label = get_field('sponsor_label') ?: 'Equipado por';
+$has_sponsor   = $sponsor_name || $sponsor_logo;
 
 // ── Taxonomy ─────────────────────────────────────────────────
 $cats     = get_the_category();
@@ -114,6 +136,7 @@ if ($gmaps_url) {
 $related_label = match ($post_type) {
     'routes'            => 'Rutas GPS',
     'point-of-interest' => 'Puntos de Interés',
+    'guide'             => 'Otros Guías',
     default             => 'Post Similares',
 };
 ?>
@@ -343,7 +366,115 @@ $related_label = match ($post_type) {
   </div>
   <?php endif; ?>
 
+  <!-- ══ ELEVATION CHART ════════════════════════════════════════ -->
+  <?php if ($has_elevation) :
+    // Calcular distancia acumulada (Haversine simplificado)
+    $dist_km  = [0.0];
+    $eles     = [];
+    $R        = 6371.0;
+    foreach ($route_pts as $i => $pt) {
+        $e = $ele_data[$i];
+        if ($e === null) continue;
+        $eles[] = $e;
+        if ($i > 0) {
+            $prev  = $route_pts[$i - 1];
+            $dLat  = deg2rad($pt[0] - $prev[0]);
+            $dLng  = deg2rad($pt[1] - $prev[1]);
+            $a     = sin($dLat/2)**2 + cos(deg2rad($prev[0])) * cos(deg2rad($pt[0])) * sin($dLng/2)**2;
+            $dist_km[] = end($dist_km) + $R * 2 * atan2(sqrt($a), sqrt(1-$a));
+        }
+    }
+    // Ganancia de elevación para stats bar
+    $ele_gain = 0;
+    for ($i = 1; $i < count($eles); $i++) {
+        $diff = $eles[$i] - $eles[$i - 1];
+        if ($diff > 0) $ele_gain += $diff;
+    }
+  ?>
+  <div class="elevation-chart-wrap" data-animate="fade-up">
+    <div class="elevation-chart-header">
+      <span class="material-symbols-outlined">elevation</span>
+      Perfil de Elevación
+      <span class="elevation-chart-gain">+<?php echo round($ele_gain); ?> m ganancia</span>
+    </div>
+    <div id="elevation-chart"></div>
+  </div>
 
+  <script>
+  (function () {
+    var xArr = <?php echo json_encode(array_values($dist_km)); ?>;
+    var yArr = <?php echo json_encode($eles); ?>;
+    var wrap = document.getElementById('elevation-chart');
+    if (!wrap || xArr.length < 2) return;
+
+    var W = wrap.offsetWidth || 700, H = 160, PAD = 44;
+    var canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
+    canvas.style.width = '100%';
+    wrap.appendChild(canvas);
+    var ctx = canvas.getContext('2d');
+
+    var minX = xArr[0], maxX = xArr[xArr.length - 1];
+    var minY = Math.min.apply(null, yArr), maxY = Math.max.apply(null, yArr);
+    var rangeY = maxY - minY || 1;
+
+    function pt(x, y) {
+      return {
+        x: PAD + (x - minX) / (maxX - minX) * (W - PAD * 2),
+        y: H - PAD - (y - minY) / rangeY * (H - PAD * 1.4)
+      };
+    }
+
+    // Grid + labels Y
+    [0, 0.25, 0.5, 0.75, 1].forEach(function (t) {
+      var val = minY + t * rangeY;
+      var p   = pt(minX, val);
+      ctx.strokeStyle = 'rgba(255,255,255,.08)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(PAD, p.y); ctx.lineTo(W - PAD, p.y); ctx.stroke();
+      ctx.fillStyle = 'rgba(255,255,255,.4)'; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
+      ctx.fillText(Math.round(val) + 'm', PAD - 4, p.y + 3);
+    });
+
+    // Labels X
+    ctx.fillStyle = 'rgba(255,255,255,.4)'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
+    [0, 0.25, 0.5, 0.75, 1].forEach(function (t) {
+      var x = minX + t * (maxX - minX);
+      var p = pt(x, minY);
+      ctx.fillText(x.toFixed(1) + 'km', p.x, H - 6);
+    });
+
+    // Build screen points
+    var pts = xArr.map(function(x, i) { return pt(x, yArr[i]); });
+
+    function smoothPath(points) {
+      ctx.moveTo(points[0].x, points[0].y);
+      for (var i = 0; i < points.length - 1; i++) {
+        var mx = (points[i].x + points[i+1].x) / 2;
+        var my = (points[i].y + points[i+1].y) / 2;
+        ctx.quadraticCurveTo(points[i].x, points[i].y, mx, my);
+      }
+      ctx.lineTo(points[points.length-1].x, points[points.length-1].y);
+    }
+
+    var p0 = pts[0], pL = pts[pts.length - 1];
+
+    // Fill
+    ctx.beginPath();
+    ctx.moveTo(p0.x, H - PAD);
+    ctx.lineTo(p0.x, p0.y);
+    smoothPath(pts);
+    ctx.lineTo(pL.x, H - PAD);
+    ctx.lineTo(p0.x, H - PAD);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(13,242,70,0.12)'; ctx.fill();
+
+    // Line
+    ctx.beginPath();
+    smoothPath(pts);
+    ctx.strokeStyle = '#0df246'; ctx.lineWidth = 2; ctx.stroke();
+  }());
+  </script>
+  <?php endif; ?>
 
   <!-- ══ GALLERY ════════════════════════════════════════════════ -->
   <?php if ($has_gallery) : ?>
@@ -410,6 +541,64 @@ $related_label = match ($post_type) {
     }
   }());
   </script>
+  <?php endif; ?>
+
+  <!-- ══ GUIDE CONTACT ═══════════════════════════════════════════ -->
+  <?php if ($has_guide_contact || !empty($guide_specialty) || $guide_price) : ?>
+  <div class="guide-contact" data-animate="fade-up">
+    <?php if (!empty($guide_specialty)) : ?>
+    <div class="guide-contact__specs">
+      <?php foreach ($guide_specialty as $s) : ?>
+        <span class="badge badge--outline"><?php echo esc_html($s); ?></span>
+      <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+    <div class="guide-contact__actions">
+      <?php if ($guide_price) : ?>
+      <div class="guide-contact__price">
+        <span class="material-symbols-outlined">payments</span>
+        Desde <strong>$<?php echo esc_html($guide_price); ?></strong>/día
+      </div>
+      <?php endif; ?>
+      <?php if ($guide_whatsapp) : ?>
+      <a href="https://wa.me/<?php echo esc_attr(preg_replace('/\D/', '', $guide_whatsapp)); ?>"
+         class="btn btn--whatsapp" target="_blank" rel="noopener">
+        <span class="material-symbols-outlined">chat</span> WhatsApp
+      </a>
+      <?php endif; ?>
+      <?php if ($guide_instagram) : ?>
+      <a href="https://instagram.com/<?php echo esc_attr(ltrim($guide_instagram, '@')); ?>"
+         class="btn btn--outline" target="_blank" rel="noopener">
+        <span class="material-symbols-outlined">photo_camera</span>
+        @<?php echo esc_html(ltrim($guide_instagram, '@')); ?>
+      </a>
+      <?php endif; ?>
+      <?php if ($guide_email) : ?>
+      <a href="mailto:<?php echo esc_attr($guide_email); ?>" class="btn btn--outline">
+        <span class="material-symbols-outlined">mail</span> Email
+      </a>
+      <?php endif; ?>
+    </div>
+  </div>
+  <?php endif; ?>
+
+  <!-- ══ SPONSOR ══════════════════════════════════════════════════ -->
+  <?php if ($has_sponsor) : ?>
+  <div class="sponsor-band" data-animate="fade-up">
+    <span class="sponsor-band__label"><?php echo esc_html($sponsor_label); ?></span>
+    <?php if ($sponsor_url) : ?>
+    <a href="<?php echo esc_url($sponsor_url); ?>" target="_blank" rel="noopener sponsored" class="sponsor-band__link">
+    <?php endif; ?>
+      <?php if ($sponsor_logo) : ?>
+      <img src="<?php echo esc_url($sponsor_logo); ?>" alt="<?php echo esc_attr($sponsor_name); ?>" class="sponsor-band__logo">
+      <?php else : ?>
+      <span class="sponsor-band__name"><?php echo esc_html($sponsor_name); ?></span>
+      <?php endif; ?>
+    <?php if ($sponsor_url) : ?>
+    </a>
+    <?php endif; ?>
+  </div>
   <?php endif; ?>
 
   <!-- ══ RELATED ════════════════════════════════════════════════ -->

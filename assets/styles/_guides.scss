@@ -1,0 +1,308 @@
+// ═══════════════════════════════════════════════════════════════
+//  GUIDE ARCHIVE
+// ═══════════════════════════════════════════════════════════════
+
+.guide-archive {
+  padding: 2rem 0 4rem;
+}
+
+.guide-zone-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-bottom: 2.5rem;
+}
+
+.guide-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+// ── Guide card ───────────────────────────────────────────────
+.guide-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: transform .2s, border-color .2s;
+
+  &:hover {
+    transform: translateY(-3px);
+    border-color: var(--terracotta);
+  }
+
+  &--featured {
+    border-color: var(--terracotta);
+    box-shadow: 0 0 0 1px var(--terracotta);
+  }
+
+  &__link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  &__badge {
+    position: absolute;
+    top: .75rem;
+    right: .75rem;
+    z-index: 2;
+    background: var(--terracotta);
+    color: #fff;
+    font-size: .65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    padding: .2rem .6rem;
+    border-radius: 99px;
+  }
+
+  &__photo {
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: var(--surface-2);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .4s;
+    }
+  }
+
+  &:hover &__photo img {
+    transform: scale(1.04);
+  }
+
+  &__photo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+
+    .material-symbols-outlined {
+      font-size: 3rem;
+    }
+  }
+
+  &__body {
+    padding: 1.25rem;
+  }
+
+  &__name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: .4rem;
+    line-height: 1.2;
+  }
+
+  &__zone {
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+    font-size: .8rem;
+    color: var(--text-muted);
+    margin-bottom: .75rem;
+
+    .material-symbols-outlined {
+      font-size: .95rem;
+      color: var(--terracotta);
+    }
+  }
+
+  &__specs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .35rem;
+    margin-bottom: .75rem;
+  }
+
+  &__price {
+    font-size: .85rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+
+    strong {
+      color: var(--text);
+    }
+  }
+
+  &__cta {
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 2;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  GUIDE CONTACT (single.php)
+// ═══════════════════════════════════════════════════════════════
+
+.guide-contact {
+  width: 93%;
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--surface);
+
+  &__specs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    margin-bottom: 1.25rem;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .75rem;
+  }
+
+  &__price {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    font-size: .9rem;
+    color: var(--text-muted);
+    margin-right: auto;
+
+    .material-symbols-outlined {
+      font-size: 1.1rem;
+      color: var(--terracotta);
+    }
+
+    strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  GUIDES MAP BLOCK
+// ═══════════════════════════════════════════════════════════════
+
+.guides-map-section {
+  padding: 4rem 0;
+
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+}
+
+#guides-map {
+  width: 100%;
+  height: 480px;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid var(--border);
+
+  @media (max-width: 639px) {
+    height: 340px;
+  }
+}
+
+// ── Zone circle label ────────────────────────────────────────
+.guide-zone-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  cursor: pointer;
+  pointer-events: auto;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0,0,0,.6);
+
+  &__name {
+    font-size: .8rem;
+    font-weight: 800;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  &__count {
+    font-size: .7rem;
+    font-weight: 500;
+    color: rgba(255,255,255,.9);
+    white-space: nowrap;
+  }
+}
+
+// Cursor pointer sobre los círculos SVG de Leaflet
+.guide-zone-circle {
+  cursor: pointer;
+}
+
+// ── WhatsApp button ──────────────────────────────────────────
+.btn--whatsapp {
+  background: #25d366;
+  color: #fff;
+  border-color: #25d366;
+
+  &:hover {
+    background: #1aab52;
+    border-color: #1aab52;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SPONSOR BAND (single.php)
+// ═══════════════════════════════════════════════════════════════
+
+.sponsor-band {
+  width: 93%;
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: .75rem;
+  background: var(--surface);
+
+  &__label {
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+  }
+
+  &__logo {
+    max-height: 36px;
+    width: auto;
+    object-fit: contain;
+    filter: var(--logo-filter, none);
+  }
+
+  &__name {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text);
+  }
+}

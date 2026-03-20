@@ -590,6 +590,51 @@
     }
   }
 
+  /* ── Elevation chart ── */
+}
+
+.elevation-chart-wrap {
+  width: 93%;
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.25rem 1.5rem 1rem;
+
+  .uplot { width: 100% !important; }
+  .u-wrap { width: 100% !important; }
+}
+
+.elevation-chart-header {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+
+  .material-symbols-outlined {
+    font-size: 1rem;
+    color: #0df246;
+  }
+}
+
+.elevation-chart-gain {
+  margin-left: auto;
+  font-size: .8rem;
+  font-weight: 700;
+  color: #0df246;
+}
+
+#elevation-chart {
+  width: 100%;
+}
+
+.page-route {
   /* ── Related posts ── */
   &__related {
     width: 93%;

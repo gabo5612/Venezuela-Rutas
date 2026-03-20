@@ -131,6 +131,7 @@ add_action('pre_get_posts', function ($query) {
     }
 });
 
+
 add_action('wp_ajax_load_more_tips', 'mag_load_more_tips');
 add_action('wp_ajax_nopriv_load_more_tips', 'mag_load_more_tips');
 

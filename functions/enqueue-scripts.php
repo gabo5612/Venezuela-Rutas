@@ -13,8 +13,10 @@ function site_scripts() {
   wp_enqueue_style(  'glightbox', 'https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css', [], null );
   wp_enqueue_script( 'glightbox', 'https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js', [], null, true );
 
-  // ── Leaflet: solo singles y 404 ──────────────────────────
-  if ( is_single() || is_404() ) {
+  // ── Leaflet: singles, 404 y cualquier página/post con bloques de mapa ──
+  $needs_leaflet = is_single() || is_404() || is_page() || is_front_page() || is_home()
+                   || is_post_type_archive() || is_tax();
+  if ( $needs_leaflet ) {
     wp_enqueue_style(  'leaflet',        'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', [], '1.9.4' );
     wp_enqueue_style(  'leaflet-locate', 'https://unpkg.com/leaflet.locatecontrol/dist/L.Control.Locate.min.css', ['leaflet'], null );
     wp_enqueue_script( 'leaflet',        'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js', [], '1.9.4', true );
