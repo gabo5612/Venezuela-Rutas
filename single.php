@@ -829,5 +829,7 @@ document.addEventListener('DOMContentLoaded', function () {
 })();
 </script>
 
+<?php do_action('patacaliente_expedition_panel', get_the_ID(), get_post_type()); ?>
+
 <?php get_template_part('components/blocks'); ?>
 <?php get_template_part('parts/footer'); ?>

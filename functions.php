@@ -132,6 +132,41 @@ add_action('pre_get_posts', function ($query) {
 });
 
 
+// ── Custom Login / Register pages ───────────────────────────────
+add_filter('login_url', function($url, $redirect) {
+    $page = get_page_by_path('login');
+    if ($page) {
+        $custom = get_permalink($page);
+        return $redirect ? add_query_arg('redirect_to', urlencode($redirect), $custom) : $custom;
+    }
+    return $url;
+}, 10, 2);
+
+add_filter('register_url', function($url) {
+    $page = get_page_by_path('registro');
+    return $page ? get_permalink($page) : $url;
+});
+
+// Redirect wp-login.php to custom pages (except admin/ajax requests)
+add_action('init', function() {
+    if (!is_admin() && isset($_SERVER['REQUEST_URI'])) {
+        $uri = $_SERVER['REQUEST_URI'];
+        if (strpos($uri, 'wp-login.php') !== false && !isset($_POST['log']) && !isset($_POST['user_login'])) {
+            $action = $_GET['action'] ?? '';
+            if ($action === 'register') {
+                $page = get_page_by_path('registro');
+                if ($page) { wp_redirect(get_permalink($page)); exit; }
+            } elseif (!$action || $action === 'login') {
+                $page = get_page_by_path('login');
+                if ($page) {
+                    $redirect = isset($_GET['redirect_to']) ? '?redirect_to=' . urlencode($_GET['redirect_to']) : '';
+                    wp_redirect(get_permalink($page) . $redirect); exit;
+                }
+            }
+        }
+    }
+});
+
 // ── Invalidar transients del bloque GPS al guardar rutas o POIs ─
 add_action('save_post', function ($post_id) {
     $type = get_post_type($post_id);
@@ -223,4 +258,14 @@ function mag_load_more_tips()
         'has_more' => ($paged < (int) $q->max_num_pages),
     ]);
 }
+
+
+// ===============================
+// ADMIN BAR — solo administradores
+// ===============================
+add_action('after_setup_theme', function () {
+    if ( ! current_user_can('administrator') ) {
+        show_admin_bar( false );
+    }
+});
 

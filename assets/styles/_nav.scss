@@ -133,6 +133,65 @@
       gap: 1.3rem;
     }
   }
+
+  // ── User account button ───────────────────────────────────
+  &__user { position: relative; }
+
+  &__user-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    padding: .35rem .75rem .35rem .35rem;
+    border-radius: var(--radius-full);
+    border: 1px solid rgba(255,255,255,.1);
+    background: rgba(255,255,255,.05);
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    transition: border-color .15s, background .15s, color .15s;
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--primary-border);
+      background: var(--primary-dim);
+      color: var(--primary);
+    }
+
+    .material-symbols-outlined {
+      font-size: 1.25rem;
+      font-variation-settings: 'FILL' 0;
+    }
+
+    &--guest {
+      padding: .4rem;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      justify-content: center;
+
+      .material-symbols-outlined { font-size: 1.35rem; }
+    }
+  }
+
+  &__user-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--primary-border);
+  }
+
+  &__user-name {
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    @media (max-width: 640px) { display: none; }
+  }
 }
 
 /* Show share button only on single posts */
