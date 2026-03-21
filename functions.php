@@ -139,6 +139,18 @@ add_action('save_post', function ($post_id) {
     if ($type === 'point-of-interest') delete_transient('gps_block_pois');
 });
 
+// ── Endpoint público para datos del mapa GPS ────────────────────
+add_action('wp_ajax_gps_map_data',        'gps_map_data_handler');
+add_action('wp_ajax_nopriv_gps_map_data', 'gps_map_data_handler');
+function gps_map_data_handler() {
+    $routes = get_transient('gps_block_routes');
+    $pois   = get_transient('gps_block_pois');
+    // Si no hay transient lo generamos (raro, pero por si acaso)
+    if ($routes === false) $routes = [];
+    if ($pois   === false) $pois   = [];
+    wp_send_json(['routes' => $routes, 'pois' => $pois]);
+}
+
 add_action('wp_ajax_load_more_tips', 'mag_load_more_tips');
 add_action('wp_ajax_nopriv_load_more_tips', 'mag_load_more_tips');
 

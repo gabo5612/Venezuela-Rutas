@@ -21,8 +21,9 @@ if ( have_rows('slides') ) {
 }
 
 
-$is_slider = count($slides) > 1;
-$slider_id = 'hero-slider-' . uniqid();
+$is_slider  = count($slides) > 1;
+$slider_id  = 'hero-slider-' . uniqid();
+$first_slide = true;
 ?>
 
 <section class="block-hero">
@@ -78,7 +79,8 @@ $slider_id = 'hero-slider-' . uniqid();
           <?php else : ?>
             <img src="<?php echo esc_url($slide['image']); ?>"
                  alt="<?php echo esc_attr($slide['title'] . ' ' . $slide['title_highlight']); ?>"
-                 class="block-hero__img">
+                 class="block-hero__img"
+                 <?php echo $first_slide ? 'fetchpriority="high"' : 'loading="lazy"'; ?>>
           <?php endif; ?>
 
           <?php if ( $has_stats ) : ?>
@@ -102,7 +104,7 @@ $slider_id = 'hero-slider-' . uniqid();
 
       </div>
     </div>
-    <?php endforeach; ?>
+    <?php $first_slide = false; endforeach; ?>
 
   </div>
 </section>
