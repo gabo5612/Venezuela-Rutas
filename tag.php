@@ -14,25 +14,25 @@ $tag_desc    = $queried_tag ? $queried_tag->description : '';
     <div class="cat-hero__inner">
       <span class="cat-hero__eyebrow">
         <span class="material-symbols-outlined">label</span>
-        Etiqueta
+        Tag
       </span>
       <h1 class="cat-hero__title"><?php echo esc_html(strtoupper($tag_name)); ?></h1>
       <?php if ($tag_desc) : ?>
         <p class="cat-hero__desc"><?php echo esc_html($tag_desc); ?></p>
       <?php endif; ?>
       <div class="cat-hero__actions">
-        <a href="<?php echo esc_url(home_url('/')); ?>#gps-filters" class="btn btn--primary">Ver Rutas</a>
+        <a href="<?php echo esc_url(home_url('/')); ?>#gps-filters" class="btn btn--primary">View Routes</a>
       </div>
     </div>
   </section>
 
-  <!-- ══ FILTROS: OTRAS TAGS ════════════════════════════ -->
+  <!-- ══ FILTERS: OTHER TAGS ════════════════════════════ -->
   <div class="page-category__filters">
     <div class="filter-pills">
-      <span class="filter-pills__label">Etiquetas:</span>
+      <span class="filter-pills__label">Tags:</span>
       <a href="<?php echo esc_url(get_post_type_archive_link('routes') ?: home_url('/')); ?>"
          class="filter-pills__pill">
-        <span class="material-symbols-outlined">map</span> Todas
+        <span class="material-symbols-outlined">map</span> All
       </a>
       <?php
       $all_tags = get_tags(['hide_empty' => true]);
@@ -67,7 +67,7 @@ $tag_desc    = $queried_tag ? $queried_tag->description : '';
 
         if ($is_first) : $is_first = false; ?>
 
-        <!-- Post destacado (spans 2 cols) -->
+        <!-- Featured post (spans 2 cols) -->
         <article class="post-card--featured">
           <div class="featured-bg" <?php if ($thumb) echo 'style="background-image:url(\'' . esc_url($thumb) . '\')"'; ?>></div>
           <div class="featured-overlay"></div>
@@ -85,7 +85,7 @@ $tag_desc    = $queried_tag ? $queried_tag->description : '';
               <?php if ($time) : ?>
                 <div class="featured-stat"><span class="material-symbols-outlined">schedule</span><?php echo esc_html($time); ?></div>
               <?php endif; ?>
-              <span class="featured-read">Leer <span class="material-symbols-outlined">arrow_right_alt</span></span>
+              <span class="featured-read">Read <span class="material-symbols-outlined">arrow_right_alt</span></span>
             </div>
           </div>
           <a href="<?php the_permalink(); ?>" class="featured-link" aria-label="<?php the_title_attribute(); ?>"></a>
@@ -93,7 +93,7 @@ $tag_desc    = $queried_tag ? $queried_tag->description : '';
 
         <?php else : ?>
 
-        <!-- Post normal -->
+        <!-- Normal post -->
         <div class="post-card" data-animate="fade-up">
           <a href="<?php the_permalink(); ?>" class="post-card__link" aria-label="<?php the_title_attribute(); ?>"></a>
           <div class="post-card__image">
@@ -125,7 +125,7 @@ $tag_desc    = $queried_tag ? $queried_tag->description : '';
           </div>
         </div>
         <?php endif; endwhile; else : ?>
-        <p style="color:var(--text-muted);padding:2rem 0;">No hay entradas con esta etiqueta.</p>
+        <p style="color:var(--text-muted);padding:2rem 0;">No posts with this tag.</p>
         <?php endif; ?>
     </div>
 
@@ -135,7 +135,7 @@ $tag_desc    = $queried_tag ? $queried_tag->description : '';
       $next = next_posts($GLOBALS['wp_query']->max_num_pages, false);
       if ($next) : ?>
       <a href="<?php echo esc_url($next); ?>" class="load-more-btn">
-        Cargar Más
+        Load more
         <span class="material-symbols-outlined">keyboard_double_arrow_right</span>
       </a>
       <?php endif; ?>

@@ -1,8 +1,8 @@
 /* ── Gallery block, page & masonry grid ──────────────────────
-   .block-gallery  — bloque ACF flexible content
-   .page-gallery   — template página galería
-   .gallery-hero   — header de la página
-   .gallery-section — cada sección de fotos
+   .block-gallery  — ACF flexible content block
+   .page-gallery   — gallery page template
+   .gallery-hero   — page header
+   .gallery-section — each photo section
    .masonry-grid   — shared: single.php + gallery
 ──────────────────────────────────────────────────────────── */
 
@@ -149,7 +149,7 @@
   @media (min-width: 1024px) { columns: 4; }
 
   &--full {
-    // En page-gallery usa más columnas y sin padding lateral ajustado
+    // In page-gallery uses more columns and without adjusted side padding
     @media (min-width: 1024px) { columns: 4; }
     @media (min-width: 1280px) { columns: 5; }
   }
@@ -190,7 +190,7 @@
     }
   }
 
-  // Overlay con ícono play para videos
+  // Overlay with play icon for videos
   &__overlay--play {
     .material-symbols-outlined {
       font-size: 3rem;

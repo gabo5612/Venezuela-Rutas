@@ -1,5 +1,5 @@
 <?php
-$block_title = get_field('cat_title', 'option') ?: 'Categorías';
+$block_title = get_field('cat_title', 'option') ?: 'Categories';
 ?>
 
 <section class="block-categories">
@@ -7,7 +7,7 @@ $block_title = get_field('cat_title', 'option') ?: 'Categorías';
 
     <div class="section-header" data-animate="fade-up" data-animate-delay="100">
       <div>
-        <div class="section-header__eyebrow">Explorar Por</div>
+        <div class="section-header__eyebrow">Explore By</div>
         <h2 class="section-header__title"><?php echo esc_html($block_title); ?></h2>
       </div>
     </div>

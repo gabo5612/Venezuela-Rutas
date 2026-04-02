@@ -55,7 +55,7 @@
     margin: 0;
     padding: 0;
 
-    @media (min-width: 768px) {
+    @media (min-width: 1023px) {
       display: flex;
     }
 
@@ -126,6 +126,14 @@
     .material-symbols-outlined {
       font-size: 1rem;
     }
+     .mobile-span{
+        display: none !important;
+      }
+    @media (min-width:425px) {
+      .mobile-span{
+        display: inline !important;
+      }
+    }
   }
   .site-nav__links{
     .menu{
@@ -141,7 +149,7 @@
     display: inline-flex;
     align-items: center;
     gap: .45rem;
-    padding: .35rem .75rem .35rem .35rem;
+    padding: 0.4rem 0.5rem;
     border-radius: var(--radius-full);
     border: 1px solid rgba(255,255,255,.1);
     background: rgba(255,255,255,.05);

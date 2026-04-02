@@ -14,18 +14,18 @@ $active_tag  = is_tag() ? $queried_tag : null;
         <span class="material-symbols-outlined">route</span>
         Venezuela Rutas
       </span>
-      <h1 class="archive-hero__title">Todas las Rutas</h1>
-      <p class="archive-hero__desc">Explora nuestra colección de rutas documentadas a través de Venezuela.</p>
+      <h1 class="archive-hero__title">All Routes</h1>
+      <p class="archive-hero__desc">Explore our collection of documented routes across Venezuela.</p>
     </div>
   </section>
 
-  <!-- ══ FILTROS POR TAG ════════════════════════════════ -->
+  <!-- ══ FILTERS BY TAG ════════════════════════════════ -->
   <div class="page-archive-routes__filters">
     <div class="filter-pills">
-      <span class="filter-pills__label">Filtrar:</span>
+      <span class="filter-pills__label">Filter:</span>
       <a href="<?php echo esc_url(get_post_type_archive_link('routes')); ?>"
          class="filter-pills__pill <?php echo !$active_tag ? 'filter-pills__pill--active' : ''; ?>">
-        <span class="material-symbols-outlined">map</span> Todas
+        <span class="material-symbols-outlined">map</span> All
       </a>
       <?php
       $route_tags = get_tags(['hide_empty' => true]);
@@ -40,7 +40,7 @@ $active_tag  = is_tag() ? $queried_tag : null;
     </div>
   </div>
 
-  <!-- ══ GRID DE RUTAS ══════════════════════════════════ -->
+  <!-- ══ ROUTES GRID ══════════════════════════════════ -->
   <div class="page-archive-routes__grid">
     <div class="posts-grid">
       <?php
@@ -55,7 +55,7 @@ $active_tag  = is_tag() ? $queried_tag : null;
 
         if ($is_first) : $is_first = false; ?>
 
-        <!-- Ruta destacada (spans 2 cols) -->
+        <!-- Featured route (spans 2 cols) -->
         <article class="post-card--featured">
           <div class="featured-bg" <?php if ($thumb) echo 'style="background-image:url(\'' . esc_url($thumb) . '\')"'; ?>></div>
           <div class="featured-overlay"></div>
@@ -76,7 +76,7 @@ $active_tag  = is_tag() ? $queried_tag : null;
               <?php if ($elev) : ?>
                 <div class="featured-stat"><span class="material-symbols-outlined">moving</span><?php echo esc_html($elev); ?></div>
               <?php endif; ?>
-              <span class="featured-read">Ver Ruta <span class="material-symbols-outlined">arrow_right_alt</span></span>
+              <span class="featured-read">View Route <span class="material-symbols-outlined">arrow_right_alt</span></span>
             </div>
           </div>
           <a href="<?php the_permalink(); ?>" class="featured-link" aria-label="<?php the_title_attribute(); ?>"></a>
@@ -84,7 +84,7 @@ $active_tag  = is_tag() ? $queried_tag : null;
 
         <?php else : ?>
 
-        <!-- Ruta normal -->
+        <!-- Normal route -->
         <div class="post-card" data-animate="fade-up">
           <a href="<?php the_permalink(); ?>" class="post-card__link" aria-label="<?php the_title_attribute(); ?>"></a>
           <div class="post-card__image">
@@ -120,7 +120,7 @@ $active_tag  = is_tag() ? $queried_tag : null;
         </div>
 
         <?php endif; endwhile; else : ?>
-        <p style="color:var(--text-muted);padding:2rem 0;">No hay rutas disponibles.</p>
+        <p style="color:var(--text-muted);padding:2rem 0;">No routes available.</p>
         <?php endif; ?>
     </div>
 
@@ -130,7 +130,7 @@ $active_tag  = is_tag() ? $queried_tag : null;
       $next = next_posts($GLOBALS['wp_query']->max_num_pages, false);
       if ($next) : ?>
       <a href="<?php echo esc_url($next); ?>" class="load-more-btn">
-        Cargar Más
+        Load more
         <span class="material-symbols-outlined">keyboard_double_arrow_right</span>
       </a>
       <?php endif; ?>

@@ -136,7 +136,7 @@
   background-color: var(--background) !important;
 }
 
-/* ── Botón "Abrir en Google Maps" ── */
+/* ── Button "Open in Google Maps" ── */
 .map-link-button {
   display: inline-block;
   background: var(--primary);
@@ -157,7 +157,7 @@
   }
 }
 
-/* ── Marcadores de punto (divIcon con clase CSS) ── */
+/* ── Point markers (divIcon with CSS class) ── */
 .map-pin {
   width: 14px;
   height: 14px;
@@ -180,7 +180,7 @@
   }
 }
 
-/* ── Filtros GPS (píldoras + dropdown agrupado) ── */
+/* ── GPS filters (pills + grouped dropdown) ── */
 .gps-filters {
   margin-bottom: 1rem;
   position: relative;
@@ -195,7 +195,7 @@
   gap: 0.5rem;
 }
 
-// Píldora base (Todos, Solo POIs, Filtrar▾)
+// Base pill (All, POIs Only, Filter▾)
 .gps-pill {
   background: var(--bg-card);
   border: 1px solid var(--line);
@@ -228,7 +228,7 @@
   }
 }
 
-// Grupo-píldora: label + expand juntos
+// Group-pill: label + expand together
 .gps-dropdown {
   position: relative;
 }
@@ -265,12 +265,12 @@
     &.is-open {
       background: var(--primary-dim);
       color: var(--primary);
-      transform: none; // la rotación la hace CSS en el texto ▾
+      transform: none; // rotation handled by CSS on the ▾ character
     }
   }
 }
 
-// Panel sub-tags
+// Sub-tags panel
 .gps-panel {
   display: none;
   position: absolute;
@@ -292,7 +292,7 @@
   }
 }
 
-// Tag individual dentro del panel
+// Individual tag inside the panel
 .gps-tag {
   background: transparent;
   border: 1px solid var(--line);

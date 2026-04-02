@@ -2,7 +2,7 @@
 
 <div class="page-404">
 
-  <!-- ══ MAPA "SIGNAL LOST" ════════════════════════════ -->
+  <!-- ══ MAP "SIGNAL LOST" ════════════════════════════ -->
   <div class="page-404__map-wrap container">
     <div id="map-404"></div>
 
@@ -17,15 +17,15 @@
     <div class="page-404__errcode">[ERR_ROUTE_EXPIRED_404]</div>
   </div>
 
-  <!-- ══ CONTENIDO ════════════════════════════════════ -->
+  <!-- ══ CONTENT ════════════════════════════════════ -->
   <div class="page-404__body container">
 
-    <h1 class="page-404__title">Coordenadas No<br>Encontradas</h1>
+    <h1 class="page-404__title">Coordinates Not<br>Found</h1>
 
     <p class="page-404__desc">
-      Parece que te saliste de la ruta. El terreno es desconocido
-      o el enlace ha expirado. Regresa a terreno seguro antes de
-      que caiga la noche.
+      Looks like you went off the trail. The terrain is unknown
+      or the link has expired. Return to safe ground before
+      nightfall.
     </p>
 
     <!-- Terminal search -->
@@ -37,7 +37,7 @@
       <div class="page-404__terminal-input-wrap">
         <span class="page-404__terminal-prompt">&gt;</span>
         <input type="search" name="s" class="page-404__terminal-input"
-               placeholder="BUSCAR_SALIDA" autocomplete="off" spellcheck="false">
+               placeholder="SEARCH_EXIT" autocomplete="off" spellcheck="false">
         <span class="page-404__terminal-cursor"></span>
       </div>
     </form>
@@ -46,11 +46,11 @@
     <div class="page-404__actions">
       <a href="<?php echo esc_url(home_url('/')); ?>" class="btn btn--primary">
         <span class="material-symbols-outlined">location_on</span>
-        Volver al Campamento Base
+        Back to Base Camp
       </a>
       <a href="<?php echo esc_url(get_post_type_archive_link('routes') ?: home_url('/')); ?>" class="btn btn--outline">
         <span class="material-symbols-outlined">map</span>
-        Ver Todas las Rutas
+        View All Routes
       </a>
     </div>
 
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
     maxZoom: 19,
   }).addTo(map);
 
-  // Pulsing "lost" marker at map center
+  // Pulsing "lost" marker at map center (no translation needed)
   var icon = L.divIcon({
     className: '',
     html: '<div class="lost-pin"><div class="lost-pin__dot"></div><div class="lost-pin__ring"></div></div>',

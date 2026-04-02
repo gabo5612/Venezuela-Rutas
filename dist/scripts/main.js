@@ -8,13 +8,13 @@ window.openGalleryModal = function (items, startIndex) {
   overlay.innerHTML =
     '<div class="gal-modal__stage">' +
       '<span class="gal-modal__counter"></span>' +
-      '<button class="gal-modal__close" aria-label="Cerrar">' +
+      '<button class="gal-modal__close" aria-label="Close">' +
         '<span class="material-symbols-outlined">close</span>' +
       '</button>' +
-      '<button class="gal-modal__nav gal-modal__nav--prev" aria-label="Anterior">' +
+      '<button class="gal-modal__nav gal-modal__nav--prev" aria-label="Previous">' +
         '<span class="material-symbols-outlined">chevron_left</span>' +
       '</button>' +
-      '<button class="gal-modal__nav gal-modal__nav--next" aria-label="Siguiente">' +
+      '<button class="gal-modal__nav gal-modal__nav--next" aria-label="Next">' +
         '<span class="material-symbols-outlined">chevron_right</span>' +
       '</button>' +
     '</div>';

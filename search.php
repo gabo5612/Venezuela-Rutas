@@ -9,26 +9,26 @@
     <div class="search-hero__inner container">
       <span class="search-hero__eyebrow">
         <span class="material-symbols-outlined">search</span>
-        Búsqueda
+        Search
       </span>
       <h1 class="search-hero__title">
         <?php if ($search_query) : ?>
           <?php echo esc_html($search_query); ?>
         <?php else : ?>
-          Buscar
+          Search
         <?php endif; ?>
       </h1>
       <?php if (have_posts()) : ?>
         <p class="search-hero__count">
           <?php echo number_format_i18n($GLOBALS['wp_query']->found_posts); ?>
-          resultado<?php echo $GLOBALS['wp_query']->found_posts !== 1 ? 's' : ''; ?> encontrado<?php echo $GLOBALS['wp_query']->found_posts !== 1 ? 's' : ''; ?>
+          result<?php echo $GLOBALS['wp_query']->found_posts !== 1 ? 's' : ''; ?> found
         </p>
       <?php endif; ?>
 
       <!-- Search form -->
       <form role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>" class="search-form">
         <input type="search" name="s" value="<?php echo esc_attr($search_query); ?>"
-               placeholder="Buscar rutas, puntos, artículos…" class="search-form__input" autocomplete="off">
+               placeholder="Search routes, points, articles…" class="search-form__input" autocomplete="off">
         <button type="submit" class="search-form__btn">
           <span class="material-symbols-outlined">search</span>
         </button>
@@ -47,9 +47,9 @@
           $diff      = get_field('difficulty') ?: '';
           $dist      = get_field('distance')   ?: '';
           $type_labels = [
-            'post'              => ['label' => 'Artículo',         'icon' => 'article'],
-            'routes'            => ['label' => 'Ruta',             'icon' => 'route'],
-            'point-of-interest' => ['label' => 'Punto de Interés', 'icon' => 'location_on'],
+            'post'              => ['label' => 'Article',          'icon' => 'article'],
+            'routes'            => ['label' => 'Route',            'icon' => 'route'],
+            'point-of-interest' => ['label' => 'Point of Interest','icon' => 'location_on'],
           ];
           $type_info = $type_labels[$post_type] ?? ['label' => ucfirst($post_type), 'icon' => 'draft'];
         ?>
@@ -98,7 +98,7 @@
         $next = next_posts($GLOBALS['wp_query']->max_num_pages, false);
         if ($next) : ?>
         <a href="<?php echo esc_url($next); ?>" class="load-more-btn">
-          Más resultados
+          More results
           <span class="material-symbols-outlined">keyboard_double_arrow_right</span>
         </a>
         <?php endif; ?>
@@ -108,9 +108,9 @@
     <?php else : ?>
       <div class="search-empty">
         <span class="material-symbols-outlined">search_off</span>
-        <p>No se encontraron resultados para <strong>"<?php echo esc_html($search_query); ?>"</strong></p>
-        <p class="search-empty__hint">Intenta con otras palabras clave o explora nuestras rutas.</p>
-        <a href="<?php echo esc_url(home_url('/')); ?>" class="btn btn--primary">Ir al Inicio</a>
+        <p>No results found for <strong>"<?php echo esc_html($search_query); ?>"</strong></p>
+        <p class="search-empty__hint">Try other keywords or explore our routes.</p>
+        <a href="<?php echo esc_url(home_url('/')); ?>" class="btn btn--primary">Go Home</a>
       </div>
     <?php endif; ?>
   </div>

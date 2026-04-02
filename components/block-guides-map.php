@@ -1,8 +1,8 @@
 <section class="container guides-map-section">
 
   <?php
-  $eyebrow = get_sub_field('eyebrow') ?: 'Directorio';
-  $title   = get_sub_field('title')   ?: 'Guías por Zona';
+  $eyebrow = get_sub_field('eyebrow') ?: 'Directory';
+  $title   = get_sub_field('title')   ?: 'Guides by Zone';
   ?>
 
   <div class="section-header" data-animate="fade-up">
@@ -11,7 +11,7 @@
       <h2 class="section-header__title" style="color:var(--sand)"><?php echo esc_html($title); ?></h2>
     </div>
     <a href="<?php echo esc_url(get_post_type_archive_link('guide')); ?>" class="btn btn--outline">
-      Ver todos los guías
+      View all guides
     </a>
   </div>
 
@@ -83,7 +83,7 @@
         className: '',
         html: `<div class="guide-zone-label">
                  <span class="guide-zone-label__name">${zone.name}</span>
-                 <span class="guide-zone-label__count">${zone.count} guía${zone.count !== 1 ? 's' : ''}</span>
+                 <span class="guide-zone-label__count">${zone.count} guide${zone.count !== 1 ? 's' : ''}</span>
                </div>`,
         iconSize: [120, 44],
         iconAnchor: [60, 22]

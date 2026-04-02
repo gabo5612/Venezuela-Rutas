@@ -12,7 +12,7 @@ $current_zone = is_tax('guide-zone') ? get_queried_object() : null;
     <div class="section-header" data-animate="fade-up">
       <div>
         <div class="section-header__eyebrow">Directorio</div>
-        <h1 class="section-header__title" style="color:var(--sand)">Guías & Operadores</h1>
+        <h1 class="section-header__title" style="color:var(--sand)">Guides & Operators</h1>
       </div>
     </div>
 
@@ -73,7 +73,7 @@ $current_zone = is_tax('guide-zone') ? get_queried_object() : null;
           className: '',
           html: '<div class="guide-zone-label">'
               + '<span class="guide-zone-label__name">' + zone.name + '</span>'
-              + '<span class="guide-zone-label__count">' + zone.count + ' guía' + (zone.count !== 1 ? 's' : '') + '</span>'
+              + '<span class="guide-zone-label__count">' + zone.count + ' guide' + (zone.count !== 1 ? 's' : '') + '</span>'
               + '</div>',
           iconSize:   [120, 44],
           iconAnchor: [60, 22]
@@ -100,7 +100,7 @@ $current_zone = is_tax('guide-zone') ? get_queried_object() : null;
     <div class="guide-zone-filters" data-animate="fade-up" data-animate-delay="100">
       <a href="<?php echo esc_url(get_post_type_archive_link('guide')); ?>"
          class="gps-pill <?php echo !$current_zone ? 'is-active' : ''; ?>">
-        Todas las zonas
+        All zones
       </a>
       <?php foreach ($zones as $zone) : ?>
       <a href="<?php echo esc_url(get_term_link($zone)); ?>"
@@ -124,7 +124,7 @@ $current_zone = is_tax('guide-zone') ? get_queried_object() : null;
       ?>
       <div class="guide-card <?php echo $g_featured ? 'guide-card--featured' : ''; ?>" data-animate="fade-up">
         <?php if ($g_featured) : ?>
-        <div class="guide-card__badge">Destacado</div>
+        <div class="guide-card__badge">Featured</div>
         <?php endif; ?>
         <a href="<?php the_permalink(); ?>" class="guide-card__link" aria-label="<?php the_title_attribute(); ?>"></a>
 
@@ -157,7 +157,7 @@ $current_zone = is_tax('guide-zone') ? get_queried_object() : null;
           <?php endif; ?>
 
           <?php if ($g_price) : ?>
-          <p class="guide-card__price">Desde <strong>$<?php echo esc_html($g_price); ?></strong>/día</p>
+          <p class="guide-card__price">From <strong>$<?php echo esc_html($g_price); ?></strong>/day</p>
           <?php endif; ?>
 
           <div class="guide-card__cta">
@@ -169,13 +169,13 @@ $current_zone = is_tax('guide-zone') ? get_queried_object() : null;
               <span class="material-symbols-outlined">chat</span> WhatsApp
             </a>
             <?php endif; ?>
-            <a href="<?php the_permalink(); ?>" class="btn btn--outline btn--sm">Ver perfil</a>
+            <a href="<?php the_permalink(); ?>" class="btn btn--outline btn--sm">View profile</a>
           </div>
         </div>
       </div>
       <?php endwhile;
       else : ?>
-      <p style="color:var(--text-muted);grid-column:1/-1">No hay guías registrados aún.</p>
+      <p style="color:var(--text-muted);grid-column:1/-1">No guides registered yet.</p>
       <?php endif; ?>
     </div>
 

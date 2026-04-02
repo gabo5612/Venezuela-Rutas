@@ -1,7 +1,7 @@
 <?php
 /*
- * Template Name: Sugerir Ruta
- * Description: Página de formulario para sugerir una nueva ruta
+ * Template Name: Suggest Route
+ * Description: Form page to suggest a new route
  */
 ?>
 <?php get_template_part('parts/header'); ?>
@@ -21,14 +21,14 @@
     <div class="cat-hero__inner">
       <span class="cat-hero__eyebrow">
         <span class="material-symbols-outlined">add_location</span>
-        Comunidad
+        Community
       </span>
-      <h1 class="cat-hero__title">SUGIERE UNA RUTA</h1>
-      <p class="cat-hero__desc">¿Conoces un camino que merece ser explorado? Comparte los detalles y lo revisaremos para publicarlo.</p>
+      <h1 class="cat-hero__title">SUGGEST A ROUTE</h1>
+      <p class="cat-hero__desc">Do you know a trail worth exploring? Share the details and we'll review it for publication.</p>
       <div class="cat-hero__actions">
         <a href="<?php echo esc_url( home_url('/nuevo-poi') ); ?>" class="btn btn--outline">
           <span class="material-symbols-outlined">location_on</span>
-          ¿Tienes un POI?
+          Have a POI?
         </a>
       </div>
     </div>
@@ -36,7 +36,7 @@
 
   <div class="page-suggest__form" data-animate="fade-up">
     <?php
-    // Cambia el ID por el de tu formulario en Fluent Forms > Formularios
+    // Change the ID to your form's ID in Fluent Forms > Forms
     echo do_shortcode('[fluentform id="3"]');
     ?>
   </div>

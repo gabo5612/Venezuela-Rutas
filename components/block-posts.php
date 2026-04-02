@@ -1,5 +1,5 @@
 <?php
-$block_title = get_sub_field('post_title') ?: 'Últimas Rutas';
+$block_title = get_sub_field('post_title') ?: 'Latest Routes';
 $post_type   = get_sub_field('post_type')  ?: 'post';
 $per_page    = intval(get_sub_field('posts_per_page')) ?: 4;
 
@@ -17,11 +17,11 @@ $q = new WP_Query([
 
     <div class="section-header" data-animate="fade-up" data-animate-delay="100">
       <div>
-        <div class="section-header__eyebrow">Explorar</div>
+        <div class="section-header__eyebrow">Explore</div>
         <h2 class="section-header__title"><?php echo esc_html($block_title); ?></h2>
       </div>
       <a href="<?php echo esc_url( get_post_type_archive_link($post_type) ?: home_url('/') ); ?>" class="section-header__link">
-        Ver Todas <span class="material-symbols-outlined">arrow_right_alt</span>
+        View All <span class="material-symbols-outlined">arrow_right_alt</span>
       </a>
     </div>
 
@@ -68,7 +68,7 @@ $q = new WP_Query([
     <?php if ($q->max_num_pages > 1) : ?>
     <div class="load-more-wrap">
       <button id="moreTips" class="load-more-btn" type="button" data-page="2">
-        Cargar Más
+        Load more
         <span class="material-symbols-outlined">keyboard_double_arrow_right</span>
       </button>
     </div>

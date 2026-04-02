@@ -1,7 +1,7 @@
 <?php
 $eyebrow    = get_sub_field('eyebrow')    ?: 'Editorial';
-$title      = get_sub_field('fp_title')   ?: 'Bitácora de Campo';
-$link_label = get_sub_field('link_label') ?: 'Leer Todo';
+$title      = get_sub_field('fp_title')   ?: 'Field Journal';
+$link_label = get_sub_field('link_label') ?: 'Read All';
 $link_url   = get_sub_field('link_url')   ?: '/post';
 
 $fp_posts = get_sub_field('fp_posts') ?: [];
@@ -52,7 +52,7 @@ if (!$fp_posts) return;
           <?php if ($excerpt) : ?>
           <p class="fp-card__excerpt"><?php echo esc_html(wp_trim_words($excerpt, 22, '...')); ?></p>
           <?php endif; ?>
-          <span class="fp-card__read">Seguir Leyendo</span>
+          <span class="fp-card__read">Keep Reading</span>
         </div>
       </article>
       <?php endforeach; ?>

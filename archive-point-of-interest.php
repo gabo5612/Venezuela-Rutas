@@ -7,17 +7,17 @@
     <div class="archive-hero__inner container">
       <span class="archive-hero__eyebrow">
         <span class="material-symbols-outlined">location_on</span>
-        Puntos de Interés
+        Points of Interest
       </span>
       <h1 class="archive-hero__title">Atlas de Venezuela</h1>
-      <p class="archive-hero__desc">Lugares, miradores, cascadas y puntos notables documentados en el campo.</p>
+      <p class="archive-hero__desc">Places, viewpoints, waterfalls and notable points documented in the field.</p>
     </div>
   </section>
 
-  <!-- ══ FILTROS POR CATEGORÍA ══════════════════════════ -->
+  <!-- ══ FILTERS BY CATEGORY ══════════════════════════ -->
   <div class="page-archive-poi__filters">
     <div class="filter-pills">
-      <span class="filter-pills__label">Tipo:</span>
+      <span class="filter-pills__label">Type:</span>
       <?php
       $poi_cats = get_categories(['hide_empty' => true]);
       $icons    = ['location_on','forest','water','filter_hdr','wb_sunny','landscape','park'];
@@ -33,7 +33,7 @@
     </div>
   </div>
 
-  <!-- ══ GRID DE POIs ═══════════════════════════════════ -->
+  <!-- ══ POI GRID ═══════════════════════════════════ -->
   <div class="page-archive-poi__grid">
     <div class="posts-grid">
       <?php
@@ -47,7 +47,7 @@
 
         if ($is_first) : $is_first = false; ?>
 
-        <!-- POI destacado (spans 2 cols) -->
+        <!-- Featured POI (spans 2 cols) -->
         <article class="post-card--featured">
           <div class="featured-bg" <?php if ($thumb) echo 'style="background-image:url(\'' . esc_url($thumb) . '\')"'; ?>></div>
           <div class="featured-overlay"></div>
@@ -65,7 +65,7 @@
                   <?php echo esc_html(number_format($lat, 4)) . ', ' . esc_html(number_format($lon, 4)); ?>
                 </div>
               <?php endif; ?>
-              <span class="featured-read">Ver Punto <span class="material-symbols-outlined">arrow_right_alt</span></span>
+              <span class="featured-read">View Point <span class="material-symbols-outlined">arrow_right_alt</span></span>
             </div>
           </div>
           <a href="<?php the_permalink(); ?>" class="featured-link" aria-label="<?php the_title_attribute(); ?>"></a>
@@ -73,7 +73,7 @@
 
         <?php else : ?>
 
-        <!-- POI normal -->
+        <!-- Normal POI -->
         <div class="post-card" data-animate="fade-up">
           <a href="<?php the_permalink(); ?>" class="post-card__link" aria-label="<?php the_title_attribute(); ?>"></a>
           <div class="post-card__image">
@@ -106,7 +106,7 @@
         </div>
 
         <?php endif; endwhile; else : ?>
-        <p style="color:var(--text-muted);padding:2rem 0;">No hay puntos de interés disponibles.</p>
+        <p style="color:var(--text-muted);padding:2rem 0;">No points of interest available.</p>
         <?php endif; ?>
     </div>
 
@@ -116,7 +116,7 @@
       $next = next_posts($GLOBALS['wp_query']->max_num_pages, false);
       if ($next) : ?>
       <a href="<?php echo esc_url($next); ?>" class="load-more-btn">
-        Cargar Más
+        Load more
         <span class="material-symbols-outlined">keyboard_double_arrow_right</span>
       </a>
       <?php endif; ?>

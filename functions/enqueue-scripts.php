@@ -5,15 +5,15 @@
  */
 function site_scripts() {
 
-  // ── Flickity: global (hero slider en cualquier página) ──
+  // ── Flickity: global (hero slider on any page) ──────────
   wp_enqueue_style(  'flickity', 'https://unpkg.com/flickity@3/dist/flickity.min.css', [], '3.0.0' );
   wp_enqueue_script( 'flickity', 'https://unpkg.com/flickity@3/dist/flickity.pkgd.min.js', [], '3.0.0', true );
 
-  // ── GLightbox: singles, 404, página galería y cualquier página con bloque gallery ──
+  // ── GLightbox: singles, 404, gallery page and any page with gallery block ──────────
   wp_enqueue_style(  'glightbox', 'https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css', [], null );
   wp_enqueue_script( 'glightbox', 'https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js', [], null, true );
 
-  // ── Leaflet: singles, 404 y cualquier página/post con bloques de mapa ──
+  // ── Leaflet: singles, 404 and any page/post with map blocks ────────────
   $needs_leaflet = is_single() || is_404() || is_page() || is_front_page() || is_home()
                    || is_post_type_archive() || is_tax();
   if ( $needs_leaflet ) {
@@ -29,7 +29,7 @@ function site_scripts() {
     wp_enqueue_script( 'main', get_template_directory_uri() . '/dist/scripts/main.js', [], filemtime( $js_path ), true );
   }
 
-  // ── CSS (Tailwind compilado — un solo archivo global) ────
+  // ── CSS (compiled — single global file) ─────────────────
   $css_path = get_template_directory() . '/dist/styles/app.min.css';
   if ( file_exists( $css_path ) ) {
     wp_enqueue_style( 'site-css', get_template_directory_uri() . '/dist/styles/app.min.css', [], filemtime( $css_path ) );

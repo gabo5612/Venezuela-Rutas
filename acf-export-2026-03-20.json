@@ -30,7 +30,7 @@
                                 "name": "slides",
                                 "aria-label": "",
                                 "type": "repeater",
-                                "instructions": "Agrega uno o mas slides. Si hay mas de uno se activa el slider automaticamente.",
+                                "instructions": "Add one or more slides. If there is more than one, the slider activates automatically.",
                                 "required": 0,
                                 "conditional_logic": 0,
                                 "wrapper": {
@@ -43,7 +43,7 @@
                                 "min": 0,
                                 "max": 0,
                                 "collapsed": "",
-                                "button_label": "Agregar slide",
+                                "button_label": "Add Slide",
                                 "rows_per_page": 20,
                                 "sub_fields": [
                                     {
@@ -61,9 +61,9 @@
                                             "id": ""
                                         },
                                         "choices": {
-                                            "ruta": "Ruta del dia",
-                                            "poi": "Punto de interes",
-                                            "post": "Post del dia"
+                                            "ruta": "Route of the day",
+                                            "poi": "Point of interest",
+                                            "post": "Post of the day"
                                         },
                                         "default_value": "ruta",
                                         "return_format": "label",
@@ -125,7 +125,7 @@
                                         "name": "cta",
                                         "aria-label": "",
                                         "type": "text",
-                                        "instructions": "Texto del boton (dejar vacio para ocultarlo)",
+                                        "instructions": "Button text (leave empty to hide it)",
                                         "required": 0,
                                         "conditional_logic": 0,
                                         "wrapper": {
@@ -163,7 +163,7 @@
                                             "id": ""
                                         },
                                         "choices": {
-                                            "primary": "Primary (verde electrico)",
+                                            "primary": "Primary (electric green)",
                                             "outline": "Outline",
                                             "terracotta": "Terracotta"
                                         },
@@ -236,7 +236,7 @@
                                         "name": "hero_video",
                                         "aria-label": "",
                                         "type": "url",
-                                        "instructions": "URL del video MP4 para reproducir en loop. Si se rellena, tiene prioridad sobre la imagen.",
+                                        "instructions": "MP4 video URL to play in loop. If filled, it takes priority over the image.",
                                         "required": 0,
                                         "conditional_logic": 0,
                                         "wrapper": {
@@ -246,16 +246,16 @@
                                         },
                                         "default_value": "",
                                         "allow_in_bindings": 0,
-                                        "placeholder": "https:\/\/...",
+                                        "placeholder": "https://...",
                                         "parent_repeater": "field_hero_slides00001"
                                     },
                                     {
                                         "key": "field_hero_slide_hilite",
-                                        "label": "Title Highlight (palabra en verde)",
+                                        "label": "Title Highlight (word in green)",
                                         "name": "title_highlight",
                                         "aria-label": "",
                                         "type": "text",
-                                        "instructions": "Última palabra o línea del título que aparece en verde. Se muestra debajo del título principal.",
+                                        "instructions": "Last word or line of the title that appears in green. Shown below the main title.",
                                         "required": 0,
                                         "conditional_logic": 0,
                                         "wrapper": {
@@ -273,11 +273,11 @@
                                     },
                                     {
                                         "key": "field_hero_slide_dist0",
-                                        "label": "Stat — Distancia",
+                                        "label": "Stat — Distance",
                                         "name": "hero_distance",
                                         "aria-label": "",
                                         "type": "text",
-                                        "instructions": "Valor de distancia para la tarjeta de stats (ej: 18km).",
+                                        "instructions": "Distance value for the stats card (e.g. 18km).",
                                         "required": 0,
                                         "conditional_logic": 0,
                                         "wrapper": {
@@ -295,11 +295,11 @@
                                     },
                                     {
                                         "key": "field_hero_slide_alti0",
-                                        "label": "Stat — Altitud",
+                                        "label": "Stat — Altitude",
                                         "name": "hero_altitude",
                                         "aria-label": "",
                                         "type": "text",
-                                        "instructions": "Valor de altitud para la tarjeta de stats (ej: 2.1k).",
+                                        "instructions": "Altitude value for the stats card (e.g. 2.1k).",
                                         "required": 0,
                                         "conditional_logic": 0,
                                         "wrapper": {
@@ -329,11 +329,11 @@
                         "sub_fields": [
                             {
                                 "key": "field_gps_filter_groups",
-                                "label": "Grupos de Filtros",
+                                "label": "Filter Groups",
                                 "name": "filter_groups",
                                 "aria-label": "",
                                 "type": "repeater",
-                                "instructions": "Define grupos de tags para el menú desplegable del mapa. Cada grupo aparece como una sección en el panel de filtros.",
+                                "instructions": "Define tag groups for the map dropdown menu. Each group appears as a section in the filter panel.",
                                 "required": 0,
                                 "conditional_logic": 0,
                                 "wrapper": {
@@ -346,16 +346,16 @@
                                 "min": 0,
                                 "max": 0,
                                 "collapsed": "",
-                                "button_label": "Agregar Grupo",
+                                "button_label": "Add Group",
                                 "rows_per_page": 20,
                                 "sub_fields": [
                                     {
                                         "key": "field_gps_group_label",
-                                        "label": "Nombre del Grupo",
+                                        "label": "Group Name",
                                         "name": "group_label",
                                         "aria-label": "",
                                         "type": "text",
-                                        "instructions": "Ej: Senderismo, Montaña, Costas",
+                                        "instructions": "E.g.: Hiking, Mountain, Coasts",
                                         "required": 1,
                                         "conditional_logic": 0,
                                         "wrapper": {
@@ -365,18 +365,18 @@
                                         },
                                         "default_value": "",
                                         "maxlength": "",
-                                        "placeholder": "Nombre del grupo",
+                                        "placeholder": "Group name",
                                         "prepend": "",
                                         "append": "",
                                         "parent_repeater": "field_gps_filter_groups"
                                     },
                                     {
                                         "key": "field_gps_group_tags",
-                                        "label": "Tags del Grupo",
+                                        "label": "Group Tags",
                                         "name": "group_tags",
                                         "aria-label": "",
                                         "type": "taxonomy",
-                                        "instructions": "Selecciona los tags que pertenecen a este grupo",
+                                        "instructions": "Select the tags that belong to this group",
                                         "required": 0,
                                         "conditional_logic": 0,
                                         "wrapper": {
@@ -493,7 +493,7 @@
                                 "name": "posts_per_page",
                                 "aria-label": "",
                                 "type": "number",
-                                "instructions": "CuÃ¡ntos posts mostrar (por defecto 4)",
+                                "instructions": "How many posts to show (default 4)",
                                 "required": 0,
                                 "conditional_logic": 0,
                                 "wrapper": {
@@ -599,7 +599,7 @@
                     "layout_6a1bc9f200010": {
                         "key": "layout_6a1bc9f200010",
                         "name": "cta",
-                        "label": "CTA \/ Newsletter",
+                        "label": "CTA / Newsletter",
                         "display": "block",
                         "sub_fields": [
                             {
@@ -616,7 +616,7 @@
                                     "class": "",
                                     "id": ""
                                 },
-                                "default_value": "Â¿Tienes una Ruta?",
+                                "default_value": "Do you have a Route?",
                                 "maxlength": "",
                                 "allow_in_bindings": 0,
                                 "placeholder": "",
@@ -637,7 +637,7 @@
                                     "class": "",
                                     "id": ""
                                 },
-                                "default_value": "Comparte tu aventura con la comunidad venezolana.",
+                                "default_value": "Share your adventure with the Venezuelan community.",
                                 "maxlength": "",
                                 "allow_in_bindings": 0,
                                 "placeholder": "",
@@ -650,7 +650,7 @@
                                 "name": "cta_label",
                                 "aria-label": "",
                                 "type": "text",
-                                "instructions": "Texto del botÃ³n",
+                                "instructions": "Button text",
                                 "required": 0,
                                 "conditional_logic": 0,
                                 "wrapper": {
@@ -658,7 +658,7 @@
                                     "class": "",
                                     "id": ""
                                 },
-                                "default_value": "Enviar Ruta",
+                                "default_value": "Submit Route",
                                 "maxlength": "",
                                 "allow_in_bindings": 0,
                                 "placeholder": "",
@@ -690,7 +690,7 @@
                     "layout_6a1bc9f000020": {
                         "key": "layout_6a1bc9f000020",
                         "name": "features",
-                        "label": "Features \/ 3 columnas",
+                        "label": "Features / 3 columnas",
                         "display": "block",
                         "sub_fields": [
                             {
@@ -707,7 +707,7 @@
                                     "class": "",
                                     "id": ""
                                 },
-                                "default_value": "Por quÃ© Rutas",
+                                "default_value": "Why Rutas",
                                 "maxlength": "",
                                 "allow_in_bindings": 0,
                                 "placeholder": "",
@@ -720,7 +720,7 @@
                                 "name": "items",
                                 "aria-label": "",
                                 "type": "repeater",
-                                "instructions": "MÃ¡ximo 3 items recomendado",
+                                "instructions": "Maximum 3 items recommended",
                                 "required": 0,
                                 "conditional_logic": 0,
                                 "wrapper": {
@@ -733,7 +733,7 @@
                                 "min": 0,
                                 "max": 6,
                                 "collapsed": "",
-                                "button_label": "Agregar Ã­tem",
+                                "button_label": "Add Item",
                                 "rows_per_page": 20,
                                 "sub_fields": [
                                     {
@@ -742,7 +742,7 @@
                                         "name": "icon",
                                         "aria-label": "",
                                         "type": "text",
-                                        "instructions": "Nombre del Material Symbol (ej: terrain, explore, map)",
+                                        "instructions": "Material Symbol name (e.g.: terrain, explore, map)",
                                         "required": 0,
                                         "conditional_logic": 0,
                                         "wrapper": {
@@ -820,7 +820,7 @@
                                 "name": "gallery_eyebrow",
                                 "aria-label": "",
                                 "type": "text",
-                                "instructions": "Texto pequeño sobre el título (ej: Archivo Visual).",
+                                "instructions": "Small text above the title (e.g.: Visual Archive).",
                                 "required": 0,
                                 "conditional_logic": 0,
                                 "wrapper": {
@@ -831,14 +831,14 @@
                                 "default_value": "",
                                 "maxlength": "",
                                 "allow_in_bindings": 0,
-                                "placeholder": "Archivo Visual",
+                                "placeholder": "Visual Archive",
                                 "prepend": "",
                                 "append": "",
                                 "parent_repeater": ""
                             },
                             {
                                 "key": "field_gal_blk_title",
-                                "label": "Título",
+                                "label": "Title",
                                 "name": "gallery_title",
                                 "aria-label": "",
                                 "type": "text",
@@ -853,14 +853,14 @@
                                 "default_value": "",
                                 "maxlength": "",
                                 "allow_in_bindings": 0,
-                                "placeholder": "Nuestra Galería",
+                                "placeholder": "Our Gallery",
                                 "prepend": "",
                                 "append": "",
                                 "parent_repeater": ""
                             },
                             {
                                 "key": "field_gal_blk_desc",
-                                "label": "Descripción",
+                                "label": "Description",
                                 "name": "gallery_desc",
                                 "aria-label": "",
                                 "type": "textarea",
@@ -882,11 +882,11 @@
                             },
                             {
                                 "key": "field_gal_blk_sections",
-                                "label": "Secciones",
+                                "label": "Sections",
                                 "name": "gallery_sections",
                                 "aria-label": "",
                                 "type": "repeater",
-                                "instructions": "Agrupa las fotos en secciones con título opcional.",
+                                "instructions": "Group photos into sections with optional title.",
                                 "required": 0,
                                 "conditional_logic": 0,
                                 "wrapper": {
@@ -899,17 +899,17 @@
                                 "min": 0,
                                 "max": 0,
                                 "collapsed": "",
-                                "button_label": "Agregar sección",
+                                "button_label": "Add Section",
                                 "rows_per_page": 20,
                                 "allow_in_bindings": 0,
                                 "sub_fields": [
                                     {
                                         "key": "field_gal_blk_sec_title",
-                                        "label": "Título de sección",
+                                        "label": "Section Title",
                                         "name": "section_title",
                                         "aria-label": "",
                                         "type": "text",
-                                        "instructions": "Opcional. Ej: Cumbres \/ Día 1",
+                                        "instructions": "Optional. E.g.: Summits / Day 1",
                                         "required": 0,
                                         "conditional_logic": 0,
                                         "wrapper": {
@@ -927,7 +927,7 @@
                                     },
                                     {
                                         "key": "field_gal_blk_sec_imgs",
-                                        "label": "Imágenes",
+                                        "label": "Images",
                                         "name": "section_images",
                                         "aria-label": "",
                                         "type": "gallery",
@@ -1002,7 +1002,7 @@
                                     "class": "",
                                     "id": ""
                                 },
-                                "default_value": "Bitácora de Campo",
+                                "default_value": "Field Journal",
                                 "maxlength": "",
                                 "allow_in_bindings": 0,
                                 "placeholder": "",
@@ -1023,7 +1023,7 @@
                                     "class": "",
                                     "id": ""
                                 },
-                                "default_value": "Leer Todo",
+                                "default_value": "Read All",
                                 "maxlength": "",
                                 "allow_in_bindings": 0,
                                 "placeholder": "",
@@ -1036,7 +1036,7 @@
                                 "name": "link_url",
                                 "aria-label": "",
                                 "type": "url",
-                                "instructions": "Dejar vacío para usar el enlace del archivo del CPT",
+                                "instructions": "Leave empty to use the CPT archive link",
                                 "required": 0,
                                 "conditional_logic": 0,
                                 "wrapper": {
@@ -1046,7 +1046,7 @@
                                 },
                                 "default_value": "",
                                 "allow_in_bindings": 0,
-                                "placeholder": "https:\/\/"
+                                "placeholder": "https://"
                             },
                             {
                                 "key": "field_fp_posts_repeater",
@@ -1054,7 +1054,7 @@
                                 "name": "fp_posts",
                                 "aria-label": "",
                                 "type": "repeater",
-                                "instructions": "Selecciona hasta 2 posts a destacar",
+                                "instructions": "Select up to 2 posts to feature",
                                 "required": 0,
                                 "conditional_logic": 0,
                                 "wrapper": {
@@ -1067,7 +1067,7 @@
                                 "min": 0,
                                 "max": 2,
                                 "collapsed": "",
-                                "button_label": "Agregar post",
+                                "button_label": "Add Post",
                                 "rows_per_page": 20,
                                 "allow_in_bindings": 0,
                                 "sub_fields": [
@@ -1111,7 +1111,7 @@
                     "layout_guides_map_001": {
                         "key": "layout_guides_map_001",
                         "name": "guides-map",
-                        "label": "Mapa de Guías por Zona",
+                        "label": "Guides Map by Zone",
                         "display": "block",
                         "sub_fields": [
                             {
@@ -1128,7 +1128,7 @@
                                     "class": "",
                                     "id": ""
                                 },
-                                "default_value": "Directorio",
+                                "default_value": "Directory",
                                 "maxlength": "",
                                 "placeholder": "",
                                 "prepend": "",
@@ -1136,7 +1136,7 @@
                             },
                             {
                                 "key": "field_gm_title",
-                                "label": "Título",
+                                "label": "Title",
                                 "name": "title",
                                 "aria-label": "",
                                 "type": "text",
@@ -1148,7 +1148,7 @@
                                     "class": "",
                                     "id": ""
                                 },
-                                "default_value": "Guías por Zona",
+                                "default_value": "Guides by Zone",
                                 "maxlength": "",
                                 "placeholder": "",
                                 "prepend": "",
@@ -1210,7 +1210,7 @@
         "fields": [
             {
                 "key": "field_guide_photo",
-                "label": "Foto de perfil",
+                "label": "Profile Photo",
                 "name": "guide_photo",
                 "aria-label": "",
                 "type": "image",
@@ -1239,7 +1239,7 @@
                 "name": "guide_whatsapp",
                 "aria-label": "",
                 "type": "text",
-                "instructions": "Número con código de país, ej: +584241234567",
+                "instructions": "Number with country code, e.g.: +584241234567",
                 "required": false,
                 "conditional_logic": false,
                 "wrapper": {
@@ -1278,7 +1278,7 @@
                 "name": "guide_instagram",
                 "aria-label": "",
                 "type": "text",
-                "instructions": "Handle sin @, ej: gabriel_rutas",
+                "instructions": "Handle without @, e.g.: gabriel_rutas",
                 "required": false,
                 "conditional_logic": false,
                 "wrapper": {
@@ -1294,7 +1294,7 @@
             },
             {
                 "key": "field_guide_price_from",
-                "label": "Precio desde (USD\/día)",
+                "label": "Price from (USD/day)",
                 "name": "guide_price_from",
                 "aria-label": "",
                 "type": "number",
@@ -1316,7 +1316,7 @@
             },
             {
                 "key": "field_guide_is_featured",
-                "label": "Listing Destacado",
+                "label": "Featured Listing",
                 "name": "guide_is_featured",
                 "aria-label": "",
                 "type": "true_false",
@@ -1328,7 +1328,7 @@
                     "class": "",
                     "id": ""
                 },
-                "message": "Mostrar como guía destacado",
+                "message": "Show as featured guide",
                 "default_value": 0,
                 "ui": 0,
                 "ui_on_text": "",
@@ -1336,7 +1336,7 @@
             },
             {
                 "key": "field_guide_specialty",
-                "label": "Especialidades",
+                "label": "Specialties",
                 "name": "guide_specialty",
                 "aria-label": "",
                 "type": "checkbox",
@@ -1349,14 +1349,14 @@
                     "id": ""
                 },
                 "choices": {
-                    "Senderismo": "Senderismo",
+                    "Senderismo": "Hiking",
                     "4x4": "4x4",
-                    "Escalada": "Escalada",
+                    "Escalada": "Climbing",
                     "Kayak": "Kayak",
                     "Camping": "Camping",
-                    "Fotografía": "Fotografía",
-                    "Buceo": "Buceo",
-                    "Ciclismo": "Ciclismo"
+                    "Fotografía": "Photography",
+                    "Buceo": "Diving",
+                    "Ciclismo": "Cycling"
                 },
                 "layout": "horizontal",
                 "toggle": 0,
@@ -1486,11 +1486,11 @@
             },
             {
                 "key": "field_6a2route00001",
-                "label": "Distancia",
+                "label": "Distance",
                 "name": "distance",
                 "aria-label": "",
                 "type": "text",
-                "instructions": "Ej: 12 km",
+                "instructions": "E.g.: 12 km",
                 "required": 0,
                 "conditional_logic": 0,
                 "wrapper": {
@@ -1507,11 +1507,11 @@
             },
             {
                 "key": "field_6a2route00002",
-                "label": "Elevación",
+                "label": "Elevation",
                 "name": "elevation",
                 "aria-label": "",
                 "type": "text",
-                "instructions": "Ej: 1200 m",
+                "instructions": "E.g.: 1200 m",
                 "required": 0,
                 "conditional_logic": 0,
                 "wrapper": {
@@ -1528,7 +1528,7 @@
             },
             {
                 "key": "field_6a2route00003",
-                "label": "Dificultad",
+                "label": "Difficulty",
                 "name": "difficulty",
                 "aria-label": "",
                 "type": "select",
@@ -1541,10 +1541,10 @@
                     "id": ""
                 },
                 "choices": {
-                    "Fácil": "Fácil",
-                    "Moderado": "Moderado",
-                    "Difí­cil": "Difí­cil",
-                    "Extremo": "Extremo"
+                    "Fácil": "Easy",
+                    "Moderado": "Moderate",
+                    "Difí­cil": "Difficult",
+                    "Extremo": "Extreme"
                 },
                 "default_value": false,
                 "return_format": "value",
@@ -1557,7 +1557,7 @@
             },
             {
                 "key": "field_6a2route00004",
-                "label": "Tiempo estimado",
+                "label": "Estimated Time",
                 "name": "time",
                 "aria-label": "",
                 "type": "text",
@@ -1578,11 +1578,11 @@
             },
             {
                 "key": "field_6a2route00005",
-                "label": "Latitud",
+                "label": "Latitude",
                 "name": "latitude",
                 "aria-label": "",
                 "type": "text",
-                "instructions": "Coordenada decimal. Ej: 10.4806",
+                "instructions": "Decimal coordinate. E.g.: 10.4806",
                 "required": 0,
                 "conditional_logic": 0,
                 "wrapper": {
@@ -1599,11 +1599,11 @@
             },
             {
                 "key": "field_6a2route00006",
-                "label": "Longitud",
+                "label": "Longitude",
                 "name": "longitude",
                 "aria-label": "",
                 "type": "text",
-                "instructions": "Coordenada decimal. Ej: -66.9036",
+                "instructions": "Decimal coordinate. E.g.: -66.9036",
                 "required": 0,
                 "conditional_logic": 0,
                 "wrapper": {
@@ -1620,7 +1620,7 @@
             },
             {
                 "key": "field_6a2route00007",
-                "label": "Ubicación",
+                "label": "Location",
                 "name": "location",
                 "aria-label": "",
                 "type": "text",
@@ -1641,11 +1641,11 @@
             },
             {
                 "key": "field_6a2route00008",
-                "label": "Alerta de condiciones",
+                "label": "Conditions Alert",
                 "name": "conditions_alert",
                 "aria-label": "",
                 "type": "textarea",
-                "instructions": "Mensaje de advertencia que aparece en banner rojo. Dejar vacÃ­o para ocultarlo.",
+                "instructions": "Warning message shown in red banner. Leave empty to hide it.",
                 "required": 0,
                 "conditional_logic": 0,
                 "wrapper": {
@@ -1656,7 +1656,7 @@
                 "default_value": "",
                 "maxlength": "",
                 "allow_in_bindings": 0,
-                "placeholder": "Ej: Acceso restringido en Ã©poca de lluvia. Consultar condiciones antes de partir.",
+                "placeholder": "E.g.: Access restricted during rainy season. Check conditions before departure.",
                 "new_lines": "br",
                 "rows": 3
             },
@@ -1666,7 +1666,7 @@
                 "name": "checkpoints",
                 "aria-label": "",
                 "type": "repeater",
-                "instructions": "Puntos de referencia a lo largo de la ruta",
+                "instructions": "Reference points along the route",
                 "required": 0,
                 "conditional_logic": 0,
                 "wrapper": {
@@ -1679,7 +1679,7 @@
                 "min": 0,
                 "max": 0,
                 "collapsed": "field_6a2route00009a",
-                "button_label": "Agregar Checkpoint",
+                "button_label": "Add Checkpoint",
                 "rows_per_page": 20,
                 "sub_fields": [
                     {
@@ -1716,11 +1716,11 @@
             },
             {
                 "key": "field_6a2route00010",
-                "label": "Galerí­a",
+                "label": "Gallery",
                 "name": "gallery",
                 "aria-label": "",
                 "type": "gallery",
-                "instructions": "Fotos de la ruta. Se muestran en grilla en la pÃ¡gina del post.",
+                "instructions": "Route photos. Displayed in a grid on the post page.",
                 "required": 0,
                 "conditional_logic": 0,
                 "wrapper": {
@@ -1910,7 +1910,11 @@
                         "instructions": "",
                         "required": 0,
                         "conditional_logic": 0,
-                        "wrapper": { "width": "", "class": "", "id": "" },
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
                         "default_value": "",
                         "maxlength": "",
                         "allow_in_bindings": 0,
@@ -1957,15 +1961,15 @@
     },
     {
         "key": "group_guide_zone_coords",
-        "title": "Zona — Coordenadas",
+        "title": "Zone — Coordinates",
         "fields": [
             {
                 "key": "field_zone_latitude",
-                "label": "Latitud",
+                "label": "Latitude",
                 "name": "zone_latitude",
                 "aria-label": "",
                 "type": "text",
-                "instructions": "Ej: 10.4806",
+                "instructions": "E.g.: 10.4806",
                 "required": false,
                 "conditional_logic": false,
                 "wrapper": {
@@ -1981,11 +1985,11 @@
             },
             {
                 "key": "field_zone_longitude",
-                "label": "Longitud",
+                "label": "Longitude",
                 "name": "zone_longitude",
                 "aria-label": "",
                 "type": "text",
-                "instructions": "Ej: -66.9036",
+                "instructions": "E.g.: -66.9036",
                 "required": false,
                 "conditional_logic": false,
                 "wrapper": {
@@ -2001,7 +2005,7 @@
             },
             {
                 "key": "field_zone_radius",
-                "label": "Radio en el mapa (1–10)",
+                "label": "Map Radius (1–10)",
                 "name": "zone_radius",
                 "aria-label": "",
                 "type": "range",
@@ -2046,7 +2050,7 @@
         "fields": [
             {
                 "key": "field_sponsor_label",
-                "label": "Etiqueta",
+                "label": "Label",
                 "name": "sponsor_label",
                 "aria-label": "",
                 "type": "text",
@@ -2058,7 +2062,7 @@
                     "class": "",
                     "id": ""
                 },
-                "default_value": "Equipado por",
+                "default_value": "Equipped by",
                 "maxlength": "",
                 "placeholder": "",
                 "prepend": "",
@@ -2066,7 +2070,7 @@
             },
             {
                 "key": "field_sponsor_name",
-                "label": "Nombre del sponsor",
+                "label": "Sponsor Name",
                 "name": "sponsor_name",
                 "aria-label": "",
                 "type": "text",
@@ -2111,7 +2115,7 @@
             },
             {
                 "key": "field_sponsor_url",
-                "label": "URL del sponsor",
+                "label": "Sponsor URL",
                 "name": "sponsor_url",
                 "aria-label": "",
                 "type": "url",
@@ -2148,67 +2152,62 @@
     },
     {
         "key": "taxonomy_guide_zone",
-        "title": "Guide Zone",
+        "title": "Zones",
         "menu_order": 0,
         "active": true,
         "taxonomy": "guide-zone",
         "object_type": [
             "guide"
         ],
-        "advanced_configuration": true,
+        "advanced_configuration": 1,
         "import_source": "",
         "import_date": "",
         "labels": {
-            "name": "Zonas",
-            "singular_name": "Zona",
-            "menu_name": "Zonas",
-            "all_items": "Todas las Zonas",
-            "edit_item": "Editar Zona",
-            "view_item": "Ver Zona",
-            "add_new_item": "Agregar Zona",
-            "new_item_name": "Nombre nueva Zona",
-            "parent_item": "Zona padre",
-            "parent_item_colon": "Zona padre:",
-            "search_items": "Buscar Zonas",
-            "popular_items": "Zonas populares",
-            "not_found": "No se encontraron zonas",
-            "items_list_navigation": "Navegación lista de zonas",
-            "items_list": "Lista de zonas",
-            "back_to_items": "Volver a Zonas",
-            "item_link": "Enlace a Zona",
-            "item_link_description": "Un enlace a una zona."
+            "name": "Zones",
+            "singular_name": "Zone"
         },
         "description": "",
-        "public": true,
+        "capabilities": {
+            "manage_terms": "manage_categories",
+            "edit_terms": "manage_categories",
+            "delete_terms": "manage_categories",
+            "assign_terms": "edit_posts"
+        },
+        "public": 1,
         "publicly_queryable": true,
-        "hierarchical": false,
+        "hierarchical": 0,
         "show_ui": true,
         "show_in_menu": true,
         "show_in_nav_menus": true,
         "show_in_rest": true,
         "rest_base": "",
-        "rest_namespace": "wp\/v2",
+        "rest_namespace": "wp/v2",
         "rest_controller_class": "WP_REST_Terms_Controller",
         "show_tagcloud": true,
         "show_in_quick_edit": true,
-        "show_admin_column": true,
+        "show_admin_column": false,
         "rewrite": {
             "permalink_rewrite": "taxonomy_key",
-            "with_front": "1",
-            "hierarchical": "0"
+            "slug": "",
+            "with_front": true,
+            "rewrite_hierarchical": false
         },
         "query_var": "taxonomy_key",
         "query_var_name": "",
-        "default_term": "",
-        "sort": null,
+        "default_term": {
+            "default_term_enabled": false,
+            "default_term_name": "",
+            "default_term_slug": "",
+            "default_term_description": ""
+        },
+        "sort": 0,
         "meta_box": "default",
         "meta_box_cb": "",
-        "meta_box_sanitize_cb": "",
-        "update_count_callback": ""
+        "meta_box_sanitize_cb": ""
     },
     {
         "key": "post_type_guide_directory",
-        "title": "Guías",
+        "title": "Guides",
         "menu_order": 0,
         "active": true,
         "post_type": "guide",
@@ -2216,39 +2215,39 @@
         "import_source": "",
         "import_date": "",
         "labels": {
-            "name": "Guías",
-            "singular_name": "Guía",
-            "menu_name": "Guías",
-            "all_items": "Todos los Guías",
-            "edit_item": "Editar Guía",
-            "view_item": "Ver Guía",
-            "view_items": "Ver Guías",
-            "add_new_item": "Agregar Guía",
-            "add_new": "Agregar Guía",
-            "new_item": "Nuevo Guía",
-            "parent_item_colon": "Guía padre:",
-            "search_items": "Buscar Guías",
-            "not_found": "No se encontraron guías",
-            "not_found_in_trash": "No se encontraron guías en la papelera",
-            "archives": "Directorio de Guías",
-            "attributes": "Atributos del Guía",
+            "name": "Guides",
+            "singular_name": "Guide",
+            "menu_name": "Guides",
+            "all_items": "All Guides",
+            "edit_item": "Edit Guide",
+            "view_item": "View Guide",
+            "view_items": "View Guides",
+            "add_new_item": "Add Guide",
+            "add_new": "Add Guide",
+            "new_item": "New Guide",
+            "parent_item_colon": "Parent Guide:",
+            "search_items": "Search Guides",
+            "not_found": "No guides found",
+            "not_found_in_trash": "No guides found in trash",
+            "archives": "Guide Directory",
+            "attributes": "Guide Attributes",
             "featured_image": "",
             "set_featured_image": "",
             "remove_featured_image": "",
             "use_featured_image": "",
-            "insert_into_item": "Insertar en guía",
-            "uploaded_to_this_item": "Subido a este guía",
-            "filter_items_list": "Filtrar lista de guías",
-            "filter_by_date": "Filtrar guías por fecha",
-            "items_list_navigation": "Navegación lista de guías",
-            "items_list": "Lista de guías",
-            "item_published": "Guía publicado.",
-            "item_published_privately": "Guía publicado de forma privada.",
-            "item_reverted_to_draft": "Guía revertido a borrador.",
-            "item_scheduled": "Guía programado.",
-            "item_updated": "Guía actualizado.",
-            "item_link": "Enlace a Guía",
-            "item_link_description": "Un enlace a un guía."
+            "insert_into_item": "Insert into guide",
+            "uploaded_to_this_item": "Uploaded to this guide",
+            "filter_items_list": "Filter guides list",
+            "filter_by_date": "Filter guides by date",
+            "items_list_navigation": "Guides list navigation",
+            "items_list": "Guides list",
+            "item_published": "Guide published.",
+            "item_published_privately": "Guide published privately.",
+            "item_reverted_to_draft": "Guide reverted to draft.",
+            "item_scheduled": "Guide scheduled.",
+            "item_updated": "Guide updated.",
+            "item_link": "Guide Link",
+            "item_link_description": "A link to a guide."
         },
         "description": "",
         "public": true,
@@ -2262,7 +2261,7 @@
         "show_in_nav_menus": true,
         "show_in_rest": true,
         "rest_base": "",
-        "rest_namespace": "wp\/v2",
+        "rest_namespace": "wp/v2",
         "rest_controller_class": "WP_REST_Posts_Controller",
         "menu_position": "",
         "menu_icon": {
@@ -2308,8 +2307,8 @@
         "labels": {
             "name": "Point of interest",
             "singular_name": "Point of interest",
-            "menu_name": "Point of interes",
-            "all_items": "All Point of interes",
+            "menu_name": "Point of interest",
+            "all_items": "All Point of interest",
             "edit_item": "Edit Point of interest",
             "view_item": "View Point of interest",
             "view_items": "View Point of interes",
@@ -2352,7 +2351,7 @@
         "show_in_nav_menus": true,
         "show_in_rest": true,
         "rest_base": "",
-        "rest_namespace": "wp\/v2",
+        "rest_namespace": "wp/v2",
         "rest_controller_class": "WP_REST_Posts_Controller",
         "menu_position": "",
         "menu_icon": {
@@ -2399,37 +2398,37 @@
         "labels": {
             "name": "Routes",
             "singular_name": "route",
-            "menu_name": "Rutas",
-            "all_items": "All Rutas",
-            "edit_item": "Edit ruta",
-            "view_item": "View ruta",
-            "view_items": "View Rutas",
-            "add_new_item": "Add New ruta",
-            "add_new": "Add New ruta",
-            "new_item": "New ruta",
-            "parent_item_colon": "Parent ruta:",
-            "search_items": "Search Rutas",
-            "not_found": "No rutas found",
-            "not_found_in_trash": "No rutas found in Trash",
-            "archives": "ruta Archives",
-            "attributes": "ruta Attributes",
+            "menu_name": "Routes",
+            "all_items": "All route",
+            "edit_item": "Edit routes",
+            "view_item": "View routes",
+            "view_items": "View Routes",
+            "add_new_item": "Add New routes",
+            "add_new": "Add New routes",
+            "new_item": "New routes",
+            "parent_item_colon": "Parent routes:",
+            "search_items": "Search routes",
+            "not_found": "No routes found",
+            "not_found_in_trash": "No routesfound in Trash",
+            "archives": "routesArchives",
+            "attributes": "routesAttributes",
             "featured_image": "",
             "set_featured_image": "",
             "remove_featured_image": "",
             "use_featured_image": "",
-            "insert_into_item": "Insert into ruta",
-            "uploaded_to_this_item": "Uploaded to this ruta",
-            "filter_items_list": "Filter rutas list",
-            "filter_by_date": "Filter rutas by date",
-            "items_list_navigation": "Rutas list navigation",
-            "items_list": "Rutas list",
-            "item_published": "ruta published.",
-            "item_published_privately": "ruta published privately.",
-            "item_reverted_to_draft": "ruta reverted to draft.",
-            "item_scheduled": "ruta scheduled.",
-            "item_updated": "ruta updated.",
-            "item_link": "ruta Link",
-            "item_link_description": "A link to a ruta."
+            "insert_into_item": "Insert into route",
+            "uploaded_to_this_item": "Uploaded to this routes",
+            "filter_items_list": "Filter routes list",
+            "filter_by_date": "Filter routes by date",
+            "items_list_navigation": "Routes list navigation",
+            "items_list": "Routes list",
+            "item_published": "Route published.",
+            "item_published_privately": "Route published privately.",
+            "item_reverted_to_draft": "Route reverted to draft.",
+            "item_scheduled": "Route scheduled.",
+            "item_updated": "Route updated.",
+            "item_link": "Route Link",
+            "item_link_description": "A link to a Route."
         },
         "description": "",
         "public": true,
@@ -2443,7 +2442,7 @@
         "show_in_nav_menus": true,
         "show_in_rest": true,
         "rest_base": "",
-        "rest_namespace": "wp\/v2",
+        "rest_namespace": "wp/v2",
         "rest_controller_class": "WP_REST_Posts_Controller",
         "menu_position": "",
         "menu_icon": {

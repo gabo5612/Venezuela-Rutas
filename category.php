@@ -2,7 +2,7 @@
 
 <?php
 $queried_cat = get_queried_object();
-$cat_name    = $queried_cat ? $queried_cat->name : 'Rutas';
+$cat_name    = $queried_cat ? $queried_cat->name : 'Routes';
 $cat_desc    = $queried_cat ? $queried_cat->description : '';
 
 $first_q  = new WP_Query(['category_name' => $queried_cat->slug ?? '', 'posts_per_page' => 1]);
@@ -19,15 +19,15 @@ if ($first_q->have_posts()) { $first_q->the_post(); $hero_img = get_the_post_thu
     <div class="cat-hero__inner">
       <span class="cat-hero__eyebrow">
         <span class="material-symbols-outlined">sensors</span>
-        Inteligencia de Campo
+        Field Intelligence
       </span>
       <h1 class="cat-hero__title"><?php echo esc_html( strtoupper($cat_name) ); ?></h1>
       <?php if ($cat_desc) : ?>
         <p class="cat-hero__desc"><?php echo esc_html($cat_desc); ?></p>
       <?php endif; ?>
       <div class="cat-hero__actions">
-        <a href="<?php echo esc_url( home_url('/') ); ?>" class="btn btn--primary">Ver Rutas</a>
-        <a href="#" class="btn btn--outline">Ver Atlas</a>
+        <a href="<?php echo esc_url( home_url('/') ); ?>" class="btn btn--primary">View Routes</a>
+        <a href="#" class="btn btn--outline">View Atlas</a>
       </div>
     </div>
   </section>
@@ -35,9 +35,9 @@ if ($first_q->have_posts()) { $first_q->the_post(); $hero_img = get_the_post_thu
   <!-- ══ FILTROS ════════════════════════════════════════ -->
   <div class="page-category__filters">
     <div class="filter-pills">
-      <span class="filter-pills__label">Filtrar Terreno:</span>
+      <span class="filter-pills__label">Filter Terrain:</span>
       <a href="<?php echo esc_url( home_url('/') ); ?>" class="filter-pills__pill">
-        <span class="material-symbols-outlined">landscape</span> Todos
+        <span class="material-symbols-outlined">landscape</span> All
       </a>
       <?php
       $icons    = ['terrain','wb_sunny','filter_hdr','forest','water','ac_unit','park'];
@@ -69,7 +69,7 @@ if ($first_q->have_posts()) { $first_q->the_post(); $hero_img = get_the_post_thu
 
         if ($is_first) : $is_first = false; ?>
 
-        <!-- Post destacado (spans 2 cols) -->
+        <!-- Featured post (spans 2 cols) -->
         <article class="post-card--featured" data-animate="scale">
           <div class="featured-bg" <?php if ($thumb) echo 'style="background-image:url(\'' . esc_url($thumb) . '\')"'; ?>></div>
           <div class="featured-overlay"></div>
@@ -87,7 +87,7 @@ if ($first_q->have_posts()) { $first_q->the_post(); $hero_img = get_the_post_thu
               <?php if ($time) : ?>
                 <div class="featured-stat"><span class="material-symbols-outlined">schedule</span><?php echo esc_html($time); ?></div>
               <?php endif; ?>
-              <span class="featured-read">Leer <span class="material-symbols-outlined">arrow_right_alt</span></span>
+              <span class="featured-read">Read <span class="material-symbols-outlined">arrow_right_alt</span></span>
             </div>
           </div>
           <a href="<?php the_permalink(); ?>" class="featured-link" aria-label="<?php the_title_attribute(); ?>"></a>
@@ -95,7 +95,7 @@ if ($first_q->have_posts()) { $first_q->the_post(); $hero_img = get_the_post_thu
 
         <?php else : ?>
 
-        <!-- Post normal -->
+        <!-- Normal post -->
         <div class="post-card" data-animate="fade-up">
           <a href="<?php the_permalink(); ?>" class="post-card__link" aria-label="<?php the_title_attribute(); ?>"></a>
           <div class="post-card__image">
@@ -133,7 +133,7 @@ if ($first_q->have_posts()) { $first_q->the_post(); $hero_img = get_the_post_thu
     <?php if ($GLOBALS['wp_query']->max_num_pages > 1) : ?>
     <div class="load-more-wrap">
       <button id="moreTips" data-page="2" class="load-more-btn">
-        Cargar Más
+        Load more
         <span class="material-symbols-outlined">keyboard_double_arrow_right</span>
       </button>
     </div>

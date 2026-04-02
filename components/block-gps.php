@@ -1,9 +1,9 @@
 <section class="container">
 
-  <!-- FILTROS -->
+  <!-- FILTERS -->
   <div id="gps-filters" class="gps-filters"></div>
 
-  <!-- MAPA -->
+  <!-- MAP -->
   <div id="map" ></div>
 
   <script>
@@ -155,7 +155,7 @@
         showCompass: true,
         drawCircle: true,
         showPopup: false,
-        strings: { title: "Centrar en mi ubicación" }
+        strings: { title: "Center on my location" }
       }).addTo(map);
 
       // Capas: rutas y POIs (para poder mostrar/ocultar)
@@ -206,8 +206,8 @@
 
       // Construir HTML de filtros
       // Píldoras fijas
-      var html = '<button type="button" class="gps-pill is-active" data-filter="all" data-filter-type="all">Todos</button>';
-      html += '<button type="button" class="gps-pill" data-filter="pois" data-filter-type="pois">Solo POIs</button>';
+      var html = '<button type="button" class="gps-pill is-active" data-filter="all" data-filter-type="all">All</button>';
+      html += '<button type="button" class="gps-pill" data-filter="pois" data-filter-type="pois">POIs Only</button>';
 
       // Grupo como píldora con sub-tags desplegables
       validGroups.forEach(function (group, i) {
@@ -302,7 +302,7 @@
           }
 
           if (poi.entry_url) {
-            popupHtml += `<a href="${poi.entry_url}" target="_blank">Ver Punto de interés</a><br>`;
+            popupHtml += `<a href="${poi.entry_url}" target="_blank">View Point of Interest</a><br>`;
           }
 
           if (poi.google_maps_url && poi.google_maps_url !== '') {
@@ -394,11 +394,11 @@
           }
 
           if (routeUrl) {
-            popupHtml += `<a href="${routeUrl}" target="_blank">Ver Ruta</a><br>`;
+            popupHtml += `<a href="${routeUrl}" target="_blank">View Route</a><br>`;
           }
 
           if (blogUrl) {
-            popupHtml += `<a href="${blogUrl}" target="_blank">Ver Bitácora</a><br>`;
+            popupHtml += `<a href="${blogUrl}" target="_blank">View Journal</a><br>`;
           }
 
           if (routePoints.length >= 2) {
@@ -406,7 +406,7 @@
             const destination = end.join(',');
             const waypoints = poiWaypoints.join('|');
             const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&waypoints=${encodeURIComponent(waypoints)}`;
-            popupHtml += `<br><a href="${googleMapsUrl}" target="_blank" class="map-link-button">Abrir ruta en<br>Google Maps</a>`;
+            popupHtml += `<br><a href="${googleMapsUrl}" target="_blank" class="map-link-button">Open route in<br>Google Maps</a>`;
           }
 
           L.marker(start, { icon: routeIcon }).addTo(routesLayer).bindPopup(popupHtml);

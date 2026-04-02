@@ -36,7 +36,7 @@ $first_slide = true;
     <div class="block-hero__slide">
       <div class="block-hero__inner">
 
-        <!-- ── Columna izquierda: texto ── -->
+        <!-- ── Left column: text ── -->
         <div class="block-hero__content">
 
           <?php if ( $slide['type'] ) : ?>
@@ -70,7 +70,7 @@ $first_slide = true;
 
         </div>
 
-        <!-- ── Columna derecha: imagen + stats ── -->
+        <!-- ── Right column: image + stats ── -->
         <?php if ( $slide['video'] || $slide['image'] ) : ?>
         <div class="block-hero__media">
           <?php if ( $slide['video'] ) : ?>
@@ -88,13 +88,13 @@ $first_slide = true;
             <?php if ( $slide['hero_distance'] ) : ?>
             <div class="block-hero__stat">
               <span class="block-hero__stat-value"><?php echo esc_html($slide['hero_distance']); ?></span>
-              <span class="block-hero__stat-label">Distancia</span>
+              <span class="block-hero__stat-label">Distance</span>
             </div>
             <?php endif; ?>
             <?php if ( $slide['hero_altitude'] ) : ?>
             <div class="block-hero__stat">
               <span class="block-hero__stat-value"><?php echo esc_html($slide['hero_altitude']); ?></span>
-              <span class="block-hero__stat-label">Altitud</span>
+              <span class="block-hero__stat-label">Altitude</span>
             </div>
             <?php endif; ?>
           </div>

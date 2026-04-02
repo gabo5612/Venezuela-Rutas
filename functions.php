@@ -78,7 +78,7 @@ add_action('template_redirect', function () {
 
     $post_id = get_queried_object_id();
     $points  = get_field('points', $post_id);
-    if (empty($points)) wp_die('Esta entrada no tiene puntos GPS.');
+    if (empty($points)) wp_die('This entry has no GPS points.');
 
     $pts = [];
     foreach ($points as $p) {
@@ -86,7 +86,7 @@ add_action('template_redirect', function () {
         $lng = floatval($p['longitude'] ?? 0);
         if ($lat && $lng) $pts[] = [$lat, $lng];
     }
-    if (empty($pts)) wp_die('No se encontraron coordenadas válidas.');
+    if (empty($pts)) wp_die('No valid coordinates found.');
 
     $title    = get_the_title($post_id);
     $filename = sanitize_title($title) . '.gpx';
@@ -167,20 +167,20 @@ add_action('init', function() {
     }
 });
 
-// ── Invalidar transients del bloque GPS al guardar rutas o POIs ─
+// ── Invalidate GPS block transients when saving routes or POIs ─
 add_action('save_post', function ($post_id) {
     $type = get_post_type($post_id);
     if ($type === 'routes')           delete_transient('gps_block_routes');
     if ($type === 'point-of-interest') delete_transient('gps_block_pois');
 });
 
-// ── Endpoint público para datos del mapa GPS ────────────────────
+// ── Public endpoint for GPS map data ────────────────────────────
 add_action('wp_ajax_gps_map_data',        'gps_map_data_handler');
 add_action('wp_ajax_nopriv_gps_map_data', 'gps_map_data_handler');
 function gps_map_data_handler() {
     $routes = get_transient('gps_block_routes');
     $pois   = get_transient('gps_block_pois');
-    // Si no hay transient lo generamos (raro, pero por si acaso)
+    // If no transient, generate it (rare, but just in case)
     if ($routes === false) $routes = [];
     if ($pois   === false) $pois   = [];
     wp_send_json(['routes' => $routes, 'pois' => $pois]);
@@ -261,7 +261,7 @@ function mag_load_more_tips()
 
 
 // ===============================
-// ADMIN BAR — solo administradores
+// ADMIN BAR — administrators only
 // ===============================
 add_action('after_setup_theme', function () {
     if ( ! current_user_can('administrator') ) {

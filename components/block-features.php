@@ -7,7 +7,7 @@ $heading = get_sub_field('heading') ?: 'Por qué Rutas';
 
     <div class="section-header" data-animate="fade-up" data-animate-delay="100">
       <div>
-        <div class="section-header__eyebrow">Protocolo de Misión</div>
+        <div class="section-header__eyebrow">Mission Protocol</div>
         <h2 class="section-header__title"><?php echo esc_html($heading); ?></h2>
       </div>
     </div>

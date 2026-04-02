@@ -86,7 +86,7 @@ $has_guide_contact = $guide_whatsapp || $guide_email || $guide_instagram;
 $sponsor_name  = get_field('sponsor_name')  ?: '';
 $sponsor_logo  = get_field('sponsor_logo')  ?: '';
 $sponsor_url   = get_field('sponsor_url')   ?: '';
-$sponsor_label = get_field('sponsor_label') ?: 'Equipado por';
+$sponsor_label = get_field('sponsor_label') ?: 'Equipped by';
 $has_sponsor   = $sponsor_name || $sponsor_logo;
 
 // ── Taxonomy ─────────────────────────────────────────────────
@@ -134,10 +134,10 @@ if ($gmaps_url) {
 
 // ── Related posts label ──────────────────────────────────────
 $related_label = match ($post_type) {
-    'routes'            => 'Rutas GPS',
-    'point-of-interest' => 'Puntos de Interés',
-    'guide'             => 'Otros Guías',
-    default             => 'Post Similares',
+    'routes'            => 'GPS Routes',
+    'point-of-interest' => 'Points of Interest',
+    'guide'             => 'Other Guides',
+    default             => 'Similar Posts',
 };
 ?>
 
@@ -164,12 +164,12 @@ $related_label = match ($post_type) {
       </button>
       <?php if ($has_map) : ?>
       <button class="tab-btn" data-tab="map">
-        <span class="material-symbols-outlined">map</span> Mapa
+        <span class="material-symbols-outlined">map</span> Map
       </button>
       <?php endif; ?>
       <?php if ($has_gallery) : ?>
       <button class="tab-btn" data-tab="gallery">
-        <span class="material-symbols-outlined">photo_library</span> Galería
+        <span class="material-symbols-outlined">photo_library</span> Gallery
       </button>
       <?php endif; ?>
     </div>
@@ -183,28 +183,28 @@ $related_label = match ($post_type) {
     <div class="page-route__stat">
       <span class="stat-icon material-symbols-outlined">distance</span>
       <span class="stat-value"><?php echo esc_html($distance); ?></span>
-      <span class="stat-label">Distancia</span>
+      <span class="stat-label">Distance</span>
     </div>
     <?php endif; ?>
     <?php if ($elevation) : ?>
     <div class="page-route__stat">
       <span class="stat-icon material-symbols-outlined">elevation</span>
       <span class="stat-value"><?php echo esc_html($elevation); ?></span>
-      <span class="stat-label">Elevación</span>
+      <span class="stat-label">Elevation</span>
     </div>
     <?php endif; ?>
     <?php if ($difficulty) : ?>
     <div class="page-route__stat">
       <span class="stat-icon material-symbols-outlined">fitness_center</span>
       <span class="stat-value"><?php echo esc_html($difficulty); ?></span>
-      <span class="stat-label">Dificultad</span>
+      <span class="stat-label">Difficulty</span>
     </div>
     <?php endif; ?>
     <?php if ($est_time) : ?>
     <div class="page-route__stat">
       <span class="stat-icon material-symbols-outlined">schedule</span>
       <span class="stat-value"><?php echo esc_html($est_time); ?></span>
-      <span class="stat-label">Tiempo Est.</span>
+      <span class="stat-label">Est. Time</span>
     </div>
     <?php endif; ?>
   </div>
@@ -217,7 +217,7 @@ $related_label = match ($post_type) {
        data-lon="<?php echo esc_attr($weather_lon); ?>">
     <div class="weather-state weather-state--loading">
       <span class="material-symbols-outlined weather-spin">progress_activity</span>
-      <span>Obteniendo clima…</span>
+      <span>Fetching weather…</span>
     </div>
     <div class="weather-state weather-state--data">
       <div class="weather-icon-wrap">
@@ -237,11 +237,11 @@ $related_label = match ($post_type) {
           <span class="weather-hum-val"></span>
         </span>
       </div>
-      <div class="weather-badge">Clima actual en <?php the_title(); ?></div>
+      <div class="weather-badge">Current weather at <?php the_title(); ?></div>
     </div>
     <div class="weather-state weather-state--error">
       <span class="material-symbols-outlined">cloud_off</span>
-      <span>Clima no disponible</span>
+      <span>Weather unavailable</span>
     </div>
   </div>
   <?php endif; ?>
@@ -298,17 +298,17 @@ $related_label = match ($post_type) {
     <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.5rem">
       <?php if ($gmaps_url) : ?>
       <a href="<?php echo esc_url($gmaps_url); ?>" class="btn btn--primary" target="_blank" rel="noopener">
-        <span class="material-symbols-outlined">map</span> Ver en Google Maps
+        <span class="material-symbols-outlined">map</span> View on Google Maps
       </a>
       <?php endif; ?>
       <?php if ($blog_url) : ?>
       <a href="<?php echo esc_url($blog_url); ?>" class="btn btn--outline">
-        <span class="material-symbols-outlined">article</span> Ver Bitácora
+        <span class="material-symbols-outlined">article</span> View Log
       </a>
       <?php endif; ?>
       <?php if ($has_polyline) : ?>
       <a href="<?php echo esc_url(add_query_arg('gpx', '1', get_permalink())); ?>" class="btn btn--outline">
-        <span class="material-symbols-outlined">download</span> Descargar GPX
+        <span class="material-symbols-outlined">download</span> Download GPX
       </a>
       <?php endif; ?>
     </div>
@@ -325,7 +325,7 @@ $related_label = match ($post_type) {
          class="page-route__map-gmaps-btn"
          target="_blank" rel="noopener">
         <span class="material-symbols-outlined">map</span>
-        Ver en Google Maps
+        View on Google Maps
       </a>
       <?php endif; ?>
     </div>
@@ -335,6 +335,7 @@ $related_label = match ($post_type) {
       <div class="cp-header">
         <span class="material-symbols-outlined">route</span>
         Checkpoints (<?php echo count($all_cp_pois); ?>)
+
       </div>
       <div class="cp-list">
         <?php foreach ($all_cp_pois as $poi) :
@@ -354,7 +355,7 @@ $related_label = match ($post_type) {
             </a>
             <?php if ($poi_maps_url) : ?>
             <a href="<?php echo esc_url($poi_maps_url); ?>" class="cp-maps-link" target="_blank" rel="noopener">
-              <span class="material-symbols-outlined">map</span> Ver en Maps
+              <span class="material-symbols-outlined">map</span> View on Maps
             </a>
             <?php endif; ?>
           </div>
@@ -384,7 +385,7 @@ $related_label = match ($post_type) {
             $dist_km[] = end($dist_km) + $R * 2 * atan2(sqrt($a), sqrt(1-$a));
         }
     }
-    // Ganancia de elevación para stats bar
+    // Elevation gain for stats bar
     $ele_gain = 0;
     for ($i = 1; $i < count($eles); $i++) {
         $diff = $eles[$i] - $eles[$i - 1];
@@ -394,8 +395,8 @@ $related_label = match ($post_type) {
   <div class="elevation-chart-wrap" data-animate="fade-up">
     <div class="elevation-chart-header">
       <span class="material-symbols-outlined">elevation</span>
-      Perfil de Elevación
-      <span class="elevation-chart-gain">+<?php echo round($ele_gain); ?> m ganancia</span>
+      Elevation Profile
+      <span class="elevation-chart-gain">+<?php echo round($ele_gain); ?> m gain</span>
     </div>
     <div id="elevation-chart"></div>
   </div>
@@ -481,8 +482,8 @@ $related_label = match ($post_type) {
   <div id="section-gallery" class="page-route__gallery">
     <div class="section-header">
       <div>
-        <div class="section-header__eyebrow">Documentación Visual</div>
-        <h2 class="section-header__title" style="color:var(--sand)">Galería</h2>
+        <div class="section-header__eyebrow">Visual Documentation</div>
+        <h2 class="section-header__title" style="color:var(--sand)">Gallery</h2>
       </div>
     </div>
     <div class="masonry-grid js-masonry" data-gallery-id="gallery-<?php echo get_the_ID(); ?>">
@@ -558,7 +559,7 @@ $related_label = match ($post_type) {
       <?php if ($guide_price) : ?>
       <div class="guide-contact__price">
         <span class="material-symbols-outlined">payments</span>
-        Desde <strong>$<?php echo esc_html($guide_price); ?></strong>/día
+        From <strong>$<?php echo esc_html($guide_price); ?></strong>/day
       </div>
       <?php endif; ?>
       <?php if ($guide_whatsapp) : ?>
@@ -605,7 +606,7 @@ $related_label = match ($post_type) {
   <div class="page-route__related">
     <div class="section-header" data-animate="fade-up" data-animate-delay="100">
       <div>
-        <div class="section-header__eyebrow">Continúa Explorando</div>
+        <div class="section-header__eyebrow">Keep Exploring</div>
         <h2 class="section-header__title" style="color:var(--sand)"><?php echo esc_html($related_label); ?></h2>
       </div>
     </div>
@@ -677,7 +678,7 @@ $related_label = match ($post_type) {
      class="page-route__mobile-maps-btn"
      target="_blank" rel="noopener">
     <span class="material-symbols-outlined">map</span>
-    Ver ruta en Google Maps
+    View route on Google Maps
   </a>
   <?php endif; ?>
 
@@ -697,8 +698,8 @@ document.addEventListener('DOMContentLoaded', function () {
   map.fitBounds(poly.getBounds(), { padding: [30, 30] });
   var startIcon = L.divIcon({ className: '', html: '<div class="map-pin map-pin--start"></div>', iconAnchor: [7, 7] });
   var endIcon   = L.divIcon({ className: '', html: '<div class="map-pin map-pin--end"></div>',   iconAnchor: [7, 7] });
-  L.marker(routePoints[0],                      { icon: startIcon }).addTo(map).bindPopup('Inicio').openPopup();
-  L.marker(routePoints[routePoints.length - 1], { icon: endIcon   }).addTo(map).bindPopup('Fin');
+  L.marker(routePoints[0],                      { icon: startIcon }).addTo(map).bindPopup('Start').openPopup();
+  L.marker(routePoints[routePoints.length - 1], { icon: endIcon   }).addTo(map).bindPopup('End');
   <?php else : ?>
   var lat  = <?php echo json_encode(floatval($lat)); ?>;
   var lon  = <?php echo json_encode(floatval($lon)); ?>;
@@ -734,14 +735,14 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!el) return;
 
   var WMO_LABELS = {
-    0:'Despejado', 1:'Mayormente despejado', 2:'Parcialmente nublado', 3:'Nublado',
-    45:'Niebla', 48:'Niebla helada',
-    51:'Llovizna ligera', 53:'Llovizna', 55:'Llovizna intensa',
-    61:'Lluvia ligera', 63:'Lluvia moderada', 65:'Lluvia fuerte',
-    71:'Nevada ligera', 73:'Nevada', 75:'Nevada fuerte',
-    80:'Chubascos', 81:'Chubascos moderados', 82:'Chubascos fuertes',
-    85:'Aguanieve', 86:'Aguanieve fuerte',
-    95:'Tormenta eléctrica', 96:'Tormenta con granizo', 99:'Tormenta fuerte'
+    0:'Clear', 1:'Mostly clear', 2:'Partly cloudy', 3:'Overcast',
+    45:'Fog', 48:'Icy fog',
+    51:'Light drizzle', 53:'Drizzle', 55:'Heavy drizzle',
+    61:'Light rain', 63:'Moderate rain', 65:'Heavy rain',
+    71:'Light snow', 73:'Snow', 75:'Heavy snow',
+    80:'Showers', 81:'Moderate showers', 82:'Heavy showers',
+    85:'Sleet', 86:'Heavy sleet',
+    95:'Thunderstorm', 96:'Thunderstorm with hail', 99:'Severe thunderstorm'
   };
 
   var WMO_ICONS = {
@@ -768,7 +769,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var code = c.weathercode;
       el.querySelector('.weather-icon').textContent    = WMO_ICONS[code]  || 'wb_sunny';
       el.querySelector('.weather-temp').textContent    = Math.round(c.temperature_2m) + '°C';
-      el.querySelector('.weather-desc').textContent    = WMO_LABELS[code] || 'Condición desconocida';
+      el.querySelector('.weather-desc').textContent    = WMO_LABELS[code] || 'Unknown condition';
       el.querySelector('.weather-wind-val').textContent = Math.round(c.windspeed_10m) + ' km/h';
       el.querySelector('.weather-hum-val').textContent  = c.relative_humidity_2m + '%';
       el.classList.add('is-ready');
@@ -829,7 +830,7 @@ document.addEventListener('DOMContentLoaded', function () {
 })();
 </script>
 
-<?php do_action('patacaliente_expedition_panel', get_the_ID(), get_post_type()); ?>
+<?php do_action('hotfootadventure_expedition_panel', get_the_ID(), get_post_type()); ?>
 
 <?php get_template_part('components/blocks'); ?>
 <?php get_template_part('parts/footer'); ?>

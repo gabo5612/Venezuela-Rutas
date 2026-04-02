@@ -11,7 +11,7 @@
 
 /* ── Hero ─────────────────────────────────────────────────── */
 .author-hero {
-  padding: 4rem 0 3rem;
+  padding: 6rem 0 3rem;
   border-bottom: 1px solid var(--line);
   background: linear-gradient(to bottom, rgba(13,242,70,.04), transparent);
 
@@ -133,6 +133,227 @@
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: .05em;
+  }
+}
+
+/* Verified badge on avatar */
+.author-hero__verified {
+  position: absolute;
+  bottom: 4px; right: 4px;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 2px solid var(--background);
+  display: flex; align-items: center; justify-content: center;
+
+  .material-symbols-outlined {
+    font-size: .9rem;
+    color: #0a0a0a;
+    font-variation-settings: 'FILL' 1;
+  }
+}
+
+/* Role badges */
+.author-hero__name-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .6rem;
+  margin-bottom: .5rem;
+
+  @media (max-width: 640px) { justify-content: center; }
+}
+
+.author-role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  padding: .25rem .7rem;
+  border-radius: 30px;
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+
+  .material-symbols-outlined { font-size: .85rem; font-variation-settings: 'FILL' 1; }
+
+  &--guide      { background: rgba(13,242,70,.12); border: 1px solid rgba(13,242,70,.3); color: var(--primary); }
+  &--organizer  { background: rgba(96,165,250,.12); border: 1px solid rgba(96,165,250,.3); color: #60a5fa; }
+  &--experience { background: rgba(251,191,36,.12); border: 1px solid rgba(251,191,36,.3); color: #fbbf24; }
+  &--featured   { background: rgba(250,204,21,.15); border: 1px solid rgba(250,204,21,.4); color: #facc15; }
+}
+
+/* Guide meta (zones + price) */
+.author-hero__guide-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: .75rem;
+
+  @media (max-width: 640px) { justify-content: center; }
+}
+
+.author-guide-meta__item {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  font-size: .85rem;
+  color: var(--text-muted);
+
+  .material-symbols-outlined { font-size: 1rem; color: var(--primary); font-variation-settings: 'FILL' 1; }
+
+  &--price strong { color: var(--primary); }
+}
+
+/* Specialty chip (no icon, simpler) */
+.author-activity-chip--specialty {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  color: var(--text-muted);
+  padding: .25rem .65rem;
+}
+
+/* Link to guide listing */
+.author-guide-listing-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+  transition: opacity .15s;
+
+  .material-symbols-outlined { font-size: .9rem; }
+  &:hover { opacity: .75; }
+}
+
+/* Guide bio */
+.author-hero__guide-bio {
+  font-size: .88rem;
+  color: var(--text-muted);
+  margin: 0 0 1rem;
+  max-width: 560px;
+  line-height: 1.6;
+  padding-left: .85rem;
+  border-left: 2px solid var(--primary-border);
+}
+
+/* Guide contact buttons */
+.author-hero__contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  margin-bottom: 1.25rem;
+
+  @media (max-width: 640px) { justify-content: center; }
+}
+
+.author-contact-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .5rem 1.1rem;
+  border-radius: 30px;
+  font-size: .82rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: opacity .15s, transform .1s;
+
+  .material-symbols-outlined { font-size: 1rem; }
+  &:hover { opacity: .85; transform: translateY(-1px); }
+
+  &--wa {
+    background: #25d366;
+    color: #fff;
+    svg { flex-shrink: 0; }
+  }
+  &--ig {
+    background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+    color: #fff;
+  }
+}
+
+/* ── Guide expeditions section ───────────────────────────── */
+.author-guide-expeditions {
+  padding: 2.5rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.author-section-title {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--text-muted);
+  margin: 0 0 1.25rem;
+
+  .material-symbols-outlined { font-size: 1.1rem; color: var(--primary); font-variation-settings: 'FILL' 1; }
+}
+
+.author-exp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.author-exp-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+  transition: border-color .15s;
+
+  &:hover { border-color: var(--primary-border); }
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .5rem;
+  }
+
+  &__activity {
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--primary);
+  }
+
+  &__status {
+    font-size: .68rem;
+    font-weight: 600;
+    padding: .15rem .5rem;
+    border-radius: 20px;
+
+    &--open      { background: rgba(13,242,70,.12); color: var(--primary); }
+    &--full      { background: rgba(251,191,36,.12); color: #fbbf24; }
+    &--completed { background: rgba(255,255,255,.06); color: var(--text-faint); }
+  }
+
+  &__title {
+    font-size: .9rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  &__date {
+    display: flex;
+    align-items: center;
+    gap: .3rem;
+    font-size: .75rem;
+    color: var(--text-muted);
+
+    .material-symbols-outlined { font-size: .85rem; }
   }
 }
 

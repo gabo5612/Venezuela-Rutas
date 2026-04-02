@@ -1,7 +1,7 @@
 <?php
 /*
- * Template Name: Sugerir Punto de Interés
- * Description: Página de formulario para sugerir un nuevo punto de interés
+ * Template Name: Suggest Point of Interest
+ * Description: Form page to suggest a new point of interest
  */
 ?>
 <?php get_template_part('parts/header'); ?>
@@ -21,14 +21,14 @@
     <div class="cat-hero__inner">
       <span class="cat-hero__eyebrow">
         <span class="material-symbols-outlined">location_on</span>
-        Comunidad
+        Community
       </span>
-      <h1 class="cat-hero__title">SUGIERE UN POI</h1>
-      <p class="cat-hero__desc">¿Hay un lugar especial que vale la pena marcar en el mapa? Cuéntanos sobre este punto de interés.</p>
+      <h1 class="cat-hero__title">SUGGEST A POI</h1>
+      <p class="cat-hero__desc">Is there a special place worth marking on the map? Tell us about this point of interest.</p>
       <div class="cat-hero__actions">
         <a href="<?php echo esc_url( home_url('/nueva-ruta') ); ?>" class="btn btn--outline">
           <span class="material-symbols-outlined">add_location</span>
-          ¿Tienes una Ruta?
+          Have a Route?
         </a>
       </div>
     </div>
@@ -36,7 +36,7 @@
 
   <div class="page-suggest__form" data-animate="fade-up">
     <?php
-    // Cambia el ID por el de tu formulario en Fluent Forms > Formularios
+    // Change the ID to your form's ID in Fluent Forms > Forms
     echo do_shortcode('[fluentform id="4"]');
     ?>
   </div>
