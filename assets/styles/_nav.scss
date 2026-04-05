@@ -104,6 +104,34 @@
     }
   }
 
+  &__cart {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    color: var(--text, #e8e8e8);
+    transition: color .15s;
+
+    .material-symbols-outlined { font-size: 1.4rem; }
+    &:hover { color: #0df246; }
+  }
+
+  &__cart-count {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background: #0df246;
+    color: #111;
+    font-size: .6rem;
+    font-weight: 800;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
   &__cta {
     display: inline-flex;
     align-items: center;

@@ -1,0 +1,635 @@
+// ═══════════════════════════════════════════════════════════════
+// MISSION DEPLOYMENT CHECKOUT
+// ═══════════════════════════════════════════════════════════════
+
+$c-bg:      #041c04;
+$c-surface: #081f08;
+$c-border:  rgba(13, 242, 70, 0.15);
+$c-green:   #0df246;
+$c-text:    #e8f5e9;
+$c-muted:   rgba(232, 245, 233, 0.45);
+$c-red:     #ff4444;
+$radius:    4px;
+$mono:      'Share Tech Mono', monospace;
+
+// ── Wrap ─────────────────────────────────────────────────────────
+.co-wrap {
+  min-height: 100vh;
+  background: $c-bg;
+  color: $c-text;
+}
+
+// ── Hero ─────────────────────────────────────────────────────────
+.co-hero {
+  border-bottom: 1px solid $c-border;
+  border-left: 4px solid $c-green;
+  padding: 3rem 0 2rem;
+  margin-left: 0;
+
+  &__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  &__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    font-family: $mono;
+    font-size: .65rem;
+    color: $c-muted;
+    letter-spacing: .14em;
+    margin-bottom: .75rem;
+
+    .material-symbols-outlined { font-size: .9rem; color: $c-green; }
+  }
+
+  &__title {
+    font-family: $mono;
+    font-size: clamp(1.6rem, 4vw, 2.8rem);
+    font-weight: 400;
+    letter-spacing: .04em;
+    color: $c-green;
+    line-height: 1;
+  }
+}
+
+// ── Notices ──────────────────────────────────────────────────────
+.co-notices {
+  max-width: 1200px;
+  margin: 1rem auto 0;
+  padding: 0 1.5rem;
+
+  .woocommerce-message,
+  .woocommerce-info,
+  .woocommerce-error {
+    background: rgba(13, 242, 70, .07);
+    border: 1px solid $c-green;
+    border-left: 4px solid $c-green;
+    border-radius: $radius;
+    padding: .75rem 1.25rem;
+    margin-bottom: .5rem;
+    list-style: none;
+    font-family: $mono;
+    font-size: .75rem;
+    color: $c-text;
+    letter-spacing: .05em;
+
+    &::before, &::after, li::before, li::after { content: '' !important; display: none !important; }
+    li { padding: 0; }
+  }
+
+  .woocommerce-error {
+    background: rgba(255, 68, 68, .07);
+    border-color: $c-red;
+    border-left-color: $c-red;
+  }
+}
+
+// ── Layout ───────────────────────────────────────────────────────
+.co-layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 2.5rem;
+  padding-top: 2.5rem;
+  padding-bottom: 4rem;
+  align-items: start;
+
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── Form column ──────────────────────────────────────────────────
+.co-form-col {
+  min-width: 0;
+}
+
+// ── Sections ─────────────────────────────────────────────────────
+.co-section {
+  margin-bottom: 2.5rem;
+
+  &__hd {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: .75rem;
+    border-bottom: 1px solid $c-border;
+
+    .material-symbols-outlined { color: $c-green; font-size: 1.2rem; }
+  }
+
+  &__title {
+    font-family: $mono;
+    font-size: .8rem;
+    font-weight: 400;
+    letter-spacing: .1em;
+    color: $c-text;
+  }
+
+  &__body {
+    background: $c-surface;
+    padding: 1.5rem;
+    border: 1px solid $c-border;
+    border-radius: $radius;
+  }
+
+  &--notes {
+    .co-section__body { background: transparent; padding: 0; border: none; }
+  }
+}
+
+// ── Field grid ───────────────────────────────────────────────────
+.co-fields-grid {
+  display: grid;
+  gap: 1.25rem;
+
+  &--2 { grid-template-columns: repeat(2, 1fr); }
+  &--1 { grid-template-columns: repeat(2, 1fr); }
+
+  @media (max-width: 600px) {
+    &--2, &--1 { grid-template-columns: 1fr; }
+  }
+}
+
+.co-field {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+
+  &--full { grid-column: 1 / -1; }
+
+  // WC wraps fields in .woocommerce-input-wrapper
+  .woocommerce-input-wrapper { width: 100%; }
+}
+
+.co-field__label {
+  font-family: $mono;
+  font-size: .62rem;
+  letter-spacing: .14em;
+  color: $c-muted;
+  text-transform: uppercase;
+}
+
+.co-required { color: $c-green; margin-left: .2rem; }
+
+// WC form field overrides inside checkout
+.co-wrap {
+  .woocommerce-checkout {
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"],
+    input[type="password"],
+    textarea,
+    select {
+      width: 100%;
+      background: $c-bg;
+      border: none;
+      border-bottom: 1px solid $c-border;
+      border-radius: 0;
+      color: $c-text;
+      font-family: $mono;
+      font-size: .78rem;
+      letter-spacing: .06em;
+      padding: .65rem .5rem;
+      transition: border-color .2s;
+      box-shadow: none;
+      -webkit-appearance: none;
+
+      &::placeholder { color: $c-muted; }
+      &:focus {
+        outline: none;
+        border-bottom-color: $c-green;
+        background: rgba(13, 242, 70, .03);
+      }
+    }
+
+    textarea { resize: vertical; min-height: 80px; border: 1px solid $c-border; padding: .6rem .5rem; }
+
+    // WC validation states
+    .woocommerce-validated input { border-bottom-color: $c-green; }
+    .woocommerce-invalid input  { border-bottom-color: $c-red; }
+
+    // WC field wrapper — remove default styles
+    .form-row {
+      margin: 0;
+      padding: 0;
+
+      label { display: none; } // we use our own .co-field__label
+      .required { display: none; }
+    }
+
+    // Select2 inside checkout (country/state selects)
+    .select2-container .select2-selection--single {
+      background: $c-bg;
+      border: none;
+      border-bottom: 1px solid $c-border;
+      border-radius: 0;
+      height: 38px;
+
+      .select2-selection__rendered {
+        color: $c-text;
+        font-family: $mono;
+        font-size: .78rem;
+        letter-spacing: .06em;
+        line-height: 38px;
+        padding-left: .5rem;
+      }
+
+      .select2-selection__arrow { height: 38px; }
+    }
+
+    // Validation inline messages
+    .woocommerce-error { font-size: .65rem; margin-top: .25rem; }
+  }
+}
+
+// ── Ship to different address ─────────────────────────────────────
+.co-ship-toggle {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid $c-border;
+}
+
+.co-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  font-family: $mono;
+  font-size: .72rem;
+  letter-spacing: .1em;
+  color: $c-muted;
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    accent-color: $c-green;
+  }
+}
+
+.co-shipping-fields {
+  margin-top: 1.25rem;
+  display: none;
+
+  &.active { display: block; }
+}
+
+// ── Login note ────────────────────────────────────────────────────
+.co-login-note {
+  font-family: $mono;
+  font-size: .75rem;
+  color: $c-muted;
+  letter-spacing: .06em;
+  padding: .75rem 1rem;
+  border: 1px solid $c-border;
+  border-radius: $radius;
+  margin-bottom: 1.5rem;
+
+  a { color: $c-green; text-decoration: underline; }
+}
+
+// ── Payment section overrides ─────────────────────────────────────
+.co-payment-wrap {
+  // WC payment box
+  #payment {
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+
+    ul.payment_methods {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1.5rem;
+      border-bottom: 1px solid $c-border;
+
+      li {
+        border: 1px solid $c-border;
+        border-radius: $radius;
+        margin-bottom: .6rem;
+        overflow: hidden;
+        transition: border-color .2s;
+
+        &:has(input:checked) { border-color: $c-green; background: rgba(13,242,70,.04); }
+
+        label {
+          display: flex;
+          align-items: center;
+          gap: .75rem;
+          padding: .85rem 1rem;
+          font-family: $mono;
+          font-size: .75rem;
+          letter-spacing: .08em;
+          color: $c-text;
+          cursor: pointer;
+          text-transform: uppercase;
+
+          img { height: 20px; filter: brightness(.7); }
+        }
+
+        input[type="radio"] {
+          accent-color: $c-green;
+          width: 14px;
+          height: 14px;
+          flex-shrink: 0;
+        }
+
+        .payment_box {
+          background: rgba(13,242,70,.04);
+          border-top: 1px solid $c-border;
+          padding: 1rem;
+          font-family: $mono;
+          font-size: .72rem;
+          color: $c-muted;
+
+          p { margin: 0 0 .5rem; }
+
+          input[type="text"],
+          input[type="tel"],
+          input[type="number"] {
+            width: 100%;
+            background: $c-bg;
+            border: none;
+            border-bottom: 1px solid $c-border;
+            color: $c-text;
+            font-family: $mono;
+            font-size: .75rem;
+            padding: .5rem .4rem;
+
+            &:focus { outline: none; border-bottom-color: $c-green; }
+          }
+        }
+      }
+    }
+
+    // Security note
+    .wc-terms-and-conditions,
+    .payment_terms {
+      font-family: $mono;
+      font-size: .65rem;
+      color: $c-muted;
+      letter-spacing: .04em;
+      padding: .75rem;
+      border-left: 2px solid $c-border;
+      margin-bottom: 1rem;
+      line-height: 1.6;
+
+      a { color: $c-green; }
+    }
+
+    // Place order button
+    #place_order {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      width: 100%;
+      background: $c-green;
+      color: $c-bg;
+      border: none;
+      border-radius: $radius;
+      font-family: $mono;
+      font-size: .85rem;
+      letter-spacing: .14em;
+      font-weight: 400;
+      text-transform: uppercase;
+      padding: 1rem;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(13,242,70,.2);
+      transition: opacity .2s, transform .2s;
+
+      &:hover { opacity: .9; transform: translateY(-1px); }
+      &:active { transform: translateY(0); }
+    }
+  }
+
+  // Order review table inside shipping section
+  .woocommerce-checkout-review-order { display: none; } // hidden — we have our own sidebar
+}
+
+// ── Shipping methods (in section 03) ─────────────────────────────
+.co-shipping-methods {
+  .shop_table.woocommerce-checkout-review-order-table { display: none; }
+
+  #shipping_method {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: .75rem;
+
+    li {
+      border: 1px solid $c-border;
+      border-radius: $radius;
+      padding: 1rem;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+
+      &:has(input:checked) {
+        border-color: $c-green;
+        background: rgba(13,242,70,.06);
+      }
+
+      label {
+        display: flex;
+        flex-direction: column;
+        gap: .35rem;
+        font-family: $mono;
+        font-size: .72rem;
+        color: $c-text;
+        letter-spacing: .06em;
+        cursor: pointer;
+      }
+
+      input[type="radio"] { accent-color: $c-green; }
+    }
+  }
+}
+
+// ── Right sidebar summary ─────────────────────────────────────────
+.co-summary {
+  position: sticky;
+  top: 6rem;
+
+  @media (max-width: 960px) { position: static; }
+
+  &__inner {
+    background: $c-surface;
+    border: 1px solid $c-border;
+    border-radius: $radius;
+    overflow: hidden;
+  }
+
+  &__hd {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 1.25rem 1.25rem .75rem;
+    border-bottom: 1px solid $c-border;
+  }
+
+  &__title {
+    font-family: $mono;
+    font-size: .8rem;
+    font-weight: 400;
+    letter-spacing: .14em;
+    color: $c-text;
+  }
+
+  &__count {
+    font-family: $mono;
+    font-size: .6rem;
+    color: $c-muted;
+    letter-spacing: .1em;
+  }
+
+  // Items list
+  &__items {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid $c-border;
+    display: flex;
+    flex-direction: column;
+    gap: .85rem;
+    max-height: 280px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar { width: 3px; }
+    &::-webkit-scrollbar-thumb { background: $c-border; }
+  }
+
+  &__item {
+    display: flex;
+    gap: .85rem;
+    align-items: flex-start;
+  }
+
+  &__item-img {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    background: rgba(13,242,70,.05);
+    border: 1px solid $c-border;
+    border-radius: $radius;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: grayscale(40%);
+    transition: filter .3s;
+
+    &:hover { filter: grayscale(0); }
+
+    img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .material-symbols-outlined { font-size: 1.2rem; color: $c-muted; }
+  }
+
+  &__item-info { flex: 1; min-width: 0; }
+
+  &__item-name {
+    font-family: $mono;
+    font-size: .7rem;
+    letter-spacing: .05em;
+    color: $c-text;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: .2rem;
+  }
+
+  &__item-qty {
+    font-family: $mono;
+    font-size: .6rem;
+    color: $c-muted;
+    letter-spacing: .08em;
+    margin-bottom: .2rem;
+  }
+
+  &__item-price {
+    font-family: $mono;
+    font-size: .75rem;
+    color: $c-text;
+  }
+
+  // Totals
+  &__totals {
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: .55rem;
+    border-bottom: 1px solid $c-border;
+  }
+
+  &__total-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: $mono;
+    font-size: .68rem;
+    letter-spacing: .06em;
+    color: $c-muted;
+
+    span:first-child { display: flex; align-items: center; gap: .3rem; }
+    .material-symbols-outlined { font-size: .85rem; }
+
+    &--discount { color: $c-green; }
+
+    &--final {
+      padding-top: .75rem;
+      margin-top: .25rem;
+      border-top: 1px solid $c-border;
+      font-size: .85rem;
+      color: $c-green;
+
+      span:last-child { font-size: 1rem; }
+    }
+  }
+}
+
+// ── HUD element ───────────────────────────────────────────────────
+.co-hud {
+  position: relative;
+  height: 80px;
+  overflow: hidden;
+
+  &__grid {
+    position: absolute;
+    inset: 0;
+    opacity: .08;
+    background-image: radial-gradient(#0df246 1px, transparent 1px);
+    background-size: 10px 10px;
+    pointer-events: none;
+  }
+
+  &__data {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 100%;
+    padding: .75rem 1.25rem;
+  }
+
+  &__coords {
+    font-family: $mono;
+    font-size: .55rem;
+    color: $c-green;
+    opacity: .6;
+    line-height: 1.6;
+    letter-spacing: .06em;
+  }
+
+  &__radar {
+    width: 40px;
+    height: 40px;
+    border: 2px solid rgba(13,242,70,.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $radius;
+
+    .material-symbols-outlined { color: $c-green; font-size: 1.2rem; }
+  }
+}

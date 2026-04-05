@@ -10,6 +10,10 @@ require_once(get_template_directory() . '/functions/enqueue-scripts.php');
 add_action('after_setup_theme', function () {
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
+    add_theme_support('woocommerce');
+    add_theme_support('wc-product-gallery-zoom');
+    add_theme_support('wc-product-gallery-lightbox');
+    add_theme_support('wc-product-gallery-slider');
     register_nav_menus([
         'menu'   => __('Main Menu', 'textdomain'),
         'footer' => __('Footer Menu', 'textdomain'),
@@ -259,6 +263,21 @@ function mag_load_more_tips()
     ]);
 }
 
+
+// ===============================
+// WOOCOMMERCE — custom page templates
+// ===============================
+add_filter('template_include', function ($template) {
+    if (function_exists('is_cart') && is_cart()) {
+        $custom = get_stylesheet_directory() . '/woocommerce/cart.php';
+        if (file_exists($custom)) return $custom;
+    }
+    if (function_exists('is_checkout') && is_checkout() && !is_order_received_page() && !is_checkout_pay_page()) {
+        $custom = get_stylesheet_directory() . '/woocommerce/checkout.php';
+        if (file_exists($custom)) return $custom;
+    }
+    return $template;
+});
 
 // ===============================
 // ADMIN BAR — administrators only

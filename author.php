@@ -60,19 +60,27 @@ $joined = (int) $wpdb->get_var( $wpdb->prepare(
     $author_id
 ));
 
-// Expeditions led (for guide public display)
+// Expeditions led (for guide public display — upcoming + active only)
 $led_expeditions = [];
 if ( $is_guide && $is_approved ) {
+    $today   = date('Y-m-d');
     $led_ids = $wpdb->get_col( $wpdb->prepare(
-        "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_exp_organizer' AND meta_value = %d ORDER BY post_id DESC LIMIT 6",
-        $author_id
+        "SELECT pm.post_id
+         FROM {$wpdb->postmeta} pm
+         INNER JOIN {$wpdb->postmeta} pm_date ON pm_date.post_id = pm.post_id AND pm_date.meta_key = '_exp_date'
+         INNER JOIN {$wpdb->postmeta} pm_status ON pm_status.post_id = pm.post_id AND pm_status.meta_key = '_exp_status'
+         WHERE pm.meta_key = '_exp_organizer' AND pm.meta_value = %d
+           AND pm_date.meta_value >= %s
+           AND pm_status.meta_value IN ('open','full')
+         ORDER BY pm_date.meta_value ASC",
+        $author_id, $today
     ));
     if ( $led_ids ) {
         $led_expeditions = get_posts([
-            'post__in'  => $led_ids,
-            'post_type' => 'expedition',
-            'orderby'   => 'post__in',
-            'numberposts' => 6,
+            'post__in'    => $led_ids,
+            'post_type'   => 'expedition',
+            'orderby'     => 'post__in',
+            'numberposts' => -1,
         ]);
     }
 }
@@ -256,49 +264,74 @@ $posts_query = new WP_Query([
     </div>
   </section>
 
-  <!-- ── Guide expeditions led ─────────────────────────────────── -->
-  <?php if ( $is_guide && $is_approved && ! empty($led_expeditions) ) : ?>
+  <!-- ── Guide: upcoming expeditions ─────────────────────────── -->
+  <?php if ( $is_guide && $is_approved ) : ?>
   <section class="author-guide-expeditions container">
     <h2 class="author-section-title">
       <span class="material-symbols-outlined">groups</span>
-      Led Expeditions
+      Upcoming Expeditions
     </h2>
+    <?php if ( ! empty($led_expeditions) ) : ?>
     <div class="author-exp-grid">
       <?php foreach ($led_expeditions as $exp) :
-        $exp_date     = get_post_meta($exp->ID, '_exp_date', true);
-        $exp_activity = get_post_meta($exp->ID, '_exp_activity_type', true);
-        $exp_status   = get_post_meta($exp->ID, '_exp_status', true);
-        $exp_slots    = get_post_meta($exp->ID, '_exp_slots', true);
-        $status_map   = ['open' => 'Open', 'full' => 'Full', 'completed' => 'Completed'];
-        $act_label    = $activity_labels[$exp_activity][1] ?? $exp_activity;
+        $exp_date      = get_post_meta($exp->ID, '_exp_date', true);
+        $exp_time      = get_post_meta($exp->ID, '_exp_time', true);
+        $exp_activity  = get_post_meta($exp->ID, '_exp_activity_type', true);
+        $exp_status    = get_post_meta($exp->ID, '_exp_status', true);
+        $exp_slots     = (int) get_post_meta($exp->ID, '_exp_slots', true);
+        $exp_taken     = (int) get_post_meta($exp->ID, '_exp_slots_taken', true);
+        $exp_free      = max(0, $exp_slots - $exp_taken);
+        $exp_linked    = (int) get_post_meta($exp->ID, '_exp_linked_post', true);
+        $exp_linked_title = $exp_linked ? get_the_title($exp_linked) : '';
+        $exp_linked_url   = $exp_linked ? get_permalink($exp_linked) : '';
+        $exp_fee       = floatval( get_post_meta($exp->ID, '_exp_fee', true) );
+        $status_map    = ['open' => 'Open', 'full' => 'Full'];
+        $act_label     = $activity_labels[$exp_activity][1] ?? $exp_activity;
+        $act_icon      = $activity_labels[$exp_activity][0] ?? 'explore';
       ?>
       <div class="author-exp-card">
         <div class="author-exp-card__top">
-          <span class="author-exp-card__activity"><?php echo esc_html($act_label); ?></span>
+          <span class="author-exp-card__activity">
+            <span class="material-symbols-outlined"><?php echo esc_html($act_icon); ?></span>
+            <?php echo esc_html($act_label); ?>
+          </span>
           <span class="author-exp-card__status author-exp-card__status--<?php echo esc_attr($exp_status); ?>">
             <?php echo esc_html($status_map[$exp_status] ?? $exp_status); ?>
           </span>
         </div>
         <h4 class="author-exp-card__title"><?php echo esc_html($exp->post_title); ?></h4>
-        <?php if ($exp_date) : ?>
-        <span class="author-exp-card__date">
-          <span class="material-symbols-outlined">calendar_today</span>
-          <?php echo esc_html( date_i18n('j M Y', strtotime($exp_date)) ); ?>
-        </span>
+        <?php if ($exp_linked_title) : ?>
+        <a href="<?php echo esc_url($exp_linked_url); ?>" class="author-exp-card__route">
+          <span class="material-symbols-outlined">route</span>
+          <?php echo esc_html($exp_linked_title); ?>
+        </a>
         <?php endif; ?>
+        <div class="author-exp-card__meta">
+          <?php if ($exp_date) : ?>
+          <span><span class="material-symbols-outlined">calendar_today</span><?php echo esc_html( date_i18n('j M Y', strtotime($exp_date)) ); ?><?php echo $exp_time ? ' · ' . esc_html($exp_time) : ''; ?></span>
+          <?php endif; ?>
+          <span><span class="material-symbols-outlined">group</span><?php echo $exp_free; ?> slot<?php echo $exp_free !== 1 ? 's' : ''; ?> free</span>
+          <?php if ($exp_fee > 0) : ?>
+          <span><span class="material-symbols-outlined">attach_money</span>$<?php echo number_format($exp_fee, 2); ?></span>
+          <?php else : ?>
+          <span class="author-exp-card__free"><span class="material-symbols-outlined">check_circle</span>Free</span>
+          <?php endif; ?>
+        </div>
       </div>
       <?php endforeach; ?>
     </div>
+    <?php else : ?>
+    <p class="author-posts__empty">No upcoming expeditions scheduled.</p>
+    <?php endif; ?>
   </section>
-  <?php endif; ?>
 
+  <?php else : // Non-guides: show posts grid ?>
   <!-- ── Posts grid ────────────────────────────────────────────── -->
   <section class="author-posts container">
     <h2 class="author-section-title">
       <span class="material-symbols-outlined">article</span>
       Posts
     </h2>
-
     <?php if ($posts_query->have_posts()) : ?>
     <div class="author-posts__grid">
       <?php while ($posts_query->have_posts()) : $posts_query->the_post();
@@ -315,26 +348,18 @@ $posts_query = new WP_Query([
         </a>
         <?php endif; ?>
         <div class="author-post-card__body">
-          <h3 class="author-post-card__title">
-            <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-          </h3>
+          <h3 class="author-post-card__title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
           <time class="author-post-card__date"><?php echo get_the_date('j M Y'); ?></time>
         </div>
       </article>
       <?php endwhile; wp_reset_postdata(); ?>
     </div>
-
-    <?php echo paginate_links([
-        'total'   => $posts_query->max_num_pages,
-        'current' => $paged,
-        'before_page_number' => '<span>',
-        'after_page_number'  => '</span>',
-    ]); ?>
-
+    <?php echo paginate_links(['total' => $posts_query->max_num_pages, 'current' => $paged]); ?>
     <?php else : ?>
     <p class="author-posts__empty">No posts yet.</p>
     <?php endif; ?>
   </section>
+  <?php endif; ?>
 
 </main>
 

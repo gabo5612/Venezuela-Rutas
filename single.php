@@ -73,6 +73,10 @@ $blog_url = $blog_raw ? get_permalink($blog_raw) : '';
 // ── Google Maps link ─────────────────────────────────────────
 $gmaps_url = get_field('has_a_google_maps_card') ?: '';
 
+// ── Gear / WooCommerce products ──────────────────────────────
+$gear_products = get_field('products_gear') ?: [];
+$has_gear      = ! empty($gear_products) && class_exists('WooCommerce');
+
 // ── Guide profile fields ──────────────────────────────────────
 $guide_whatsapp  = get_field('guide_whatsapp')   ?: '';
 $guide_email     = get_field('guide_email')      ?: '';
@@ -156,7 +160,7 @@ $related_label = match ($post_type) {
   <?php endif; ?>
 
   <!-- ══ TABS ══════════════════════════════════════════════════ -->
-  <?php if ($has_map || $has_gallery) : ?>
+  <?php if ($has_map || $has_gallery || $has_gear) : ?>
   <div class="page-route__tabs">
     <div class="page-route__tabs-inner">
       <button class="tab-btn tab-btn--active" data-tab="info">
@@ -170,6 +174,11 @@ $related_label = match ($post_type) {
       <?php if ($has_gallery) : ?>
       <button class="tab-btn" data-tab="gallery">
         <span class="material-symbols-outlined">photo_library</span> Gallery
+      </button>
+      <?php endif; ?>
+      <?php if ($has_gear) : ?>
+      <button class="tab-btn" data-tab="gear">
+        <span class="material-symbols-outlined">backpack</span> Gear
       </button>
       <?php endif; ?>
     </div>
@@ -246,7 +255,170 @@ $related_label = match ($post_type) {
   </div>
   <?php endif; ?>
 
-  
+    <!-- ══ ELEVATION CHART ════════════════════════════════════════ -->
+  <?php if ($has_elevation) :
+    // Calcular distancia acumulada (Haversine simplificado)
+    $dist_km  = [0.0];
+    $eles     = [];
+    $R        = 6371.0;
+    foreach ($route_pts as $i => $pt) {
+        $e = $ele_data[$i];
+        if ($e === null) continue;
+        $eles[] = $e;
+        if ($i > 0) {
+            $prev  = $route_pts[$i - 1];
+            $dLat  = deg2rad($pt[0] - $prev[0]);
+            $dLng  = deg2rad($pt[1] - $prev[1]);
+            $a     = sin($dLat/2)**2 + cos(deg2rad($prev[0])) * cos(deg2rad($pt[0])) * sin($dLng/2)**2;
+            $dist_km[] = end($dist_km) + $R * 2 * atan2(sqrt($a), sqrt(1-$a));
+        }
+    }
+    // Elevation gain for stats bar
+    $ele_gain = 0;
+    for ($i = 1; $i < count($eles); $i++) {
+        $diff = $eles[$i] - $eles[$i - 1];
+        if ($diff > 0) $ele_gain += $diff;
+    }
+  ?>
+  <div class="elevation-chart-wrap" id="elevation-chart-wrap">
+    <div class="elevation-chart-header">
+      <span class="material-symbols-outlined">elevation</span>
+      Elevation Profile
+      <span class="elevation-chart-gain">+<?php echo round($ele_gain); ?> m gain</span>
+    </div>
+    <div id="elevation-chart"></div>
+  </div>
+
+  <script>
+  (function () {
+    var xArr = <?php echo json_encode(array_values($dist_km)); ?>;
+    var yArr = <?php echo json_encode($eles); ?>;
+    var wrap = document.getElementById('elevation-chart');
+    if (!wrap || xArr.length < 2) return;
+
+    var W = wrap.offsetWidth || 700, H = 160, PAD = 44;
+    var canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
+    canvas.style.width = '100%';
+    wrap.appendChild(canvas);
+    var ctx = canvas.getContext('2d');
+
+    var minX = xArr[0], maxX = xArr[xArr.length - 1];
+    var minY = Math.min.apply(null, yArr), maxY = Math.max.apply(null, yArr);
+    var rangeY = maxY - minY || 1;
+
+    function pt(x, y) {
+      return {
+        x: PAD + (x - minX) / (maxX - minX) * (W - PAD * 2),
+        y: H - PAD - (y - minY) / rangeY * (H - PAD * 1.4)
+      };
+    }
+
+    function drawGrid() {
+      [0, 0.25, 0.5, 0.75, 1].forEach(function (t) {
+        var val = minY + t * rangeY;
+        var p   = pt(minX, val);
+        ctx.strokeStyle = 'rgba(255,255,255,.08)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(PAD, p.y); ctx.lineTo(W - PAD, p.y); ctx.stroke();
+        ctx.fillStyle = 'rgba(255,255,255,.4)'; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
+        ctx.fillText(Math.round(val) + 'm', PAD - 4, p.y + 3);
+      });
+      ctx.fillStyle = 'rgba(255,255,255,.4)'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
+      [0, 0.25, 0.5, 0.75, 1].forEach(function (t) {
+        var x = minX + t * (maxX - minX);
+        var p = pt(x, minY);
+        ctx.fillText(x.toFixed(1) + 'km', p.x, H - 6);
+      });
+    }
+
+    var pts = xArr.map(function(x, i) { return pt(x, yArr[i]); });
+
+    function smoothPath(points) {
+      ctx.moveTo(points[0].x, points[0].y);
+      for (var i = 0; i < points.length - 1; i++) {
+        var mx = (points[i].x + points[i+1].x) / 2;
+        var my = (points[i].y + points[i+1].y) / 2;
+        ctx.quadraticCurveTo(points[i].x, points[i].y, mx, my);
+      }
+      ctx.lineTo(points[points.length-1].x, points[points.length-1].y);
+    }
+
+    // Draw up to `fraction` (0→1) of the path
+    function smoothPathFraction(fraction) {
+      var count = Math.max(2, Math.round(pts.length * fraction));
+      var sl    = pts.slice(0, count);
+      ctx.moveTo(sl[0].x, sl[0].y);
+      for (var i = 0; i < sl.length - 1; i++) {
+        var mx = (sl[i].x + sl[i+1].x) / 2;
+        var my = (sl[i].y + sl[i+1].y) / 2;
+        ctx.quadraticCurveTo(sl[i].x, sl[i].y, mx, my);
+      }
+      ctx.lineTo(sl[sl.length-1].x, sl[sl.length-1].y);
+      return sl[sl.length-1];
+    }
+
+    function drawFrame(fraction) {
+      ctx.clearRect(0, 0, W, H);
+      drawGrid();
+
+      var p0   = pts[0];
+      var count = Math.max(2, Math.round(pts.length * fraction));
+      var pL   = pts[count - 1];
+
+      // Fill — same as original: closePath + flat rgba fill
+      ctx.beginPath();
+      ctx.moveTo(p0.x, H - PAD);
+      ctx.lineTo(p0.x, p0.y);
+      smoothPathFraction(fraction);
+      ctx.lineTo(pL.x, H - PAD);
+      ctx.lineTo(p0.x, H - PAD);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(13,242,70,0.12)';
+      ctx.fill();
+
+      // Line
+      ctx.beginPath();
+      smoothPathFraction(fraction);
+      ctx.strokeStyle = '#0df246'; ctx.lineWidth = 2; ctx.stroke();
+
+      // Tip dot
+      ctx.beginPath();
+      ctx.arc(pL.x, pL.y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#0df246'; ctx.fill();
+    }
+
+    // Animate left→right on viewport entry
+    var animated  = false;
+    var outerWrap = document.getElementById('elevation-chart-wrap');
+
+    function animate() {
+      if (animated) return;
+      animated = true;
+      var start    = null;
+      var DURATION = 1600;
+      function step(ts) {
+        if (!start) start = ts;
+        var progress = Math.min((ts - start) / DURATION, 1);
+        var ease     = 1 - Math.pow(1 - progress, 3); // ease out cubic
+        drawFrame(ease);
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    drawGrid();
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries) {
+        if (entries[0].isIntersecting) { animate(); io.disconnect(); }
+      }, { threshold: 0.3 });
+      io.observe(outerWrap);
+    } else {
+      animate();
+    }
+  }());
+  </script>
+  <?php endif; ?>
 
   <!-- ══ ALERT ══════════════════════════════════════════════════ -->
   <?php if ($conditions) : ?>
@@ -367,115 +539,7 @@ $related_label = match ($post_type) {
   </div>
   <?php endif; ?>
 
-  <!-- ══ ELEVATION CHART ════════════════════════════════════════ -->
-  <?php if ($has_elevation) :
-    // Calcular distancia acumulada (Haversine simplificado)
-    $dist_km  = [0.0];
-    $eles     = [];
-    $R        = 6371.0;
-    foreach ($route_pts as $i => $pt) {
-        $e = $ele_data[$i];
-        if ($e === null) continue;
-        $eles[] = $e;
-        if ($i > 0) {
-            $prev  = $route_pts[$i - 1];
-            $dLat  = deg2rad($pt[0] - $prev[0]);
-            $dLng  = deg2rad($pt[1] - $prev[1]);
-            $a     = sin($dLat/2)**2 + cos(deg2rad($prev[0])) * cos(deg2rad($pt[0])) * sin($dLng/2)**2;
-            $dist_km[] = end($dist_km) + $R * 2 * atan2(sqrt($a), sqrt(1-$a));
-        }
-    }
-    // Elevation gain for stats bar
-    $ele_gain = 0;
-    for ($i = 1; $i < count($eles); $i++) {
-        $diff = $eles[$i] - $eles[$i - 1];
-        if ($diff > 0) $ele_gain += $diff;
-    }
-  ?>
-  <div class="elevation-chart-wrap" data-animate="fade-up">
-    <div class="elevation-chart-header">
-      <span class="material-symbols-outlined">elevation</span>
-      Elevation Profile
-      <span class="elevation-chart-gain">+<?php echo round($ele_gain); ?> m gain</span>
-    </div>
-    <div id="elevation-chart"></div>
-  </div>
 
-  <script>
-  (function () {
-    var xArr = <?php echo json_encode(array_values($dist_km)); ?>;
-    var yArr = <?php echo json_encode($eles); ?>;
-    var wrap = document.getElementById('elevation-chart');
-    if (!wrap || xArr.length < 2) return;
-
-    var W = wrap.offsetWidth || 700, H = 160, PAD = 44;
-    var canvas = document.createElement('canvas');
-    canvas.width = W; canvas.height = H;
-    canvas.style.width = '100%';
-    wrap.appendChild(canvas);
-    var ctx = canvas.getContext('2d');
-
-    var minX = xArr[0], maxX = xArr[xArr.length - 1];
-    var minY = Math.min.apply(null, yArr), maxY = Math.max.apply(null, yArr);
-    var rangeY = maxY - minY || 1;
-
-    function pt(x, y) {
-      return {
-        x: PAD + (x - minX) / (maxX - minX) * (W - PAD * 2),
-        y: H - PAD - (y - minY) / rangeY * (H - PAD * 1.4)
-      };
-    }
-
-    // Grid + labels Y
-    [0, 0.25, 0.5, 0.75, 1].forEach(function (t) {
-      var val = minY + t * rangeY;
-      var p   = pt(minX, val);
-      ctx.strokeStyle = 'rgba(255,255,255,.08)'; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(PAD, p.y); ctx.lineTo(W - PAD, p.y); ctx.stroke();
-      ctx.fillStyle = 'rgba(255,255,255,.4)'; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
-      ctx.fillText(Math.round(val) + 'm', PAD - 4, p.y + 3);
-    });
-
-    // Labels X
-    ctx.fillStyle = 'rgba(255,255,255,.4)'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
-    [0, 0.25, 0.5, 0.75, 1].forEach(function (t) {
-      var x = minX + t * (maxX - minX);
-      var p = pt(x, minY);
-      ctx.fillText(x.toFixed(1) + 'km', p.x, H - 6);
-    });
-
-    // Build screen points
-    var pts = xArr.map(function(x, i) { return pt(x, yArr[i]); });
-
-    function smoothPath(points) {
-      ctx.moveTo(points[0].x, points[0].y);
-      for (var i = 0; i < points.length - 1; i++) {
-        var mx = (points[i].x + points[i+1].x) / 2;
-        var my = (points[i].y + points[i+1].y) / 2;
-        ctx.quadraticCurveTo(points[i].x, points[i].y, mx, my);
-      }
-      ctx.lineTo(points[points.length-1].x, points[points.length-1].y);
-    }
-
-    var p0 = pts[0], pL = pts[pts.length - 1];
-
-    // Fill
-    ctx.beginPath();
-    ctx.moveTo(p0.x, H - PAD);
-    ctx.lineTo(p0.x, p0.y);
-    smoothPath(pts);
-    ctx.lineTo(pL.x, H - PAD);
-    ctx.lineTo(p0.x, H - PAD);
-    ctx.closePath();
-    ctx.fillStyle = 'rgba(13,242,70,0.12)'; ctx.fill();
-
-    // Line
-    ctx.beginPath();
-    smoothPath(pts);
-    ctx.strokeStyle = '#0df246'; ctx.lineWidth = 2; ctx.stroke();
-  }());
-  </script>
-  <?php endif; ?>
 
   <!-- ══ GALLERY ════════════════════════════════════════════════ -->
   <?php if ($has_gallery) : ?>
@@ -600,6 +664,164 @@ $related_label = match ($post_type) {
     </a>
     <?php endif; ?>
   </div>
+  <?php endif; ?>
+
+<?php do_action('hotfootadventure_expedition_panel', get_the_ID(), get_post_type()); ?>
+
+  <!-- ══ GEAR / RECOMMENDED PRODUCTS ══════════════════════════ -->
+  <?php
+  $gear_products = get_field('products_gear');
+  if ( ! empty($gear_products) && class_exists('WooCommerce') ) :
+  ?>
+  <div class="page-route__gear" id="section-gear" data-section="gear">
+    <div class="section-header" data-animate="fade-up">
+      <div>
+        <div class="section-header__eyebrow">Gear up</div>
+        <h2 class="section-header__title" style="color:var(--sand)">Recommended Equipment</h2>
+      </div>
+      <?php if ( count($gear_products) > 4 ) : ?>
+      <div class="gear-slider-nav">
+        <button class="gear-slider-btn js-gear-prev" aria-label="Previous">
+          <span class="material-symbols-outlined">chevron_left</span>
+        </button>
+        <button class="gear-slider-btn js-gear-next" aria-label="Next">
+          <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+      </div>
+      <?php endif; ?>
+    </div>
+
+    <div class="gear-slider-viewport">
+      <div class="gear-grid js-gear-track">
+        <?php foreach ( $gear_products as $product ) :
+          $wc_product  = wc_get_product( $product->ID );
+          if ( ! $wc_product ) continue;
+          $thumb       = get_the_post_thumbnail_url( $product->ID, 'medium' );
+          $price       = $wc_product->get_price_html();
+          $product_url = get_permalink( $product->ID );
+          $on_sale     = $wc_product->is_on_sale();
+        ?>
+        <div class="gear-card">
+          <?php if ($on_sale) : ?>
+          <span class="gear-card__sale">Sale</span>
+          <?php endif; ?>
+          <a href="<?php echo esc_url($product_url); ?>" class="gear-card__img-wrap">
+            <?php if ($thumb) : ?>
+            <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr($product->post_title); ?>" loading="lazy">
+            <?php else : ?>
+            <div class="gear-card__img-placeholder"><span class="material-symbols-outlined">backpack</span></div>
+            <?php endif; ?>
+          </a>
+          <div class="gear-card__body">
+            <h4 class="gear-card__title">
+              <a href="<?php echo esc_url($product_url); ?>"><?php echo esc_html($product->post_title); ?></a>
+            </h4>
+            <div class="gear-card__price"><?php echo $price; ?></div>
+            <a href="<?php echo esc_url($product_url); ?>" class="gear-card__btn">
+              <span class="material-symbols-outlined">shopping_bag</span>
+              View product
+            </a>
+          </div>
+        </div>
+        <?php endforeach; ?>
+      </div>
+    </div>
+  </div>
+
+  <?php if ( count($gear_products) > 4 ) : ?>
+  <script>
+  (function () {
+    var track    = document.querySelector('.js-gear-track');
+    var viewport = track && track.closest('.gear-slider-viewport');
+    if (!track) return;
+
+    // ── Clone cards for infinite loop ──────────────────────────
+    var origCards = Array.from(track.children);
+    var total     = origCards.length;
+    // Prepend clones of last N + append clones of first N
+    var CLONE_N = Math.min(total, 4);
+    origCards.slice(-CLONE_N).forEach(function (c) {
+      track.insertBefore(c.cloneNode(true), track.firstChild);
+    });
+    origCards.slice(0, CLONE_N).forEach(function (c) {
+      track.appendChild(c.cloneNode(true));
+    });
+
+    var allCards = Array.from(track.children); // includes clones
+    var current  = CLONE_N; // start at first real card
+    var autoTimer = null;
+    var isTransitioning = false;
+
+    function visibleCount() {
+      var vw = viewport.offsetWidth;
+      if (vw >= 900) return 4;
+      if (vw >= 600) return 3;
+      if (vw >= 400) return 2;
+      return 1;
+    }
+
+    function cardWidth() {
+      if (!allCards[0]) return 0;
+      var style = getComputedStyle(track);
+      var gap = parseFloat(style.gap || style.columnGap || 20);
+      return allCards[0].offsetWidth + gap;
+    }
+
+    // Move without animation (for loop jump)
+    function jumpTo(idx) {
+      current = idx;
+      track.style.transition = 'none';
+      track.style.transform  = 'translateX(-' + (current * cardWidth()) + 'px)';
+    }
+
+    // Move with animation
+    function goTo(idx) {
+      if (isTransitioning) return;
+      isTransitioning = true;
+      current = idx;
+      track.style.transition = 'transform .45s cubic-bezier(.25,.46,.45,.94)';
+      track.style.transform  = 'translateX(-' + (current * cardWidth()) + 'px)';
+    }
+
+    // After transition ends, silently jump back if we hit a clone zone
+    track.addEventListener('transitionend', function () {
+      isTransitioning = false;
+      var realEnd = CLONE_N + total; // index of first trailing clone
+      if (current >= realEnd) {
+        jumpTo(CLONE_N + (current - realEnd)); // loop to start
+      } else if (current < CLONE_N) {
+        jumpTo(realEnd - CLONE_N + current);   // loop to end
+      }
+    });
+
+    function startAuto() {
+      clearInterval(autoTimer);
+      autoTimer = setInterval(function () { goTo(current + 1); }, 5000);
+    }
+
+    document.querySelector('.js-gear-prev').addEventListener('click', function () { goTo(current - 1); startAuto(); });
+    document.querySelector('.js-gear-next').addEventListener('click', function () { goTo(current + 1); startAuto(); });
+
+    viewport.addEventListener('mouseenter', function () { clearInterval(autoTimer); });
+    viewport.addEventListener('mouseleave', startAuto);
+
+    var tx = 0;
+    viewport.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; }, {passive:true});
+    viewport.addEventListener('touchend', function (e) {
+      var dx = tx - e.changedTouches[0].clientX;
+      if (Math.abs(dx) > 40) { goTo(dx > 0 ? current + 1 : current - 1); startAuto(); }
+    }, {passive:true});
+
+    // Init: jump to first real card (no animation), then start
+    jumpTo(CLONE_N);
+    // Force reflow so the jump takes effect before enabling transitions
+    track.getBoundingClientRect();
+    startAuto();
+
+    window.addEventListener('resize', function () { jumpTo(current); });
+  }());
+  </script>
+  <?php endif; ?>
   <?php endif; ?>
 
   <!-- ══ RELATED ════════════════════════════════════════════════ -->
@@ -792,6 +1014,7 @@ document.addEventListener('DOMContentLoaded', function () {
     info:    document.getElementById('section-info'),
     map:     document.getElementById('section-map'),
     gallery: document.getElementById('section-gallery'),
+    gear:    document.getElementById('section-gear'),
   };
 
   function scrollToSection(key) {
@@ -830,7 +1053,7 @@ document.addEventListener('DOMContentLoaded', function () {
 })();
 </script>
 
-<?php do_action('hotfootadventure_expedition_panel', get_the_ID(), get_post_type()); ?>
+
 
 <?php get_template_part('components/blocks'); ?>
 <?php get_template_part('parts/footer'); ?>

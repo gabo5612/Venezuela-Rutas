@@ -600,7 +600,9 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 1rem;
-  padding: 1.25rem 1.5rem 1rem;
+  padding: 1.25rem 1rem 1rem;
+
+  @media (min-width: 600px) { padding: 1.25rem 1.5rem 1rem; }
 
   .uplot { width: 100% !important; }
   .u-wrap { width: 100% !important; }
@@ -610,12 +612,14 @@
   display: flex;
   align-items: center;
   gap: .5rem;
-  font-size: .8rem;
-  font-weight: 600;
+  font-size: .75rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: .07em;
+  letter-spacing: .1em;
   color: var(--text-muted);
-  margin-bottom: 1rem;
+  margin-bottom: .85rem;
+
+  @media (min-width: 600px) { font-size: .8rem; }
 
   .material-symbols-outlined {
     font-size: 1rem;
@@ -628,10 +632,19 @@
   font-size: .8rem;
   font-weight: 700;
   color: #0df246;
+
+  @media (max-width: 400px) { font-size: .72rem; }
 }
 
 #elevation-chart {
   width: 100%;
+  display: block;
+
+  canvas {
+    display: block;
+    width: 100% !important;
+    border-radius: 6px;
+  }
 }
 
 .page-route {

@@ -52,6 +52,16 @@
       </a>
       <?php endif; ?>
 
+      <?php if ( class_exists('WooCommerce') ) : ?>
+      <a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="site-nav__cart" aria-label="Cart">
+        <span class="material-symbols-outlined">shopping_cart</span>
+        <?php $cart_count = WC()->cart ? WC()->cart->get_cart_contents_count() : 0; ?>
+        <?php if ( $cart_count > 0 ) : ?>
+        <span class="site-nav__cart-count"><?php echo esc_html($cart_count); ?></span>
+        <?php endif; ?>
+      </a>
+      <?php endif; ?>
+
       <a href="<?php echo esc_url( home_url('/') ); ?>#gps-filters" class="site-nav__cta" data-animate="fade-up" data-animate-delay="200">
         <span class="material-symbols-outlined">explore</span>
         <span class="mobile-span">Explore</span>
