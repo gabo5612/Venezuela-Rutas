@@ -1,0 +1,502 @@
+/* ── Route Planner Page ─────────────────────────────────────
+   Template: page-route-planner.php
+   Two-column layout: sidebar panel + full-height Leaflet map.
+──────────────────────────────────────────────────────────── */
+
+/* ── Layout ── */
+.rp-layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  height: calc(100vh - 64px); // minus nav height
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    height: auto;
+  }
+}
+
+/* ── Fix: CSS display properties override HTML [hidden] attr ── */
+.rp-loading[hidden],
+.rp-stats[hidden],
+.rp-elevation[hidden],
+.rp-btn-gpx[hidden],
+.rp-btn-clear[hidden],
+.rp-save-wrap[hidden],
+.rp-btn-save[hidden],
+.rp-save-msg[hidden],
+.rp-cursor-hint[hidden] {
+  display: none !important;
+}
+
+/* ── Map wrapper ── */
+.rp-map-wrap {
+  position: relative;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    height: 60vh;
+  }
+}
+
+#rp-map {
+  width: 100%;
+  height: 100%;
+  background: var(--background);
+  // No brightness filter — light tile is default for planning
+}
+
+/* ── Cursor hint overlay (appears when placing mode is active) ── */
+.rp-cursor-hint {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--primary-border);
+  color: var(--primary);
+  padding: 0.5em 1.2em;
+  border-radius: var(--radius-full);
+  font-family: var(--primary-font);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  pointer-events: none;
+  animation: rp-pulse 2s ease-in-out infinite;
+
+  .material-symbols-outlined {
+    font-size: 1rem;
+  }
+}
+
+@keyframes rp-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
+/* ── Sidebar Panel ── */
+.rp-panel {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border-right: 1px solid var(--line);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  z-index: 10;
+
+  &--collapsed {
+    .rp-panel__body { display: none; }
+
+    @media (max-width: 768px) {
+      .rp-panel__body { display: none; }
+    }
+  }
+}
+
+.rp-panel__header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1.2rem 1.25rem;
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+
+  .rp-panel__icon {
+    color: var(--primary);
+    font-size: 1.2rem;
+  }
+}
+
+.rp-panel__title {
+  font-size: var(--md);
+  font-weight: 800;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0;
+  flex: 1;
+}
+
+.rp-panel__toggle {
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.2em 0.4em;
+  line-height: 1;
+  transition: color 0.2s, border-color 0.2s;
+
+  &:hover {
+    color: var(--primary);
+    border-color: var(--primary-border);
+  }
+
+  .material-symbols-outlined { font-size: 1rem; vertical-align: middle; }
+}
+
+.rp-panel__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  &::-webkit-scrollbar       { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+}
+
+/* ── Hint text ── */
+.rp-hint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Waypoints ── */
+.rp-waypoints {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.rp-wp {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  position: relative;
+}
+
+.rp-wp__connector {
+  width: 2px;
+  height: 14px;
+  background: var(--line);
+  margin-left: calc(7px + 0.6rem); // align with dot center
+  flex-shrink: 0;
+}
+
+.rp-wp__dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(10, 10, 10, 0.8);
+  flex-shrink: 0;
+
+  &--start {
+    background: var(--primary);
+    box-shadow: 0 0 0 3px rgba(13, 242, 70, 0.3);
+  }
+
+  &--end {
+    background: var(--terracotta);
+    box-shadow: 0 0 0 3px rgba(199, 74, 45, 0.3);
+  }
+}
+
+.rp-wp__field {
+  flex: 1;
+  position: relative;
+}
+
+/* ── Text input ── */
+.rp-input {
+  width: 100%;
+  background: var(--background);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--primary-font);
+  font-size: 0.82rem;
+  padding: 0.5em 0.8em;
+  outline: none;
+  transition: border-color 0.2s;
+
+  &::placeholder { color: var(--text-faint); }
+
+  &:focus {
+    border-color: var(--primary-border);
+    box-shadow: 0 0 0 2px rgba(13, 242, 70, 0.08);
+  }
+}
+
+/* ── Suggestions dropdown ── */
+.rp-suggestions {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--box-shadow);
+  z-index: 1000;
+  list-style: none;
+  margin: 0;
+  padding: 0.3rem;
+  max-height: 200px;
+  overflow-y: auto;
+
+  &:empty { display: none; }
+}
+
+.rp-suggestion {
+  padding: 0.5em 0.8em;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  line-height: 1.4;
+
+  &:hover {
+    background: var(--primary-dim);
+    color: var(--primary);
+  }
+}
+
+/* ── Pick (map click) button ── */
+.rp-wp__pick {
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.35em;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+
+  .material-symbols-outlined { font-size: 1rem; vertical-align: middle; }
+
+  &:hover,
+  &--active {
+    background: var(--primary-dim);
+    color: var(--primary);
+    border-color: var(--primary-border);
+  }
+}
+
+/* ── Profile selector ── */
+.rp-profiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.rp-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  background: var(--background);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.6em 0.4em;
+  font-family: var(--primary-font);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+
+  .material-symbols-outlined { font-size: 1.3rem; }
+
+  &:hover,
+  &.is-active {
+    background: var(--primary-dim);
+    color: var(--primary);
+    border-color: var(--primary-border);
+  }
+}
+
+/* ── Buttons ── */
+.rp-btn-calc {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  background: var(--primary);
+  color: var(--background);
+  border: none;
+  border-radius: var(--radius-full);
+  font-family: var(--primary-font);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.7em 1.4em;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  .material-symbols-outlined { font-size: 1rem; }
+
+  &:hover:not(:disabled) { opacity: 0.85; }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+}
+
+.rp-btn-gpx {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary-border);
+  border-radius: var(--radius-full);
+  font-family: var(--primary-font);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.6em 1.2em;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  .material-symbols-outlined { font-size: 1rem; }
+
+  &:hover {
+    background: var(--primary-dim);
+  }
+}
+
+.rp-btn-clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  background: transparent;
+  color: var(--text-faint);
+  border: 1px solid rgba(199, 74, 45, 0.15);
+  border-radius: var(--radius-full);
+  font-family: var(--primary-font);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+
+  .material-symbols-outlined { font-size: 1rem; }
+
+  &:hover {
+    color: var(--terracotta);
+    border-color: var(--line-warm);
+    background: var(--terracotta-dim);
+  }
+}
+
+/* ── Loading spinner ── */
+.rp-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.rp-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--line);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: rp-spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes rp-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Stats ── */
+.rp-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.rp-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--background);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.65em 0.8em;
+
+  .rp-stat__icon {
+    color: var(--primary);
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+}
+
+.rp-stat__label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.rp-stat__value {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-top: 0.1em;
+}
+
+/* ── Elevation profile ── */
+.rp-elevation {
+  background: var(--background);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 0.8rem;
+}
+
+.rp-elevation__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.rp-elevation__title {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.rp-elevation__range {
+  font-size: 0.65rem;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.rp-elevation__chart {
+  width: 100%;
+  height: 80px;
+  display: block;
+  overflow: visible;
+}

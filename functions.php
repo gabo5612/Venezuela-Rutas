@@ -21,6 +21,24 @@ add_action('after_setup_theme', function () {
 });
 
 // ===============================
+// POLYFILL: crypto.randomUUID (only available on HTTPS; polyfill for HTTP dev)
+// ===============================
+add_action( 'wp_head', function () {
+    ?>
+    <script>
+    if (window.crypto && !window.crypto.randomUUID) {
+      window.crypto.randomUUID = function () {
+        return '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, function (c) {
+          var n = parseInt(c, 10);
+          return (n ^ (window.crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (n / 4)))).toString(16);
+        });
+      };
+    }
+    </script>
+    <?php
+}, 1 );
+
+// ===============================
 // GOOGLE FONTS
 // ===============================
 add_action('wp_enqueue_scripts', function () {
@@ -263,6 +281,439 @@ function mag_load_more_tips()
     ]);
 }
 
+
+// ===============================
+// COMMUNITY SUGGESTIONS — Route, POI, Save Planned Route
+// ===============================
+
+/**
+ * Shared helper: sanitize & validate an array of [[lat,lng]] waypoints.
+ * Returns array of ['latitude' => '...', 'longitude' => '...'] or false.
+ */
+function rutas_parse_points( $json_string ) {
+    $raw = json_decode( wp_unslash( $json_string ), true );
+    if ( ! is_array( $raw ) ) return false;
+    $out = [];
+    foreach ( $raw as $p ) {
+        $lat = floatval( $p[0] ?? 0 );
+        $lng = floatval( $p[1] ?? 0 );
+        if ( $lat && $lng ) {
+            $point = [ 'latitude' => (string) $lat, 'longitude' => (string) $lng ];
+            if ( isset( $p[2] ) && $p[2] !== '' ) {
+                $point['elevation'] = (string) round( floatval( $p[2] ) );
+            }
+            $out[] = $point;
+        }
+    }
+    return count( $out ) >= 2 ? $out : false;
+}
+
+// ── Routing proxy ────────────────────────────────────────────────────────────
+// Uses OpenRouteService if RUTAS_ORS_API_KEY is defined (fast, reliable).
+// Falls back to OSRM otherwise. Returns a normalised payload so the JS
+// doesn't need to handle two different response formats.
+//
+// To enable ORS, add to wp-config.php:
+//   define( 'RUTAS_ORS_API_KEY', 'your-free-key-from-openrouteservice.org' );
+// ─────────────────────────────────────────────────────────────────────────────
+add_action( 'wp_ajax_rutas_proxy_route',        'rutas_proxy_route_handler' );
+add_action( 'wp_ajax_nopriv_rutas_proxy_route', 'rutas_proxy_route_handler' );
+function rutas_proxy_route_handler() {
+    $profile  = sanitize_text_field( $_POST['profile'] ?? 'foot' );
+    $start_lat = floatval( $_POST['slat'] ?? 0 );
+    $start_lng = floatval( $_POST['slng'] ?? 0 );
+    $end_lat   = floatval( $_POST['elat'] ?? 0 );
+    $end_lng   = floatval( $_POST['elng'] ?? 0 );
+
+    if ( ! in_array( $profile, [ 'foot', 'bike', 'car' ], true ) ) $profile = 'foot';
+    if ( ! $start_lat || ! $start_lng || ! $end_lat || ! $end_lng ) {
+        wp_send_json_error( 'Missing coordinates.' );
+    }
+
+    $ors_key = defined( 'RUTAS_ORS_API_KEY' ) ? RUTAS_ORS_API_KEY
+             : get_option( 'rutas_ors_api_key', '' );
+
+    $http_args = [ 'timeout' => 12, 'sslverify' => false ];
+
+    // ── OpenRouteService (preferred) ───────────────────────────
+    if ( $ors_key ) {
+        $ors_profiles = [
+            'foot' => 'foot-hiking',
+            'bike' => 'cycling-regular',
+            'car'  => 'driving-car',
+        ];
+        $ors_profile = $ors_profiles[ $profile ] ?? 'foot-hiking';
+        $url = "https://api.openrouteservice.org/v2/directions/{$ors_profile}"
+             . "?api_key={$ors_key}"
+             . "&start={$start_lng},{$start_lat}"
+             . "&end={$end_lng},{$end_lat}";
+
+        $response = wp_remote_get( $url, $http_args );
+
+        if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
+            $body = json_decode( wp_remote_retrieve_body( $response ), true );
+            $feat = $body['features'][0] ?? null;
+            if ( $feat ) {
+                $coords = array_map( fn($c) => [ $c[1], $c[0] ], $feat['geometry']['coordinates'] );
+                wp_send_json_success( [
+                    'engine'      => 'ors',
+                    'coordinates' => $coords,
+                    'distance'    => $feat['properties']['summary']['distance'] ?? 0,
+                    'duration'    => $feat['properties']['summary']['duration'] ?? 0,
+                ] );
+            }
+        }
+        // ORS failed – fall through to OSRM below
+    }
+
+    // ── OSRM (fallback) ────────────────────────────────────────
+    $coords = "{$start_lng},{$start_lat};{$end_lng},{$end_lat}";
+    $url    = "https://router.project-osrm.org/route/v1/{$profile}/{$coords}"
+            . '?geometries=geojson&overview=full&steps=false';
+
+    $response = wp_remote_get( $url, $http_args );
+
+    if ( is_wp_error( $response ) ) {
+        wp_send_json_error( 'proxy_unreachable' ); // JS will try browser-direct
+    }
+
+    $body  = json_decode( wp_remote_retrieve_body( $response ), true );
+    $route = $body['routes'][0] ?? null;
+
+    if ( ! $route ) {
+        wp_send_json_error( 'no_route' );
+    }
+
+    $coords_out = array_map( fn($c) => [ $c[1], $c[0] ], $route['geometry']['coordinates'] );
+    wp_send_json_success( [
+        'engine'      => 'osrm',
+        'coordinates' => $coords_out,
+        'distance'    => $route['distance'] ?? 0,
+        'duration'    => $route['duration'] ?? 0,
+    ] );
+}
+
+// ── Elevation proxy (OpenTopoData — avoids CORS from HTTP local dev) ──
+add_action( 'wp_ajax_rutas_proxy_elevation',        'rutas_proxy_elevation_handler' );
+add_action( 'wp_ajax_nopriv_rutas_proxy_elevation', 'rutas_proxy_elevation_handler' );
+function rutas_proxy_elevation_handler() {
+    $locations = sanitize_text_field( $_POST['locations'] ?? '' );
+    if ( ! $locations ) wp_send_json_error( 'Missing locations.' );
+
+    $url      = 'https://api.opentopodata.org/v1/srtm30m?locations=' . rawurlencode( $locations );
+    $response = wp_remote_get( $url, [
+        'timeout'   => 15,
+        'sslverify' => false, // LocalWP may lack CA certs for outbound HTTPS
+    ] );
+
+    if ( is_wp_error( $response ) ) {
+        wp_send_json_error( $response->get_error_message() );
+    }
+
+    $data = json_decode( wp_remote_retrieve_body( $response ), true );
+    if ( ! $data ) wp_send_json_error( 'Invalid elevation response.' );
+
+    wp_send_json_success( $data );
+}
+
+// ── Suggest Route ────────────────────────────────────────────
+add_action( 'wp_ajax_rutas_suggest_route',        'rutas_suggest_route_handler' );
+add_action( 'wp_ajax_nopriv_rutas_suggest_route', 'rutas_suggest_route_handler' );
+function rutas_suggest_route_handler() {
+    check_ajax_referer( 'rutas_suggest_nonce', 'nonce' );
+
+    $title       = sanitize_text_field( $_POST['title']       ?? '' );
+    $description = sanitize_textarea_field( $_POST['description'] ?? '' );
+    $difficulty  = sanitize_text_field( $_POST['difficulty']  ?? '' );
+    $activity    = sanitize_text_field( $_POST['activity']    ?? '' );
+    $notes       = sanitize_textarea_field( $_POST['notes']   ?? '' );
+    $email       = sanitize_email( $_POST['email']            ?? '' );
+
+    if ( empty( $title ) ) {
+        wp_send_json_error( 'Route name is required.' );
+    }
+
+    $points = rutas_parse_points( $_POST['points'] ?? '[]' );
+    if ( ! $points ) {
+        wp_send_json_error( 'Please add at least 2 waypoints on the map.' );
+    }
+
+    $author = is_user_logged_in() ? get_current_user_id() : 1;
+
+    $post_id = wp_insert_post( [
+        'post_title'   => $title,
+        'post_content' => $description,
+        'post_type'    => 'routes',
+        'post_status'  => 'pending',
+        'post_author'  => $author,
+        'meta_input'   => [
+            '_is_community_suggestion' => '1',
+            '_suggested_activity'      => $activity,
+            '_suggested_notes'         => $notes,
+            '_suggested_email'         => $email,
+            '_suggested_by_ip'         => sanitize_text_field( $_SERVER['REMOTE_ADDR'] ?? '' ),
+        ],
+    ] );
+
+    if ( is_wp_error( $post_id ) ) {
+        wp_send_json_error( 'Could not save suggestion. Please try again.' );
+    }
+
+    if ( function_exists( 'update_field' ) ) {
+        update_field( 'points', $points, $post_id );
+        if ( $difficulty ) update_field( 'difficulty', $difficulty, $post_id );
+    }
+
+    // Notify admin
+    $admin_email = get_option( 'admin_email' );
+    wp_mail(
+        $admin_email,
+        '[Venezuela Rutas] New route suggestion: ' . $title,
+        "A new route suggestion has been submitted.\n\nTitle: {$title}\nActivity: {$activity}\nDifficulty: {$difficulty}\nPoints: " . count( $points ) . "\n\nReview it at: " . get_edit_post_link( $post_id, 'raw' )
+    );
+
+    wp_send_json_success( [ 'message' => 'Route submitted successfully!' ] );
+}
+
+// ── Suggest POI ──────────────────────────────────────────────
+add_action( 'wp_ajax_rutas_suggest_poi',        'rutas_suggest_poi_handler' );
+add_action( 'wp_ajax_nopriv_rutas_suggest_poi', 'rutas_suggest_poi_handler' );
+function rutas_suggest_poi_handler() {
+    check_ajax_referer( 'rutas_suggest_nonce', 'nonce' );
+
+    $title       = sanitize_text_field( $_POST['title']       ?? '' );
+    $description = sanitize_textarea_field( $_POST['description'] ?? '' );
+    $category    = sanitize_text_field( $_POST['category']    ?? '' );
+    $notes       = sanitize_textarea_field( $_POST['notes']   ?? '' );
+    $email       = sanitize_email( $_POST['email']            ?? '' );
+    $lat         = floatval( $_POST['lat']                    ?? 0 );
+    $lng         = floatval( $_POST['lng']                    ?? 0 );
+
+    if ( empty( $title ) ) {
+        wp_send_json_error( 'POI name is required.' );
+    }
+    if ( ! $lat || ! $lng ) {
+        wp_send_json_error( 'Please place the POI on the map.' );
+    }
+
+    $author = is_user_logged_in() ? get_current_user_id() : 1;
+
+    $post_id = wp_insert_post( [
+        'post_title'   => $title,
+        'post_content' => $description,
+        'post_type'    => 'point-of-interest',
+        'post_status'  => 'pending',
+        'post_author'  => $author,
+        'meta_input'   => [
+            '_is_community_suggestion' => '1',
+            '_suggested_category'      => $category,
+            '_suggested_notes'         => $notes,
+            '_suggested_email'         => $email,
+            '_suggested_by_ip'         => sanitize_text_field( $_SERVER['REMOTE_ADDR'] ?? '' ),
+        ],
+    ] );
+
+    if ( is_wp_error( $post_id ) ) {
+        wp_send_json_error( 'Could not save suggestion. Please try again.' );
+    }
+
+    if ( function_exists( 'update_field' ) ) {
+        update_field( 'latitude',  (string) $lat, $post_id );
+        update_field( 'longitude', (string) $lng, $post_id );
+    }
+
+    // Notify admin
+    $admin_email = get_option( 'admin_email' );
+    wp_mail(
+        $admin_email,
+        '[Venezuela Rutas] New POI suggestion: ' . $title,
+        "A new POI suggestion has been submitted.\n\nTitle: {$title}\nCategory: {$category}\nCoordinates: {$lat}, {$lng}\n\nReview it at: " . get_edit_post_link( $post_id, 'raw' )
+    );
+
+    wp_send_json_success( [ 'message' => 'POI submitted successfully!' ] );
+}
+
+// ── Save Planned Route (logged-in users only) ────────────────
+add_action( 'wp_ajax_rutas_save_planned_route', 'rutas_save_planned_route_handler' );
+function rutas_save_planned_route_handler() {
+    check_ajax_referer( 'rutas_suggest_nonce', 'nonce' );
+
+    if ( ! is_user_logged_in() ) {
+        wp_send_json_error( 'You must be logged in to save routes.' );
+    }
+
+    $title          = sanitize_text_field( $_POST['title']          ?? '' );
+    $distance       = floatval( $_POST['distance']                  ?? 0 );
+    $elevation_gain = intval( $_POST['elevation_gain']              ?? 0 );
+
+    if ( empty( $title ) ) {
+        wp_send_json_error( 'Route name is required.' );
+    }
+
+    $points = rutas_parse_points( $_POST['points'] ?? '[]' );
+    if ( ! $points ) {
+        wp_send_json_error( 'Route must have at least 2 valid coordinates.' );
+    }
+
+    $post_id = wp_insert_post( [
+        'post_title'  => $title,
+        'post_type'   => 'routes',
+        'post_status' => 'pending',
+        'post_author' => get_current_user_id(),
+        'meta_input'  => [
+            '_is_community_suggestion' => '1',
+        ],
+    ] );
+
+    if ( is_wp_error( $post_id ) ) {
+        wp_send_json_error( 'Could not save route. Please try again.' );
+    }
+
+    if ( function_exists( 'update_field' ) ) {
+        update_field( 'points', $points, $post_id );
+
+        // ACF may silently skip the elevation sub-field if it is not in its DB
+        // registry. Write the meta keys directly using ACF's naming convention.
+        foreach ( $points as $i => $p ) {
+            if ( isset( $p['elevation'] ) && $p['elevation'] !== '' ) {
+                update_post_meta( $post_id, "points_{$i}_elevation", $p['elevation'] );
+                update_post_meta( $post_id, "_points_{$i}_elevation", 'field_points_elevation' );
+            }
+        }
+
+        if ( $distance > 0 ) {
+            update_field( 'distance',  round( $distance / 1000, 2 ), $post_id );
+        }
+        if ( $elevation_gain > 0 ) {
+            update_field( 'elevation', $elevation_gain, $post_id );
+        }
+    }
+
+    wp_send_json_success( [
+        'message'  => 'Route saved as draft!',
+        'edit_url' => get_edit_post_link( $post_id, 'raw' ),
+    ] );
+}
+
+
+// ===============================
+// COMMUNITY SUGGESTIONS — Admin listing page
+// ===============================
+add_action( 'admin_menu', function () {
+    add_menu_page(
+        'Community Suggestions',
+        'Suggestions',
+        'edit_posts',
+        'rutas-suggestions',
+        'rutas_suggestions_page',
+        'dashicons-flag',
+        26
+    );
+} );
+
+function rutas_suggestions_page() {
+    // ── Handle approve / reject actions ──────────────────────
+    if ( isset( $_GET['sg_action'], $_GET['post_id'], $_GET['_wpnonce'] ) ) {
+        $action  = sanitize_text_field( $_GET['sg_action'] );
+        $post_id = intval( $_GET['post_id'] );
+
+        if ( wp_verify_nonce( $_GET['_wpnonce'], 'rutas_sg_' . $action . '_' . $post_id ) ) {
+            if ( $action === 'approve' ) {
+                wp_update_post( [ 'ID' => $post_id, 'post_status' => 'publish' ] );
+                echo '<div class="notice notice-success is-dismissible"><p>Suggestion <strong>approved</strong> and published.</p></div>';
+            } elseif ( $action === 'reject' ) {
+                wp_trash_post( $post_id );
+                echo '<div class="notice notice-warning is-dismissible"><p>Suggestion <strong>rejected</strong> and moved to trash.</p></div>';
+            }
+        }
+    }
+
+    // ── Query pending community suggestions ──────────────────
+    $items = get_posts( [
+        'post_type'   => [ 'routes', 'point-of-interest' ],
+        'post_status' => 'pending',
+        'numberposts' => -1,
+        'orderby'     => 'date',
+        'order'       => 'DESC',
+        'meta_query'  => [ [
+            'key'   => '_is_community_suggestion',
+            'value' => '1',
+        ] ],
+    ] );
+
+    $base = admin_url( 'admin.php?page=rutas-suggestions' );
+    ?>
+    <div class="wrap">
+      <h1 class="wp-heading-inline">Community Suggestions</h1>
+      <span class="title-count" style="margin-left:.5rem;font-size:1rem;color:#888;">(<?php echo count( $items ); ?> pending)</span>
+      <hr class="wp-header-end">
+
+      <?php if ( empty( $items ) ) : ?>
+        <p style="margin-top:1.5rem;color:#888;">No pending suggestions — all caught up!</p>
+      <?php else : ?>
+        <table class="wp-list-table widefat fixed striped" style="margin-top:1rem;">
+          <thead>
+            <tr>
+              <th style="width:22%">Title</th>
+              <th style="width:10%">Type</th>
+              <th style="width:12%">Activity / Category</th>
+              <th style="width:10%">Difficulty</th>
+              <th style="width:10%">Points</th>
+              <th style="width:10%">Date</th>
+              <th style="width:14%">Submitted by</th>
+              <th style="width:12%">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ( $items as $item ) :
+                $type       = get_post_type_object( $item->post_type )->labels->singular_name;
+                $activity   = get_post_meta( $item->ID, '_suggested_activity', true )
+                           ?: get_post_meta( $item->ID, '_suggested_category', true )
+                           ?: '—';
+                $difficulty = get_field( 'difficulty', $item->ID ) ?: '—';
+                $pts        = get_field( 'points', $item->ID );
+                $pt_count   = is_array( $pts ) ? count( $pts ) : '—';
+                $email      = get_post_meta( $item->ID, '_suggested_email', true );
+                $ip         = get_post_meta( $item->ID, '_suggested_notes', true );
+                $author     = get_userdata( $item->post_author );
+                $by         = ( $author && (int) $author->ID !== 1 )
+                            ? esc_html( $author->display_name )
+                            : ( $email ? esc_html( $email ) : esc_html( get_post_meta( $item->ID, '_suggested_by_ip', true ) ?: '—' ) );
+
+                $approve_url = wp_nonce_url(
+                    add_query_arg( [ 'sg_action' => 'approve', 'post_id' => $item->ID ], $base ),
+                    'rutas_sg_approve_' . $item->ID
+                );
+                $reject_url  = wp_nonce_url(
+                    add_query_arg( [ 'sg_action' => 'reject',  'post_id' => $item->ID ], $base ),
+                    'rutas_sg_reject_' . $item->ID
+                );
+            ?>
+            <tr>
+              <td><strong><?php echo esc_html( $item->post_title ); ?></strong></td>
+              <td><?php echo esc_html( $type ); ?></td>
+              <td><?php echo esc_html( $activity ); ?></td>
+              <td><?php echo esc_html( ucfirst( $difficulty ) ); ?></td>
+              <td><?php echo esc_html( $pt_count ); ?></td>
+              <td><?php echo get_the_date( 'd M Y', $item->ID ); ?></td>
+              <td><?php echo $by; ?></td>
+              <td>
+                <a href="<?php echo esc_url( $approve_url ); ?>"
+                   class="button button-primary button-small">Approve</a>
+                <a href="<?php echo esc_url( $reject_url ); ?>"
+                   class="button button-small"
+                   onclick="return confirm('Reject and trash this suggestion?')">Reject</a>
+                <a href="<?php echo esc_url( get_edit_post_link( $item->ID ) ); ?>"
+                   class="button button-small" target="_blank">Edit</a>
+              </td>
+            </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      <?php endif; ?>
+    </div>
+    <?php
+}
 
 // ===============================
 // WOOCOMMERCE — custom page templates
