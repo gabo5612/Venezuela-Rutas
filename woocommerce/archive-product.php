@@ -1,13 +1,7 @@
 <?php
-/**
- * WooCommerce shop archive — "Quartermaster" layout
- * Inspired by Stitch design: full-width, hero card, expandable filter bar.
- */
-
 defined('ABSPATH') || exit;
 
 get_template_part('parts/header');
-
 wc_print_notices();
 
 $categories = get_terms(['taxonomy' => 'product_cat', 'hide_empty' => true, 'parent' => 0]);
@@ -15,83 +9,64 @@ $categories = get_terms(['taxonomy' => 'product_cat', 'hide_empty' => true, 'par
 
 <div class="qs-wrap">
 
-  <!-- ══ HERO HEADER ══════════════════════════════════════════ -->
   <header class="qs-header">
     <div class="qs-header__inner container">
-      <div class="qs-header__eyebrow">
-        <span>BASE_CAMP</span>
-        <span class="qs-header__sep"></span>
-        <span class="qs-header__eyebrow-accent">QUARTERMASTER</span>
-      </div>
       <div class="qs-header__bottom">
         <div>
-          <h1 class="qs-header__title">
-            <?php woocommerce_page_title(); ?> <span class="qs-header__title-accent">LOG</span>
-          </h1>
-          <p class="qs-header__sub">
-            <span class="material-symbols-outlined">settings_input_antenna</span>
-            DEPLOYMENT_INVENTORY // COMMAND_CENTER_ACTIVE
-          </p>
+          <h1 class="qs-header__title"><?php woocommerce_page_title(); ?></h1>
         </div>
         <div class="qs-search-wrap">
           <span class="material-symbols-outlined qs-search-icon">search</span>
           <input class="qs-search" type="text"
-                 placeholder="SEARCH_SERIAL_NO..."
+                 placeholder="Search products…"
                  oninput="qsSearch(this.value)">
         </div>
       </div>
     </div>
   </header>
 
-  <!-- ══ STICKY FILTER BAR ════════════════════════════════════ -->
   <div class="qs-filters-bar">
     <div class="qs-filters-bar__inner container">
       <details class="qs-filters" id="qsFilters">
         <summary class="qs-filters__summary">
           <div class="qs-filters__summary-left">
             <span class="material-symbols-outlined qs-filters__icon">tune</span>
-            <span class="qs-filters__label">FILTER_PROTOCOLS</span>
-            <div class="qs-filters__active-hint">
-              <span class="qs-filters__active-tag">ACTIVE: ALL_SYSTEMS</span>
-            </div>
+            <span class="qs-filters__label">Filter</span>
           </div>
           <span class="material-symbols-outlined qs-filters__chevron">expand_more</span>
         </summary>
 
         <div class="qs-filters__panel">
 
-          <!-- Categories -->
           <?php if (!empty($categories) && !is_wp_error($categories)) : ?>
           <div>
-            <p class="qs-filters__group-label">BY_CATEGORY</p>
+            <p class="qs-filters__group-label">Category</p>
             <div class="qs-filters__cats">
               <a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>"
                  class="qs-cat-btn <?php echo is_shop() && !is_product_category() ? 'qs-cat-btn--active' : ''; ?>">
-                ALL
+                All
               </a>
               <?php foreach ($categories as $cat) : ?>
               <a href="<?php echo esc_url(get_term_link($cat)); ?>"
                  class="qs-cat-btn <?php echo is_product_category($cat->slug) ? 'qs-cat-btn--active' : ''; ?>">
-                <?php echo esc_html(strtoupper($cat->name)); ?>
+                <?php echo esc_html($cat->name); ?>
               </a>
               <?php endforeach; ?>
             </div>
           </div>
           <?php endif; ?>
 
-          <!-- Ordering -->
           <div>
-            <p class="qs-filters__group-label">SORT_PROTOCOL</p>
+            <p class="qs-filters__group-label">Sort by</p>
             <div class="qs-filters__order-wrap">
               <?php woocommerce_catalog_ordering(); ?>
             </div>
           </div>
 
-          <!-- CTA -->
           <div class="qs-filters__group--cta">
             <button class="qs-execute-btn"
                     onclick="document.getElementById('qsFilters').removeAttribute('open')">
-              EXECUTE PROTOCOL
+              Apply filters
             </button>
           </div>
 
@@ -100,7 +75,6 @@ $categories = get_terms(['taxonomy' => 'product_cat', 'hide_empty' => true, 'par
     </div>
   </div>
 
-  <!-- ══ PRODUCT GRID ═════════════════════════════════════════ -->
   <div class="qs-grid-wrap container">
 
     <?php if (woocommerce_product_loop()) : ?>
@@ -125,13 +99,12 @@ $categories = get_terms(['taxonomy' => 'product_cat', 'hide_empty' => true, 'par
       ?>
       <li class="qs-card<?php echo $is_hero ? ' qs-card--hero' : ''; ?> product type-product">
 
-        <!-- Image -->
         <a href="<?php the_permalink(); ?>" class="qs-card__img-wrap">
           <?php if ($on_sale) : ?>
-          <span class="qs-badge qs-badge--sale">SALE</span>
+          <span class="qs-badge qs-badge--sale">Sale</span>
           <?php endif; ?>
           <span class="qs-badge qs-badge--stock <?php echo $in_stock ? 'qs-badge--in' : 'qs-badge--out'; ?>">
-            <?php echo $in_stock ? 'IN STOCK' : 'OUT OF STOCK'; ?>
+            <?php echo $in_stock ? 'In stock' : 'Out of stock'; ?>
           </span>
           <?php if ($img_src) : ?>
           <img src="<?php echo esc_url($img_src); ?>"
@@ -145,7 +118,6 @@ $categories = get_terms(['taxonomy' => 'product_cat', 'hide_empty' => true, 'par
           <div class="qs-card__img-overlay"></div>
         </a>
 
-        <!-- Body -->
         <div class="qs-card__body">
 
           <?php if ($is_hero) : ?>
@@ -155,12 +127,11 @@ $categories = get_terms(['taxonomy' => 'product_cat', 'hide_empty' => true, 'par
             </h2>
             <div class="qs-card__price-row">
               <span class="qs-card__price price"><?php echo $price_html; ?></span>
-              <span class="qs-card__credits">CREDITS</span>
             </div>
             <?php if ($cats) : ?>
             <div class="qs-card__terms">
               <?php foreach (array_slice($cats, 0, 2) as $c) : ?>
-              <span class="qs-tag"><?php echo esc_html(strtoupper($c->name)); ?></span>
+              <span class="qs-tag"><?php echo esc_html($c->name); ?></span>
               <?php endforeach; ?>
             </div>
             <?php endif; ?>
@@ -168,7 +139,7 @@ $categories = get_terms(['taxonomy' => 'product_cat', 'hide_empty' => true, 'par
           <div class="qs-card__hero-actions">
             <?php woocommerce_template_loop_add_to_cart(); ?>
             <a href="<?php the_permalink(); ?>" class="qs-view-btn">
-              VIEW_SPEC_DATA
+              View product
               <span class="material-symbols-outlined">arrow_forward</span>
             </a>
           </div>

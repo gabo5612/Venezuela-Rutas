@@ -13,6 +13,7 @@ $post_type = get_post_type();
 // ── Hero image & featured video ─────────────────────────────
 $thumb          = get_the_post_thumbnail_url(null, 'full') ?: get_field('image') ?: '';
 $video_featured = get_field('video_featured') ?: '';
+$hero_obj_pos   = get_field('hero_image_position') ?: 'center center';
 
 // ── Route stats ──────────────────────────────────────────────
 $distance   = get_field('distance')   ?: '';
@@ -120,9 +121,12 @@ if ($gmaps_url) {
 } elseif ($has_polyline) {
     $pt_start = $route_pts[0];
     $pt_end   = $route_pts[count($route_pts) - 1];
+    // Include all checkpoint + poi POIs as waypoints (deduplicated)
     $wpts = [];
-    foreach ($poi_posts as $poi_item) {
-        if (!is_object($poi_item)) continue;
+    $seen_wpt_ids = [];
+    foreach ($all_cp_pois as $poi_item) {
+        if (!is_object($poi_item) || in_array($poi_item->ID, $seen_wpt_ids)) continue;
+        $seen_wpt_ids[] = $poi_item->ID;
         $p_lat = get_field('latitude',  $poi_item->ID);
         $p_lng = get_field('longitude', $poi_item->ID);
         if ($p_lat && $p_lng) $wpts[] = $p_lat . ',' . $p_lng;
@@ -132,7 +136,7 @@ if ($gmaps_url) {
         . '&origin='      . $pt_start[0] . ',' . $pt_start[1]
         . '&destination=' . $pt_end[0]   . ',' . $pt_end[1]
         . ($wpts_str ? '&waypoints=' . rawurlencode($wpts_str) : '');
-} elseif ($has_pin) {
+} elseif ($has_pin || ($lat && $lon)) {
     $mobile_maps_url = 'https://www.google.com/maps/search/?api=1&query=' . $lat . ',' . $lon;
 }
 
@@ -145,15 +149,15 @@ $related_label = match ($post_type) {
 };
 ?>
 
-<div class="page-route page-route--<?php echo esc_attr($post_type); ?>">
+<div class="page-route page-route--<?php echo esc_attr($post_type); ?>" data-post-type="<?php echo esc_attr($post_type); ?>">
 
   <!-- ══ HERO ══════════════════════════════════════════════════ -->
   <?php if ($video_featured || $thumb) : ?>
   <div class="page-route__hero">
     <?php if ($video_featured) : ?>
-      <video autoplay muted loop playsinline src="<?php echo esc_url($video_featured); ?>"></video>
+      <video autoplay muted loop playsinline src="<?php echo esc_url($video_featured); ?>" style="object-position:<?php echo esc_attr($hero_obj_pos); ?>"></video>
     <?php else : ?>
-      <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>">
+      <img src="<?php echo esc_url($thumb); ?>" alt="<?php the_title_attribute(); ?>" style="object-position:<?php echo esc_attr($hero_obj_pos); ?>">
     <?php endif; ?>
     <div class="hero-overlay"></div>
   </div>
@@ -448,11 +452,13 @@ $related_label = match ($post_type) {
           <?php echo esc_html($location); ?>
         </span>
       <?php endif; ?>
-      <?php if ($has_pin) : ?>
-        <span style="font-size:.75rem;color:var(--text-muted);display:flex;align-items:center;gap:.3rem">
+      <?php if ($lat && $lon) : ?>
+        <a href="<?php echo esc_url('https://www.google.com/maps/search/?api=1&query=' . floatval($lat) . ',' . floatval($lon)); ?>"
+           target="_blank" rel="noopener"
+           style="font-size:.75rem;color:var(--text-muted);display:flex;align-items:center;gap:.3rem;text-decoration:none">
           <span class="material-symbols-outlined" style="font-size:1rem">my_location</span>
-          <?php echo esc_html($lat); ?>, <?php echo esc_html($lon); ?>
-        </span>
+          <?php echo esc_html(number_format(floatval($lat), 5) . ', ' . number_format(floatval($lon), 5)); ?>
+        </a>
       <?php endif; ?>
     </div>
     <?php endif; ?>
@@ -468,11 +474,6 @@ $related_label = match ($post_type) {
     <!-- ── Action buttons ── -->
     <?php if ($gmaps_url || $blog_url || $has_polyline) : ?>
     <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.5rem">
-      <?php if ($gmaps_url) : ?>
-      <a href="<?php echo esc_url($gmaps_url); ?>" class="btn btn--primary" target="_blank" rel="noopener">
-        <span class="material-symbols-outlined">map</span> View on Google Maps
-      </a>
-      <?php endif; ?>
       <?php if ($blog_url) : ?>
       <a href="<?php echo esc_url($blog_url); ?>" class="btn btn--outline">
         <span class="material-symbols-outlined">article</span> View Log
@@ -513,6 +514,16 @@ $related_label = match ($post_type) {
         <?php foreach ($all_cp_pois as $poi) :
           $poi_image_url = get_field('image', $poi->ID) ?: get_the_post_thumbnail_url($poi->ID, 'medium') ?: '';
           $poi_maps_url  = get_field('has_a_google_maps_card', $poi->ID) ?: '';
+          $poi_lat       = get_field('latitude',  $poi->ID);
+          $poi_lng       = get_field('longitude', $poi->ID);
+          // Maps link: Google Maps card URL > coords fallback
+          if ($poi_maps_url) {
+              $cp_maps_target = $poi_maps_url;
+          } elseif ($poi_lat && $poi_lng) {
+              $cp_maps_target = 'https://www.google.com/maps/search/?api=1&query=' . floatval($poi_lat) . ',' . floatval($poi_lng);
+          } else {
+              $cp_maps_target = '';
+          }
         ?>
         <div class="cp-item">
           <div class="cp-dot"></div>
@@ -525,8 +536,8 @@ $related_label = match ($post_type) {
             <a href="<?php echo esc_url(get_permalink($poi->ID)); ?>" class="cp-name">
               <?php echo esc_html($poi->post_title); ?>
             </a>
-            <?php if ($poi_maps_url) : ?>
-            <a href="<?php echo esc_url($poi_maps_url); ?>" class="cp-maps-link" target="_blank" rel="noopener">
+            <?php if ($cp_maps_target) : ?>
+            <a href="<?php echo esc_url($cp_maps_target); ?>" class="cp-maps-link" target="_blank" rel="noopener">
               <span class="material-symbols-outlined">map</span> View on Maps
             </a>
             <?php endif; ?>
@@ -854,7 +865,7 @@ $related_label = match ($post_type) {
       }
       if ($related->have_posts()) :
         while ($related->have_posts()) : $related->the_post();
-          $r_thumb = get_the_post_thumbnail_url(null, 'medium') ?: get_field('image') ?: '';
+          $r_thumb = get_the_post_thumbnail_url(null, 'high') ?: get_field('image') ?: '';
           $r_cats    = get_the_category();
       ?>
       <div class="post-card" data-animate="fade-up">
@@ -934,14 +945,17 @@ document.addEventListener('DOMContentLoaded', function () {
   L.marker([lat, lon], { icon: icon }).addTo(map).bindPopup('<?php echo esc_js(get_the_title()); ?>').openPopup();
   <?php endif; ?>
 
+  var poiIcon = L.divIcon({ className: '', html: '<div class="map-pin map-pin--poi"></div>', iconAnchor: [7, 7] });
   <?php foreach ($all_cp_pois as $cp_poi) :
     $cp_lat = floatval(get_field('latitude',  $cp_poi->ID) ?: 0);
     $cp_lon = floatval(get_field('longitude', $cp_poi->ID) ?: 0);
     if (!$cp_lat || !$cp_lon) continue;
+    $cp_gmaps = get_field('has_a_google_maps_card', $cp_poi->ID) ?: '';
+    $cp_maps_url = $cp_gmaps ?: 'https://www.google.com/maps/search/?api=1&query=' . $cp_lat . ',' . $cp_lon;
   ?>
-  L.circleMarker([<?php echo $cp_lat; ?>, <?php echo $cp_lon; ?>], {
-    radius: 5, color: '#ff6b00', fillColor: '#ff6b00', fillOpacity: 1, weight: 2
-  }).addTo(map).bindPopup('<?php echo esc_js($cp_poi->post_title); ?>');
+  L.marker([<?php echo $cp_lat; ?>, <?php echo $cp_lon; ?>], { icon: poiIcon })
+    .addTo(map)
+    .bindPopup('<strong><?php echo esc_js($cp_poi->post_title); ?></strong><br><small><?php echo $cp_lat; ?>, <?php echo $cp_lon; ?></small><br><a href="<?php echo esc_js(get_permalink($cp_poi->ID)); ?>">View POI</a> &nbsp; <a href="<?php echo esc_js($cp_maps_url); ?>" target="_blank">Maps</a>');
   <?php endforeach; ?>
 });
 </script>

@@ -1,7 +1,6 @@
 <?php
 /**
- * WooCommerce single product — "PDP Full Width" layout
- * Inspired by Stitch design: hero split, bento specs, related products.
+ * WooCommerce single product
  */
 defined('ABSPATH') || exit;
 
@@ -15,56 +14,93 @@ while (have_posts()) :
   $product = wc_get_product(get_the_ID());
   if (!$product) continue;
 
-  // ── ACF fields ──────────────────────────────────────────────
+  // ACF fields
   $gear_category  = get_field('product_gear_category')   ?: '';
   $features       = get_field('product_features')        ?: [];
   $specs          = get_field('product_specs')           ?: [];
   $attr_bars      = get_field('product_attributes_meta') ?: [];
-  $image_ref      = get_field('product_image_ref')       ?: '';
   $pdf            = get_field('product_pdf');
 
-  // ── WC data ─────────────────────────────────────────────────
+  // WC data
   $price_html   = $product->get_price_html();
   $on_sale      = $product->is_on_sale();
   $in_stock     = $product->is_in_stock();
   $gallery_ids  = $product->get_gallery_image_ids();
   $main_img_id  = get_post_thumbnail_id();
-  $main_img     = $main_img_id ? wp_get_attachment_image_url($main_img_id, 'large') : '';
   $short_desc   = $product->get_short_description();
 
-  // 4 gallery thumbs (fill with placeholder if fewer)
-  $gallery_imgs = array_slice(array_merge(
-    $gallery_ids ? array_map(fn($id) => wp_get_attachment_image_url($id, 'medium'), $gallery_ids) : [],
-    array_fill(0, 4, '')
-  ), 0, 4);
+  // Build image list: main + gallery
+  $all_imgs = [];
+  if ($main_img_id) {
+    $all_imgs[] = [
+      'full'  => wp_get_attachment_image_url($main_img_id, 'large'),
+      'thumb' => wp_get_attachment_image_url($main_img_id, 'thumbnail'),
+      'alt'   => get_post_meta($main_img_id, '_wp_attachment_image_alt', true) ?: get_the_title(),
+    ];
+  }
+  foreach ($gallery_ids as $gid) {
+    $all_imgs[] = [
+      'full'  => wp_get_attachment_image_url($gid, 'large'),
+      'thumb' => wp_get_attachment_image_url($gid, 'thumbnail'),
+      'alt'   => get_post_meta($gid, '_wp_attachment_image_alt', true) ?: get_the_title(),
+    ];
+  }
 ?>
 
 <div class="pdp-wrap">
 
-  <!-- ══ HERO ═════════════════════════════════════════════════ -->
+  <!-- HERO -->
   <section class="pdp-hero">
 
-    <!-- Image column -->
+    <!-- Image gallery column -->
     <div class="pdp-hero__img-col">
       <?php if ($on_sale) : ?>
-      <span class="pdp-badge pdp-badge--sale">SALE</span>
+      <span class="pdp-badge pdp-badge--sale">Sale</span>
       <?php endif; ?>
       <span class="pdp-badge pdp-badge--status <?php echo $in_stock ? 'pdp-badge--in' : 'pdp-badge--out'; ?>">
-        <?php echo $in_stock ? 'DEPLOYMENT READY' : 'OUT OF STOCK'; ?>
+        <?php echo $in_stock ? 'In stock' : 'Out of stock'; ?>
       </span>
 
-      <?php if ($main_img) : ?>
-      <img src="<?php echo esc_url($main_img); ?>"
-           alt="<?php the_title_attribute(); ?>"
-           class="pdp-hero__img" loading="eager">
+      <?php if (!empty($all_imgs)) : ?>
+      <div class="pdp-gallery" id="pdpGallery">
+        <!-- Main viewer -->
+        <div class="pdp-gallery__main" id="pdpMain">
+          <img src="<?php echo esc_url($all_imgs[0]['full']); ?>"
+               alt="<?php echo esc_attr($all_imgs[0]['alt']); ?>"
+               class="pdp-gallery__main-img" id="pdpMainImg"
+               loading="eager">
+          <?php if (count($all_imgs) > 1) : ?>
+          <button class="pdp-gallery__arrow pdp-gallery__arrow--prev" id="pdpPrev" aria-label="Previous image">
+            <span class="material-symbols-outlined">chevron_left</span>
+          </button>
+          <button class="pdp-gallery__arrow pdp-gallery__arrow--next" id="pdpNext" aria-label="Next image">
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
+          <?php endif; ?>
+        </div>
+
+        <!-- Thumbnail strip -->
+        <?php if (count($all_imgs) > 1) : ?>
+        <div class="pdp-gallery__thumbs" id="pdpThumbs">
+          <?php foreach ($all_imgs as $i => $img) : ?>
+          <button class="pdp-gallery__thumb<?php echo $i === 0 ? ' pdp-gallery__thumb--active' : ''; ?>"
+                  data-index="<?php echo $i; ?>"
+                  data-full="<?php echo esc_attr($img['full']); ?>"
+                  data-alt="<?php echo esc_attr($img['alt']); ?>"
+                  aria-label="View image <?php echo $i + 1; ?>">
+            <img src="<?php echo esc_url($img['thumb']); ?>"
+                 alt="<?php echo esc_attr($img['alt']); ?>"
+                 loading="lazy">
+          </button>
+          <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
+      </div>
+
       <?php else : ?>
       <div class="pdp-hero__img-placeholder">
         <span class="material-symbols-outlined">inventory_2</span>
       </div>
-      <?php endif; ?>
-
-      <?php if ($image_ref) : ?>
-      <span class="pdp-hero__img-ref">IMG_REF: <?php echo esc_html($image_ref); ?></span>
       <?php endif; ?>
     </div>
 
@@ -72,7 +108,7 @@ while (have_posts()) :
     <div class="pdp-hero__details">
 
       <?php if ($gear_category) : ?>
-      <p class="pdp-eyebrow">GEAR CATEGORY: <?php echo esc_html(strtoupper($gear_category)); ?></p>
+      <p class="pdp-eyebrow"><?php echo esc_html($gear_category); ?></p>
       <?php endif; ?>
 
       <h1 class="pdp-title">
@@ -83,13 +119,12 @@ while (have_posts()) :
         <span class="pdp-price"><?php echo $price_html; ?></span>
       </div>
 
-      <!-- Features / bullets -->
       <?php if (!empty($features)) : ?>
       <ul class="pdp-features">
         <?php foreach ($features as $f) : ?>
         <li class="pdp-features__item">
           <span class="material-symbols-outlined pdp-features__icon">check_circle</span>
-          <?php echo esc_html(strtoupper($f['feature_text'])); ?>
+          <?php echo esc_html($f['feature_text']); ?>
         </li>
         <?php endforeach; ?>
       </ul>
@@ -105,7 +140,7 @@ while (have_posts()) :
         <a href="<?php echo esc_url(is_array($pdf) ? $pdf['url'] : $pdf); ?>"
            target="_blank" rel="noopener" class="pdp-pdf-btn">
           <span class="material-symbols-outlined">picture_as_pdf</span>
-          REQUEST SPEC SHEET (PDF)
+          Download spec sheet (PDF)
         </a>
         <?php endif; ?>
       </div>
@@ -113,14 +148,13 @@ while (have_posts()) :
     </div>
   </section>
 
-  <!-- ══ BENTO — NOTES / SPECS / GALLERY ══════════════════════ -->
+  <!-- BENTO — NOTES / SPECS / GALLERY -->
   <section class="pdp-bento">
 
-    <!-- Field Notes (short description or ACF specs narrative) -->
     <div class="pdp-bento__notes">
       <div class="pdp-bento__hd">
         <span class="material-symbols-outlined pdp-bento__hd-icon">edit_note</span>
-        <h2 class="pdp-bento__hd-title">FIELD NOTES // PERFORMANCE</h2>
+        <h2 class="pdp-bento__hd-title">Description</h2>
       </div>
 
       <?php if ($short_desc) : ?>
@@ -129,14 +163,13 @@ while (have_posts()) :
       <div class="pdp-bento__body"><?php echo wp_kses_post(get_the_content()); ?></div>
       <?php endif; ?>
 
-      <!-- Attribute bars -->
       <?php if (!empty($attr_bars)) : ?>
       <div class="pdp-attr-bars">
         <?php foreach ($attr_bars as $bar) :
           $pct = min(100, max(0, intval($bar['attribute_value'])));
         ?>
         <div class="pdp-attr-bar">
-          <p class="pdp-attr-bar__label"><?php echo esc_html(strtoupper($bar['attribute_name'])); ?></p>
+          <p class="pdp-attr-bar__label"><?php echo esc_html($bar['attribute_name']); ?></p>
           <div class="pdp-attr-bar__track">
             <div class="pdp-attr-bar__fill" style="width:<?php echo $pct; ?>%"></div>
           </div>
@@ -146,24 +179,22 @@ while (have_posts()) :
       <?php endif; ?>
     </div>
 
-    <!-- Technical Specs -->
     <div class="pdp-bento__specs">
       <div class="pdp-bento__hd">
         <span class="material-symbols-outlined pdp-bento__hd-icon">settings_input_component</span>
-        <h2 class="pdp-bento__hd-title">TECHNICAL SPECIFICATIONS</h2>
+        <h2 class="pdp-bento__hd-title">Specifications</h2>
       </div>
 
       <?php if (!empty($specs)) : ?>
       <dl class="pdp-specs-table">
         <?php foreach ($specs as $s) : ?>
         <div class="pdp-specs-table__row">
-          <dt><?php echo esc_html(strtoupper($s['spec_label'])); ?></dt>
-          <dd><?php echo esc_html(strtoupper($s['spec_value'])); ?></dd>
+          <dt><?php echo esc_html($s['spec_label']); ?></dt>
+          <dd><?php echo esc_html($s['spec_value']); ?></dd>
         </div>
         <?php endforeach; ?>
       </dl>
       <?php else : ?>
-      <!-- Fallback: WooCommerce product attributes -->
       <?php
       if (function_exists('wc_display_product_attributes')) {
         wc_display_product_attributes($product);
@@ -173,26 +204,33 @@ while (have_posts()) :
     </div>
 
     <!-- Gallery 2×2 -->
+    <?php if (!empty($all_imgs)) :
+      $bento_imgs = array_slice($all_imgs, 1, 4);
+    ?>
     <div class="pdp-bento__gallery">
-      <?php foreach ($gallery_imgs as $i => $img_url) : ?>
+      <?php
+      $placeholders_needed = 4 - count($bento_imgs);
+      foreach ($bento_imgs as $i => $img) : ?>
       <div class="pdp-gallery-cell">
-        <?php if ($img_url) : ?>
-        <img src="<?php echo esc_url($img_url); ?>"
-             alt="<?php the_title_attribute(); ?> — view <?php echo $i + 1; ?>"
+        <img src="<?php echo esc_url($img['full']); ?>"
+             alt="<?php echo esc_attr($img['alt']); ?>"
              loading="lazy">
-        <?php else : ?>
-        <div class="pdp-gallery-cell__placeholder">
-          <span class="material-symbols-outlined">image</span>
-        </div>
-        <?php endif; ?>
         <div class="pdp-gallery-cell__hover"></div>
       </div>
       <?php endforeach; ?>
+      <?php for ($p = 0; $p < $placeholders_needed; $p++) : ?>
+      <div class="pdp-gallery-cell">
+        <div class="pdp-gallery-cell__placeholder">
+          <span class="material-symbols-outlined">image</span>
+        </div>
+      </div>
+      <?php endfor; ?>
     </div>
+    <?php endif; ?>
 
   </section>
 
-  <!-- ══ RELATED PRODUCTS SLIDER ════════════════════════════════ -->
+  <!-- RELATED PRODUCTS -->
   <?php
   $related_ids = wc_get_related_products(get_the_ID(), 8);
   if (!empty($related_ids)) :
@@ -201,8 +239,8 @@ while (have_posts()) :
   <section class="pdp-related container">
     <div class="pdp-related__hd">
       <div>
-        <p class="pdp-related__eyebrow">RELATED ASSETS</p>
-        <h2 class="pdp-related__title">RECOMMENDED MISSION GEAR</h2>
+        <p class="pdp-related__eyebrow">Shop</p>
+        <h2 class="pdp-related__title">You might also like</h2>
       </div>
       <div class="pdp-slider-nav">
         <button class="pdp-slider-btn js-pdp-prev" aria-label="Previous">
@@ -219,7 +257,7 @@ while (have_posts()) :
         <?php foreach ($related as $rp) :
           $r_img  = wp_get_attachment_image_url(get_post_thumbnail_id($rp->get_id()), 'medium');
           $r_cats = get_the_terms($rp->get_id(), 'product_cat');
-          $r_cat  = $r_cats ? strtoupper($r_cats[0]->name) : 'GEAR';
+          $r_cat  = $r_cats ? $r_cats[0]->name : '';
         ?>
         <a href="<?php echo esc_url(get_permalink($rp->get_id())); ?>" class="pdp-rcard">
           <div class="pdp-rcard__img-wrap">
@@ -232,13 +270,12 @@ while (have_posts()) :
               <span class="material-symbols-outlined">inventory_2</span>
             </div>
             <?php endif; ?>
-            <div class="pdp-rcard__overlay">
-              <span class="pdp-rcard__ready">READY</span>
-            </div>
           </div>
           <div class="pdp-rcard__body">
+            <?php if ($r_cat) : ?>
             <p class="pdp-rcard__cat"><?php echo esc_html($r_cat); ?></p>
-            <h3 class="pdp-rcard__name"><?php echo esc_html(strtoupper($rp->get_name())); ?></h3>
+            <?php endif; ?>
+            <h3 class="pdp-rcard__name"><?php echo esc_html($rp->get_name()); ?></h3>
             <div class="pdp-rcard__foot">
               <span class="pdp-rcard__price"><?php echo $rp->get_price_html(); ?></span>
               <span class="material-symbols-outlined pdp-rcard__cart-icon">add_shopping_cart</span>
@@ -252,6 +289,43 @@ while (have_posts()) :
 
   <script>
   (function () {
+    // ── Image gallery ──────────────────────────────────────────
+    var mainImg  = document.getElementById('pdpMainImg');
+    var thumbs   = document.querySelectorAll('.pdp-gallery__thumb');
+    var prevBtn  = document.getElementById('pdpPrev');
+    var nextBtn  = document.getElementById('pdpNext');
+    if (!mainImg || !thumbs.length) return;
+
+    var total   = thumbs.length;
+    var current = 0;
+
+    function goTo(idx) {
+      current = (idx + total) % total;
+      thumbs.forEach(function (t, i) {
+        t.classList.toggle('pdp-gallery__thumb--active', i === current);
+      });
+      var active = thumbs[current];
+      mainImg.src = active.dataset.full;
+      mainImg.alt = active.dataset.alt || '';
+    }
+
+    thumbs.forEach(function (btn) {
+      btn.addEventListener('click', function () { goTo(parseInt(btn.dataset.index, 10)); });
+    });
+    if (prevBtn) prevBtn.addEventListener('click', function () { goTo(current - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { goTo(current + 1); });
+
+    // Touch swipe
+    var tx = 0;
+    mainImg.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; }, {passive: true});
+    mainImg.addEventListener('touchend', function (e) {
+      var dx = tx - e.changedTouches[0].clientX;
+      if (Math.abs(dx) > 40) goTo(dx > 0 ? current + 1 : current - 1);
+    }, {passive: true});
+  }());
+
+  // ── Related slider ─────────────────────────────────────────
+  (function () {
     var track    = document.querySelector('.js-pdp-track');
     var viewport = track && track.parentElement;
     if (!track) return;
@@ -262,24 +336,11 @@ while (have_posts()) :
     var autoTimer = null;
     var isTransitioning = false;
 
-    // Clone cards for infinite loop
-    origCards.slice(-CLONE_N).forEach(function (c) {
-      track.insertBefore(c.cloneNode(true), track.firstChild);
-    });
-    origCards.slice(0, CLONE_N).forEach(function (c) {
-      track.appendChild(c.cloneNode(true));
-    });
+    origCards.slice(-CLONE_N).forEach(function (c) { track.insertBefore(c.cloneNode(true), track.firstChild); });
+    origCards.slice(0, CLONE_N).forEach(function (c) { track.appendChild(c.cloneNode(true)); });
 
     var allCards = Array.from(track.children);
     var current  = CLONE_N;
-
-    function visibleCount() {
-      var vw = viewport.offsetWidth;
-      if (vw >= 1100) return 4;
-      if (vw >= 720)  return 3;
-      if (vw >= 480)  return 2;
-      return 1;
-    }
 
     function cardWidth() {
       if (!allCards[0]) return 0;

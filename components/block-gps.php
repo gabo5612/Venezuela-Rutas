@@ -45,7 +45,9 @@
           }
         }
         if ($group_label && !empty($tag_names)) {
-          echo "filterGroups.push(" . json_encode(['label' => $group_label, 'tags' => $tag_names]) . ");\n";
+          $group_color = get_sub_field('group_color') ?: '';
+          $group_dash  = get_sub_field('group_dash')  ?: '';
+          echo "filterGroups.push(" . json_encode(['label' => $group_label, 'tags' => $tag_names, 'color' => $group_color, 'dash' => $group_dash]) . ");\n";
         }
       endwhile;
     endif;
@@ -181,6 +183,27 @@
       // --- Normalizador para comparar tags sin problemas ---
       function norm(s){ return String(s || '').trim().toLowerCase(); }
 
+      var GROUP_PALETTE = ['#0df246', '#4fc3f7', '#ff9800', '#ce93d8', '#f06292', '#80cbc4', '#ffeb3b'];
+      var tagColorMap = {};
+      var tagDashMap  = {};
+      filterGroups.forEach(function (group, i) {
+        var color = group.color || GROUP_PALETTE[i % GROUP_PALETTE.length];
+        var dash  = group.dash  || null;
+        group._color = color;
+        group._dash  = dash;
+        (group.tags || []).forEach(function (t) {
+          tagColorMap[norm(t)] = color;
+          tagDashMap[norm(t)]  = dash;
+        });
+      });
+      function getRouteStyle(tags) {
+        for (var i = 0; i < (tags || []).length; i++) {
+          var key = norm(tags[i]);
+          if (tagColorMap[key]) return { color: tagColorMap[key], dash: tagDashMap[key] || null };
+        }
+        return { color: '#aaaaaa', dash: null };
+      }
+
       // --- FILTROS UI ---
       var filtersEl = document.getElementById('gps-filters');
 
@@ -215,7 +238,7 @@
         var groupTagsNorm = group.tags.map(norm).join(',');
         html += `<div class="gps-dropdown" id="${groupId}-wrap">
           <div class="gps-group-pill">
-            <button type="button" class="gps-pill gps-pill--group" data-filter-type="group" data-group-tags="${groupTagsNorm}" data-group-id="${groupId}">${group.label}</button><button type="button" class="gps-pill__expand" data-group-id="${groupId}" aria-label="Ver sub-filtros">▾</button>
+            <button type="button" class="gps-pill gps-pill--group" data-filter-type="group" data-group-tags="${groupTagsNorm}" data-group-id="${groupId}" style="--pill-color:${group._color}"><span class="gps-pill__dot"></span>${group.label}</button><button type="button" class="gps-pill__expand" data-group-id="${groupId}" aria-label="Ver sub-filtros">▾</button>
           </div>
           <div class="gps-panel" id="${groupId}-panel">`;
         group.tags.forEach(function (t) {
@@ -306,10 +329,10 @@
           }
 
           if (poi.google_maps_url && poi.google_maps_url !== '') {
-            popupHtml += `<br><a href="${poi.google_maps_url}" target="_blank">Ver en Google Maps</a><br>`;
+            popupHtml += `<br><a href="${poi.google_maps_url}" target="_blank" class="map-link-button" style="text-align:center;display:block">View on Google Maps</a><br>`;
           } else {
             const googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
-            popupHtml += `<br><a href="${googleMapsLink}" target="_blank" class="map-link-button">Ver en Google Maps</a><br>`;
+            popupHtml += `<br><a href="${googleMapsLink}" target="_blank" class="map-link-button" style="text-align:center;display:block">View on Google Maps</a><br>`;
           }
 
           
@@ -368,11 +391,21 @@
                         (mode === 'tag'   && activeTags.some(function (t) { return routeTagsNorm.includes(t); }));
           if (!matches) return;
 
+          var style   = getRouteStyle(route.tags);
           var polyline = L.polyline(routePoints, {
-            color: '#0df246',
-            weight: 3,
-            opacity: 0.85
+            color:     style.color,
+            weight:    3,
+            opacity:   0.8,
+            dashArray: style.dash
           }).addTo(routesLayer);
+
+          polyline.on('mouseover', function () {
+            this.setStyle({ opacity: 1, weight: 5, dashArray: null });
+            this.bringToFront();
+          });
+          polyline.on('mouseout', function () {
+            this.setStyle({ opacity: 0.8, weight: 3, dashArray: style.dash });
+          });
 
           bounds.extend(polyline.getBounds());
           drewAny = true;
@@ -406,7 +439,7 @@
             const destination = end.join(',');
             const waypoints = poiWaypoints.join('|');
             const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&waypoints=${encodeURIComponent(waypoints)}`;
-            popupHtml += `<br><a href="${googleMapsUrl}" target="_blank" class="map-link-button">Open route in<br>Google Maps</a>`;
+            popupHtml += `<br><a href="${googleMapsUrl}" target="_blank" class="map-link-button" style="text-align:center;display:block">View on Google Maps</a>`;
           }
 
           L.marker(start, { icon: routeIcon }).addTo(routesLayer).bindPopup(popupHtml);

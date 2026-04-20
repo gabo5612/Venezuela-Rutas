@@ -369,7 +369,7 @@ function rutas_proxy_route_handler() {
     // ── OSRM (fallback) ────────────────────────────────────────
     $coords = "{$start_lng},{$start_lat};{$end_lng},{$end_lat}";
     $url    = "https://router.project-osrm.org/route/v1/{$profile}/{$coords}"
-            . '?geometries=geojson&overview=full&steps=false';
+            . '?geometries=geojson&overview=full&steps=true';
 
     $response = wp_remote_get( $url, $http_args );
 
@@ -384,7 +384,22 @@ function rutas_proxy_route_handler() {
         wp_send_json_error( 'no_route' );
     }
 
-    $coords_out = array_map( fn($c) => [ $c[1], $c[0] ], $route['geometry']['coordinates'] );
+    // Extract detailed coords from step geometries (much less simplified than overview)
+    $detailed = [];
+    foreach ( $route['legs'] ?? [] as $leg ) {
+        foreach ( $leg['steps'] ?? [] as $step ) {
+            $step_coords = $step['geometry']['coordinates'] ?? [];
+            foreach ( $step_coords as $idx => $c ) {
+                if ( $idx === 0 && ! empty( $detailed ) ) continue; // skip duplicate junction
+                $detailed[] = [ $c[1], $c[0] ];
+            }
+        }
+    }
+
+    $coords_out = ! empty( $detailed )
+        ? $detailed
+        : array_map( fn($c) => [ $c[1], $c[0] ], $route['geometry']['coordinates'] );
+
     wp_send_json_success( [
         'engine'      => 'osrm',
         'coordinates' => $coords_out,
@@ -595,6 +610,73 @@ function rutas_save_planned_route_handler() {
     ] );
 }
 
+
+// ===============================
+// ACF — add Route Color picker to filter_groups repeater
+// All three sub-fields must be registered together; ACF switches
+// the repeater to local mode the moment any sub-field is registered
+// locally, so omitting the existing fields would hide them.
+// ===============================
+add_action( 'acf/init', function () {
+    acf_add_local_field( [
+        'key'             => 'field_gps_group_label',
+        'label'           => 'Group Name',
+        'name'            => 'group_label',
+        'type'            => 'text',
+        'instructions'    => 'E.g.: Hiking, Mountain, Coasts',
+        'required'        => 1,
+        'placeholder'     => 'Group name',
+        'parent'          => 'field_gps_filter_groups',
+        'parent_repeater' => 'field_gps_filter_groups',
+        'wrapper'         => [ 'width' => '25' ],
+    ] );
+    acf_add_local_field( [
+        'key'             => 'field_gps_group_color',
+        'label'           => 'Route Color',
+        'name'            => 'group_color',
+        'type'            => 'color_picker',
+        'default_value'   => '#0df246',
+        'enable_opacity'  => 0,
+        'return_format'   => 'string',
+        'parent'          => 'field_gps_filter_groups',
+        'parent_repeater' => 'field_gps_filter_groups',
+        'wrapper'         => [ 'width' => '15' ],
+    ] );
+    acf_add_local_field( [
+        'key'             => 'field_gps_group_dash',
+        'label'           => 'Line Style',
+        'name'            => 'group_dash',
+        'type'            => 'select',
+        'choices'         => [
+            ''           => 'Solid',
+            '10 5'       => 'Dashed',
+            '4 5'        => 'Short dashes',
+            '2 5'        => 'Dotted',
+            '12 4 2 4'   => 'Dash-dot',
+            '8 4 2 4 2 4'=> 'Dash-dot-dot',
+        ],
+        'default_value'   => '',
+        'allow_null'      => 0,
+        'return_format'   => 'value',
+        'parent'          => 'field_gps_filter_groups',
+        'parent_repeater' => 'field_gps_filter_groups',
+        'wrapper'         => [ 'width' => '20' ],
+    ] );
+    acf_add_local_field( [
+        'key'             => 'field_gps_group_tags',
+        'label'           => 'Group Tags',
+        'name'            => 'group_tags',
+        'type'            => 'taxonomy',
+        'instructions'    => 'Select the tags that belong to this group',
+        'taxonomy'        => 'post_tag',
+        'field_type'      => 'multi_select',
+        'return_format'   => 'object',
+        'allow_null'      => 1,
+        'parent'          => 'field_gps_filter_groups',
+        'parent_repeater' => 'field_gps_filter_groups',
+        'wrapper'         => [ 'width' => '40' ],
+    ] );
+} );
 
 // ===============================
 // COMMUNITY SUGGESTIONS — Admin listing page

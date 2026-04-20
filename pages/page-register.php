@@ -186,6 +186,7 @@ get_template_part('parts/header');
           <p class="auth-step-hint">You can select multiple roles if applicable.</p>
           <div class="auth-role-grid">
             <?php foreach ( HFA_Roles::definitions() as $slug => $def ) :
+              if ( $slug === 'hfa_experience' ) continue; // hidden until ready
               $checked = ( isset( $_POST['hfa_roles'] ) && in_array( $slug, (array)$_POST['hfa_roles'] ) );
             ?>
             <label class="auth-role-card <?php echo $checked ? 'is-selected' : ''; ?>">
@@ -399,7 +400,7 @@ get_template_part('parts/header');
             </div>
           </div>
 
-          <!-- Experience only ─────────────────────────────────────── -->
+          <?php /* Experience only — hidden until ready
           <div class="auth-role-fields" data-roles="hfa_experience">
             <h3 class="auth-section-title"><span class="material-symbols-outlined">storefront</span> Experience / Operator</h3>
             <div class="auth-form__grid">
@@ -426,24 +427,25 @@ get_template_part('parts/header');
               <label class="auth-form__label" for="hfa_biz_desc">What do you offer?</label>
               <textarea id="hfa_biz_desc" name="hfa_biz_desc" class="auth-form__input auth-form__textarea"
                         placeholder="Describe your packages, experiences, tourism services…"
-                        rows="4"><?php echo esc_textarea( $_POST['hfa_biz_desc'] ?? '' ); ?></textarea>
+                        rows="4"></textarea>
             </div>
             <div class="auth-form__field">
               <label class="auth-form__label">How do you prefer to receive orders?</label>
               <div class="auth-radio-group">
                 <label class="auth-radio-option">
-                  <input type="radio" name="hfa_sell_method" value="contact" <?php checked( ($_POST['hfa_sell_method'] ?? 'contact'), 'contact' ); ?>>
+                  <input type="radio" name="hfa_sell_method" value="contact">
                   <span class="material-symbols-outlined">chat</span>
                   <span>Direct contact (WhatsApp / email)</span>
                 </label>
                 <label class="auth-radio-option">
-                  <input type="radio" name="hfa_sell_method" value="woo" <?php checked( ($_POST['hfa_sell_method'] ?? ''), 'woo' ); ?>>
+                  <input type="radio" name="hfa_sell_method" value="woo">
                   <span class="material-symbols-outlined">shopping_cart</span>
                   <span>Online payment (WooCommerce)</span>
                 </label>
               </div>
             </div>
           </div>
+          */ ?>
 
           <!-- Activities (all roles) ─────────────────────────────── -->
           <div class="auth-form__field">

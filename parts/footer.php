@@ -3,23 +3,23 @@ $is_guide_context = is_post_type_archive('guide') || is_tax('guide-zone') || (is
 $is_poi_context   = !$is_guide_context && (is_singular('point-of-interest') || is_post_type_archive('point-of-interest') || is_page_template('pages/page-suggest-route.php'));
 
 if ($is_guide_context) :
-  $mailto = 'mailto:hotfootadventure@gmail.com?subject=' . rawurlencode('I want to be a HotFoot Adventure guide');
+  $url = '/login/';
 ?>
 <section class="global-cta" data-animate="fade-up">
   <div class="global-cta__inner">
     <div class="global-cta__text">
       <span class="global-cta__eyebrow">Directory</span>
       <h2 class="global-cta__title">Are you a local guide?</h2>
-      <p class="global-cta__desc">Join the HotFoot Adventure directory and connect with explorers looking for guides in Venezuela.</p>
+      <p class="global-cta__desc">Create an account and join the HotFoot Adventure directory and connect with explorers looking for guides in Venezuela.</p>
     </div>
-    <a href="<?php echo esc_url($mailto); ?>" class="btn btn--primary global-cta__btn">
+    <a href="<?php echo esc_url($url); ?>" class="btn btn--primary global-cta__btn">
       <span class="material-symbols-outlined">mail</span>
       I want to be a guide
     </a>
   </div>
 </section>
 <?php else :
-  $cta_url  = $is_poi_context ? home_url('/nuevo-poi') : home_url('/nueva-ruta');
+  $cta_url  = $is_poi_context ? home_url('/new-poi') : home_url('/new-route');
   $cta_lbl  = $is_poi_context ? 'Suggest a POI'        : 'Suggest a Route';
   $cta_icon = $is_poi_context ? 'location_on'           : 'add_location';
 ?>

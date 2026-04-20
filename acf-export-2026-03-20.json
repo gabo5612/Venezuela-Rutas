@@ -246,7 +246,7 @@
                                         },
                                         "default_value": "",
                                         "allow_in_bindings": 0,
-                                        "placeholder": "https://...",
+                                        "placeholder": "https:\/\/...",
                                         "parent_repeater": "field_hero_slides00001"
                                     },
                                     {
@@ -599,7 +599,7 @@
                     "layout_6a1bc9f200010": {
                         "key": "layout_6a1bc9f200010",
                         "name": "cta",
-                        "label": "CTA / Newsletter",
+                        "label": "CTA \/ Newsletter",
                         "display": "block",
                         "sub_fields": [
                             {
@@ -690,7 +690,7 @@
                     "layout_6a1bc9f000020": {
                         "key": "layout_6a1bc9f000020",
                         "name": "features",
-                        "label": "Features / 3 columnas",
+                        "label": "Features \/ 3 columnas",
                         "display": "block",
                         "sub_fields": [
                             {
@@ -909,7 +909,7 @@
                                         "name": "section_title",
                                         "aria-label": "",
                                         "type": "text",
-                                        "instructions": "Optional. E.g.: Summits / Day 1",
+                                        "instructions": "Optional. E.g.: Summits \/ Day 1",
                                         "required": 0,
                                         "conditional_logic": 0,
                                         "wrapper": {
@@ -1046,7 +1046,7 @@
                                 },
                                 "default_value": "",
                                 "allow_in_bindings": 0,
-                                "placeholder": "https://"
+                                "placeholder": "https:\/\/"
                             },
                             {
                                 "key": "field_fp_posts_repeater",
@@ -1294,7 +1294,7 @@
             },
             {
                 "key": "field_guide_price_from",
-                "label": "Price from (USD/day)",
+                "label": "Price from (USD\/day)",
                 "name": "guide_price_from",
                 "aria-label": "",
                 "type": "number",
@@ -1861,6 +1861,266 @@
         "show_in_rest": 0
     },
     {
+        "key": "group_product_pdp",
+        "title": "Product — PDP Fields",
+        "fields": [
+            {
+                "key": "field_product_gear_category",
+                "label": "Gear Category",
+                "name": "product_gear_category",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Tactical category label shown above the product title. E.g. \"FOOTWEAR \/\/ HEAVY DUTY\"",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "placeholder": "FOOTWEAR \/\/ HEAVY DUTY",
+                "default_value": "",
+                "maxlength": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_product_features",
+                "label": "Features",
+                "name": "product_features",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "Bullet point features shown with check icons in the hero.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "min": 0,
+                "max": 6,
+                "layout": "table",
+                "button_label": "Add Feature",
+                "rows_per_page": 20,
+                "collapsed": "",
+                "sub_fields": [
+                    {
+                        "key": "field_product_feature_text",
+                        "label": "Feature",
+                        "name": "feature_text",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "placeholder": "FIELD TESTED IN ARID CONDITIONS",
+                        "default_value": "",
+                        "maxlength": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_product_features"
+                    }
+                ]
+            },
+            {
+                "key": "field_product_specs",
+                "label": "Technical Specifications",
+                "name": "product_specs",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "Key\/value rows shown in the Bento specs table.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "min": 0,
+                "max": 10,
+                "layout": "table",
+                "button_label": "Add Spec",
+                "rows_per_page": 20,
+                "collapsed": "",
+                "sub_fields": [
+                    {
+                        "key": "field_product_spec_label",
+                        "label": "Label",
+                        "name": "spec_label",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "50",
+                            "class": "",
+                            "id": ""
+                        },
+                        "placeholder": "CHASSIS WEIGHT",
+                        "default_value": "",
+                        "maxlength": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_product_specs"
+                    },
+                    {
+                        "key": "field_product_spec_value",
+                        "label": "Value",
+                        "name": "spec_value",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "50",
+                            "class": "",
+                            "id": ""
+                        },
+                        "placeholder": "640G (PER UNIT)",
+                        "default_value": "",
+                        "maxlength": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_product_specs"
+                    }
+                ]
+            },
+            {
+                "key": "field_product_attributes_meta",
+                "label": "Attribute Bars",
+                "name": "product_attributes_meta",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "Progress bars shown below Field Notes. Name + percentage (0-100).",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "min": 0,
+                "max": 4,
+                "layout": "table",
+                "button_label": "Add Attribute",
+                "rows_per_page": 20,
+                "collapsed": "",
+                "sub_fields": [
+                    {
+                        "key": "field_product_attribute_name",
+                        "label": "Attribute Name",
+                        "name": "attribute_name",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "50",
+                            "class": "",
+                            "id": ""
+                        },
+                        "placeholder": "DURABILITY",
+                        "default_value": "",
+                        "maxlength": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_product_attributes_meta"
+                    },
+                    {
+                        "key": "field_product_attribute_value",
+                        "label": "Percentage (0-100)",
+                        "name": "attribute_value",
+                        "aria-label": "",
+                        "type": "number",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": false,
+                        "wrapper": {
+                            "width": "50",
+                            "class": "",
+                            "id": ""
+                        },
+                        "min": 0,
+                        "max": 100,
+                        "default_value": 80,
+                        "step": "",
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_product_attributes_meta"
+                    }
+                ]
+            },
+            {
+                "key": "field_product_image_ref",
+                "label": "Image Reference Code",
+                "name": "product_image_ref",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Optional reference code shown in the corner of the hero image. E.g. PC_092_ALPHA",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "placeholder": "PC_092_ALPHA",
+                "default_value": "",
+                "maxlength": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_product_pdf",
+                "label": "Spec Sheet PDF",
+                "name": "product_pdf",
+                "aria-label": "",
+                "type": "file",
+                "instructions": "Optional downloadable PDF spec sheet. Displays a secondary CTA button.",
+                "required": 0,
+                "conditional_logic": false,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "array",
+                "library": "all",
+                "mime_types": "pdf",
+                "min_size": 0,
+                "max_size": 0
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "product"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "Custom PDP fields for WooCommerce products — gear category, feature bullets, specs table, attribute bars, image ref, PDF.",
+        "show_in_rest": 0
+    },
+    {
         "key": "group_6809843001d05",
         "title": "Routes",
         "fields": [
@@ -2210,7 +2470,7 @@
         "show_in_nav_menus": true,
         "show_in_rest": true,
         "rest_base": "",
-        "rest_namespace": "wp/v2",
+        "rest_namespace": "wp\/v2",
         "rest_controller_class": "WP_REST_Terms_Controller",
         "show_tagcloud": true,
         "show_in_quick_edit": true,
@@ -2290,7 +2550,7 @@
         "show_in_nav_menus": true,
         "show_in_rest": true,
         "rest_base": "",
-        "rest_namespace": "wp/v2",
+        "rest_namespace": "wp\/v2",
         "rest_controller_class": "WP_REST_Posts_Controller",
         "menu_position": "",
         "menu_icon": {
@@ -2380,7 +2640,7 @@
         "show_in_nav_menus": true,
         "show_in_rest": true,
         "rest_base": "",
-        "rest_namespace": "wp/v2",
+        "rest_namespace": "wp\/v2",
         "rest_controller_class": "WP_REST_Posts_Controller",
         "menu_position": "",
         "menu_icon": {
@@ -2471,7 +2731,7 @@
         "show_in_nav_menus": true,
         "show_in_rest": true,
         "rest_base": "",
-        "rest_namespace": "wp/v2",
+        "rest_namespace": "wp\/v2",
         "rest_controller_class": "WP_REST_Posts_Controller",
         "menu_position": "",
         "menu_icon": {
@@ -2505,197 +2765,5 @@
         "delete_with_user": false,
         "register_meta_box_cb": "",
         "enter_title_here": ""
-    },
-    {
-        "key": "group_product_pdp",
-        "title": "Product — PDP Fields",
-        "fields": [
-            {
-                "key": "field_product_gear_category",
-                "label": "Gear Category",
-                "name": "product_gear_category",
-                "type": "text",
-                "instructions": "Tactical category label shown above the product title. E.g. \"FOOTWEAR // HEAVY DUTY\"",
-                "required": 0,
-                "placeholder": "FOOTWEAR // HEAVY DUTY",
-                "wrapper": {
-                    "width": "",
-                    "class": "",
-                    "id": ""
-                }
-            },
-            {
-                "key": "field_product_features",
-                "label": "Features",
-                "name": "product_features",
-                "type": "repeater",
-                "instructions": "Bullet point features shown with check icons in the hero.",
-                "required": 0,
-                "min": 0,
-                "max": 6,
-                "layout": "table",
-                "button_label": "Add Feature",
-                "sub_fields": [
-                    {
-                        "key": "field_product_feature_text",
-                        "label": "Feature",
-                        "name": "feature_text",
-                        "type": "text",
-                        "required": 1,
-                        "placeholder": "FIELD TESTED IN ARID CONDITIONS",
-                        "wrapper": {
-                            "width": "",
-                            "class": "",
-                            "id": ""
-                        }
-                    }
-                ],
-                "wrapper": {
-                    "width": "",
-                    "class": "",
-                    "id": ""
-                }
-            },
-            {
-                "key": "field_product_specs",
-                "label": "Technical Specifications",
-                "name": "product_specs",
-                "type": "repeater",
-                "instructions": "Key/value rows shown in the Bento specs table.",
-                "required": 0,
-                "min": 0,
-                "max": 10,
-                "layout": "table",
-                "button_label": "Add Spec",
-                "sub_fields": [
-                    {
-                        "key": "field_product_spec_label",
-                        "label": "Label",
-                        "name": "spec_label",
-                        "type": "text",
-                        "required": 1,
-                        "placeholder": "CHASSIS WEIGHT",
-                        "wrapper": {
-                            "width": "50",
-                            "class": "",
-                            "id": ""
-                        }
-                    },
-                    {
-                        "key": "field_product_spec_value",
-                        "label": "Value",
-                        "name": "spec_value",
-                        "type": "text",
-                        "required": 1,
-                        "placeholder": "640G (PER UNIT)",
-                        "wrapper": {
-                            "width": "50",
-                            "class": "",
-                            "id": ""
-                        }
-                    }
-                ],
-                "wrapper": {
-                    "width": "",
-                    "class": "",
-                    "id": ""
-                }
-            },
-            {
-                "key": "field_product_attributes_meta",
-                "label": "Attribute Bars",
-                "name": "product_attributes_meta",
-                "type": "repeater",
-                "instructions": "Progress bars shown below Field Notes. Name + percentage (0-100).",
-                "required": 0,
-                "min": 0,
-                "max": 4,
-                "layout": "table",
-                "button_label": "Add Attribute",
-                "sub_fields": [
-                    {
-                        "key": "field_product_attribute_name",
-                        "label": "Attribute Name",
-                        "name": "attribute_name",
-                        "type": "text",
-                        "required": 1,
-                        "placeholder": "DURABILITY",
-                        "wrapper": {
-                            "width": "50",
-                            "class": "",
-                            "id": ""
-                        }
-                    },
-                    {
-                        "key": "field_product_attribute_value",
-                        "label": "Percentage (0-100)",
-                        "name": "attribute_value",
-                        "type": "number",
-                        "required": 1,
-                        "min": 0,
-                        "max": 100,
-                        "default_value": 80,
-                        "wrapper": {
-                            "width": "50",
-                            "class": "",
-                            "id": ""
-                        }
-                    }
-                ],
-                "wrapper": {
-                    "width": "",
-                    "class": "",
-                    "id": ""
-                }
-            },
-            {
-                "key": "field_product_image_ref",
-                "label": "Image Reference Code",
-                "name": "product_image_ref",
-                "type": "text",
-                "instructions": "Optional reference code shown in the corner of the hero image. E.g. PC_092_ALPHA",
-                "required": 0,
-                "placeholder": "PC_092_ALPHA",
-                "wrapper": {
-                    "width": "",
-                    "class": "",
-                    "id": ""
-                }
-            },
-            {
-                "key": "field_product_pdf",
-                "label": "Spec Sheet PDF",
-                "name": "product_pdf",
-                "type": "file",
-                "instructions": "Optional downloadable PDF spec sheet. Displays a secondary CTA button.",
-                "required": 0,
-                "return_format": "array",
-                "library": "all",
-                "mime_types": "pdf",
-                "wrapper": {
-                    "width": "",
-                    "class": "",
-                    "id": ""
-                }
-            }
-        ],
-        "location": [
-            [
-                {
-                    "param": "post_type",
-                    "operator": "==",
-                    "value": "product"
-                }
-            ]
-        ],
-        "menu_order": 0,
-        "position": "normal",
-        "style": "default",
-        "label_placement": "top",
-        "instruction_placement": "label",
-        "hide_on_screen": "",
-        "active": true,
-        "description": "Custom PDP fields for WooCommerce products — gear category, feature bullets, specs table, attribute bars, image ref, PDF.",
-        "show_in_rest": 0
     }
 ]

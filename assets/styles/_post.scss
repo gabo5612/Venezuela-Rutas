@@ -6,6 +6,7 @@
 .page-route {
   background: var(--bg-warm);
   min-height: 100vh;
+  padding-top: 2rem;
 
   /* ── Hero ── */
   &__hero {
@@ -23,7 +24,9 @@
       object-fit: cover;
       display: block;
     }
-
+    img{
+      object-position: top;
+    }
     .hero-overlay {
       position: absolute;
       inset: 0;
@@ -148,6 +151,12 @@
     @media (min-width: 1024px) {
       grid-template-columns: 2fr 1fr;
     }
+
+    &--full {
+      @media (min-width: 1024px) {
+        grid-template-columns: 1fr;
+      }
+    }
   }
 
   &__map-wrap {
@@ -234,6 +243,11 @@
       overflow-y: auto;
       flex: 1;
       max-height: 420px;
+      &::-webkit-scrollbar       { width: 4px; }
+      &::-webkit-scrollbar-track { background: transparent; }
+      &::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+      scrollbar-width: thin;
+      scrollbar-color: var(--line) transparent;
     }
 
     .cp-item {
@@ -276,6 +290,19 @@
       font-size: 0.85rem;
       font-weight: 800;
       color: var(--sand);
+      text-decoration: none;
+      &:hover { color: var(--primary); }
+    }
+
+    .cp-coords {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+      margin-top: 0.25rem;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      font-family: monospace;
+      letter-spacing: 0.02em;
     }
 
     .cp-maps-link {
@@ -340,14 +367,50 @@
       margin-bottom: 1rem;
     }
 
-    ul, ol {
+    strong, b {
+      color: var(--sand);
+      font-weight: 800;
+    }
+
+    em, i {
+      font-style: italic;
+    }
+
+    a {
+      color: var(--terracotta);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      &:hover { color: var(--primary); }
+    }
+
+    ul {
       color: rgba(226, 201, 160, 0.75);
       padding-left: 1.5rem;
       margin-bottom: 1rem;
+      list-style-type: disc;
 
-      li {
-        margin-bottom: 0.4rem;
-      }
+      li { margin-bottom: 0.4rem; }
+    }
+
+    ol {
+      color: rgba(226, 201, 160, 0.75);
+      padding-left: 1.5rem;
+      margin-bottom: 1rem;
+      list-style-type: decimal;
+
+      li { margin-bottom: 0.4rem; }
+    }
+
+    blockquote {
+      border-left: 3px solid var(--terracotta);
+      padding: .75rem 1.25rem;
+      margin: 1.5rem 0;
+      background: rgba(199, 74, 45, 0.07);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      color: var(--sand);
+      font-style: italic;
+
+      p { margin-bottom: 0; color: inherit; }
     }
 
     img {

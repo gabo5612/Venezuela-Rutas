@@ -64,17 +64,17 @@ get_template_part('parts/header');
 
       <!-- Profile selector -->
       <div class="rp-profiles">
-        <button class="rp-profile" data-profile="foot" title="Hiking / Walking">
-          <span class="material-symbols-outlined">hiking</span>
-          <span>Hiking</span>
+        <button class="rp-profile" data-profile="car" title="Driving">
+          <span class="material-symbols-outlined">directions_car</span>
+          <span>Driving</span>
         </button>
         <button class="rp-profile" data-profile="bike" title="Cycling">
           <span class="material-symbols-outlined">directions_bike</span>
           <span>Cycling</span>
         </button>
-        <button class="rp-profile" data-profile="car" title="Driving">
-          <span class="material-symbols-outlined">directions_car</span>
-          <span>Driving</span>
+        <button class="rp-profile" data-profile="foot" title="Hiking / Walking">
+          <span class="material-symbols-outlined">hiking</span>
+          <span>Hiking</span>
         </button>
       </div>
 
@@ -213,7 +213,7 @@ get_template_part('parts/header');
   var startCoords = null, endCoords  = null; // { lat, lng, name }
   var routeLayer  = null;
   var placingMode = null; // 'start' | 'end' | null
-  var activeProfile = 'foot';
+  var activeProfile = 'car';
   var currentRoute  = null; // { points: [[lat,lng]...], elevations: [m...], distance: m, duration: s }
   var geocodeTimers = {};
 
@@ -362,7 +362,7 @@ get_template_part('parts/header');
       btn.classList.add('is-active');
       activeProfile = btn.dataset.profile;
     });
-    if (btn.dataset.profile === 'foot') btn.classList.add('is-active');
+    if (btn.dataset.profile === activeProfile) btn.classList.add('is-active');
   });
 
   /* ─── Geocoding (Nominatim) ──────────────────────────────── */
@@ -515,7 +515,7 @@ get_template_part('parts/header');
     var url = OSRM_BASE + '/' + profile + '/' +
               startCoords.lng + ',' + startCoords.lat + ';' +
               endCoords.lng + ',' + endCoords.lat +
-              '?geometries=geojson&overview=full&steps=false';
+              '?geometries=geojson&overview=full&steps=true';
 
     console.log('[RP] 4. OSRM browser-direct:', url);
 
@@ -535,9 +535,27 @@ get_template_part('parts/header');
       .then(function (data) {
         var route = data.routes && data.routes[0];
         if (!route) { callback('No route found for these points.', null); return; }
+
+        // Extract detailed coords from step geometries (much less simplified than overview)
+        var detailed = [];
+        (route.legs || []).forEach(function (leg) {
+          (leg.steps || []).forEach(function (step) {
+            var cs = step.geometry && step.geometry.coordinates;
+            if (!cs) return;
+            cs.forEach(function (c, idx) {
+              if (idx === 0 && detailed.length > 0) return; // skip duplicate junction point
+              detailed.push([c[1], c[0]]);
+            });
+          });
+        });
+
+        var coords = detailed.length > 1
+          ? detailed
+          : route.geometry.coordinates.map(function (c) { return [c[1], c[0]]; });
+
         callback(null, {
           engine:      'osrm-direct',
-          coordinates: route.geometry.coordinates.map(function (c) { return [c[1], c[0]]; }),
+          coordinates: coords,
           distance:    route.distance,
           duration:    route.duration
         });
@@ -757,20 +775,29 @@ get_template_part('parts/header');
         $saveConfirm.disabled = true;
         $saveConfirm.textContent = 'Saving…';
 
-        // Sample route to max 100 points to avoid huge payloads
-        var pts   = sampleArray(currentRoute.points, 100);
-        var elevs = currentRoute.elevations || [];
+        // Sample route geometry to max 500 points for high-fidelity storage
+        var pts   = sampleArray(currentRoute.points, 500);
+        var elevs = currentRoute.elevations || []; // 100 sampled elevation values
 
-        // Calculate elevation gain from sampled elevations
+        // Calculate elevation gain from original elevation data
         var elevGain = 0;
         for (var ei = 1; ei < elevs.length; ei++) {
           var diff = elevs[ei] - elevs[ei - 1];
           if (diff > 0) elevGain += diff;
         }
 
-        // Zip each point with its elevation value → [lat, lng, ele]
+        // Interpolate elevations to match the 500-point geometry
+        // (elevs has 100 values covering the same proportional span)
         var ptsWithEle = pts.map(function (p, i) {
-          var ele = (elevs[i] !== undefined && elevs[i] !== null) ? elevs[i] : '';
+          var ele = '';
+          if (elevs.length > 0) {
+            var t   = pts.length > 1 ? i / (pts.length - 1) : 0;
+            var pos = t * (elevs.length - 1);
+            var lo  = Math.floor(pos);
+            var hi  = Math.min(lo + 1, elevs.length - 1);
+            var ev  = elevs[lo] * (1 - (pos - lo)) + elevs[hi] * (pos - lo);
+            ele = (ev !== null && !isNaN(ev)) ? Math.round(ev * 10) / 10 : '';
+          }
           return [p[0], p[1], ele];
         });
         console.log('[RP] Save — points:', ptsWithEle.length, '| sample[0]:', ptsWithEle[0], '| elevs available:', elevs.length);
