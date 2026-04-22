@@ -161,7 +161,7 @@ $posts_query = new WP_Query([
         <?php if ( $is_guide && ! empty($g_specialty) ) : ?>
         <div class="author-hero__activities" style="margin-bottom:.75rem">
           <?php foreach ( $g_specialty as $s ) : ?>
-          <span class="author-activity-chip author-activity-chip--specialty"><?php echo esc_html($s); ?></span>
+          <span class="author-activity-chip author-activity-chip--specialty"><?php echo esc_html( rutas_translate_specialty($s) ); ?></span>
           <?php endforeach; ?>
         </div>
         <?php endif; ?>
@@ -219,10 +219,11 @@ $posts_query = new WP_Query([
           </a>
           <?php endif; ?>
           <?php if ( $instagram ) : ?>
-          <a href="https://instagram.com/<?php echo esc_attr($instagram); ?>"
+          <?php $ig_handle = ltrim($instagram, '@'); ?>
+          <a href="https://instagram.com/<?php echo esc_attr($ig_handle); ?>"
              target="_blank" rel="noopener" class="author-contact-btn author-contact-btn--ig">
             <span class="material-symbols-outlined">photo_camera</span>
-            @<?php echo esc_html($instagram); ?>
+            @<?php echo esc_html($ig_handle); ?>
           </a>
           <?php endif; ?>
         </div>
@@ -264,68 +265,18 @@ $posts_query = new WP_Query([
     </div>
   </section>
 
-  <!-- ── Guide: upcoming expeditions ─────────────────────────── -->
+  <!-- ── Guide: upcoming expeditions (hfa-panel) ──────────────── -->
   <?php if ( $is_guide && $is_approved ) : ?>
-  <section class="author-guide-expeditions container">
-    <h2 class="author-section-title">
-      <span class="material-symbols-outlined">groups</span>
-      Upcoming Expeditions
-    </h2>
-    <?php if ( ! empty($led_expeditions) ) : ?>
-    <div class="author-exp-grid">
-      <?php foreach ($led_expeditions as $exp) :
-        $exp_date      = get_post_meta($exp->ID, '_exp_date', true);
-        $exp_time      = get_post_meta($exp->ID, '_exp_time', true);
-        $exp_activity  = get_post_meta($exp->ID, '_exp_activity_type', true);
-        $exp_status    = get_post_meta($exp->ID, '_exp_status', true);
-        $exp_slots     = (int) get_post_meta($exp->ID, '_exp_slots', true);
-        $exp_taken     = (int) get_post_meta($exp->ID, '_exp_slots_taken', true);
-        $exp_free      = max(0, $exp_slots - $exp_taken);
-        $exp_linked    = (int) get_post_meta($exp->ID, '_exp_linked_post', true);
-        $exp_linked_title = $exp_linked ? get_the_title($exp_linked) : '';
-        $exp_linked_url   = $exp_linked ? get_permalink($exp_linked) : '';
-        $exp_fee       = floatval( get_post_meta($exp->ID, '_exp_fee', true) );
-        $status_map    = ['open' => 'Open', 'full' => 'Full'];
-        $act_label     = $activity_labels[$exp_activity][1] ?? $exp_activity;
-        $act_icon      = $activity_labels[$exp_activity][0] ?? 'explore';
-      ?>
-      <div class="author-exp-card">
-        <div class="author-exp-card__top">
-          <span class="author-exp-card__activity">
-            <span class="material-symbols-outlined"><?php echo esc_html($act_icon); ?></span>
-            <?php echo esc_html($act_label); ?>
-          </span>
-          <span class="author-exp-card__status author-exp-card__status--<?php echo esc_attr($exp_status); ?>">
-            <?php echo esc_html($status_map[$exp_status] ?? $exp_status); ?>
-          </span>
-        </div>
-        <h4 class="author-exp-card__title"><?php echo esc_html($exp->post_title); ?></h4>
-        <?php if ($exp_linked_title) : ?>
-        <a href="<?php echo esc_url($exp_linked_url); ?>" class="author-exp-card__route">
-          <span class="material-symbols-outlined">route</span>
-          <?php echo esc_html($exp_linked_title); ?>
-        </a>
-        <?php endif; ?>
-        <div class="author-exp-card__meta">
-          <?php if ($exp_date) : ?>
-          <span><span class="material-symbols-outlined">calendar_today</span><?php echo esc_html( date_i18n('j M Y', strtotime($exp_date)) ); ?><?php echo $exp_time ? ' · ' . esc_html($exp_time) : ''; ?></span>
-          <?php endif; ?>
-          <span><span class="material-symbols-outlined">group</span><?php echo $exp_free; ?> slot<?php echo $exp_free !== 1 ? 's' : ''; ?> free</span>
-          <?php if ($exp_fee > 0) : ?>
-          <span><span class="material-symbols-outlined">attach_money</span>$<?php echo number_format($exp_fee, 2); ?></span>
-          <?php else : ?>
-          <span class="author-exp-card__free"><span class="material-symbols-outlined">check_circle</span>Free</span>
-          <?php endif; ?>
-        </div>
-      </div>
-      <?php endforeach; ?>
-    </div>
-    <?php else : ?>
-    <p class="author-posts__empty">No upcoming expeditions scheduled.</p>
-    <?php endif; ?>
-  </section>
+  <div class="container" style="margin-bottom:3rem">
+    <?php
+    $panel_organizer_id = $author_id;
+    $post_id   = 0;
+    $post_type = 'guide';
+    include WP_PLUGIN_DIR . '/hotfoot-expeditions/templates/expedition-panel.php';
+    ?>
+  </div>
+  <?php endif; ?>
 
-  <?php else : // Non-guides: show posts grid ?>
   <!-- ── Posts grid ────────────────────────────────────────────── -->
   <section class="author-posts container">
     <h2 class="author-section-title">
@@ -359,7 +310,6 @@ $posts_query = new WP_Query([
     <p class="author-posts__empty">No posts yet.</p>
     <?php endif; ?>
   </section>
-  <?php endif; ?>
 
 </main>
 

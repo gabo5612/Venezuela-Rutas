@@ -173,43 +173,59 @@
     }
   }
 
-  &__map-gmaps-btn {
+  &__map-nav-btns {
     display: none;
 
     @media (min-width: 1024px) {
       display: flex;
       align-items: center;
-      gap: .45rem;
+      gap: .5rem;
       position: absolute;
       bottom: 1rem;
       left: 50%;
       transform: translateX(-50%);
       z-index: 900;
-      padding: .6rem 1.25rem;
-      background: rgba(26, 22, 20, 0.88);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid var(--line-warm);
-      border-radius: var(--radius-full);
-      color: var(--sand);
-      font-family: var(--primary-font);
-      font-weight: 700;
-      font-size: .7rem;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      white-space: nowrap;
-      text-decoration: none;
-      transition: background .2s, border-color .2s;
+    }
+  }
 
-      .material-symbols-outlined {
-        font-size: .95rem;
-        color: var(--terracotta);
-      }
+  &__map-gmaps-btn,
+  &__map-waze-btn {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    padding: .6rem 1.25rem;
+    background: rgba(26, 22, 20, 0.88);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--line-warm);
+    border-radius: var(--radius-full);
+    color: var(--sand);
+    font-family: var(--primary-font);
+    font-weight: 700;
+    font-size: .7rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: background .2s, border-color .2s;
 
-      &:hover {
-        background: rgba(199, 74, 45, 0.2);
-        border-color: var(--terracotta);
-      }
+    .material-symbols-outlined { font-size: .95rem; }
+  }
+
+  &__map-gmaps-btn {
+    .material-symbols-outlined { color: var(--terracotta); }
+    &:hover {
+      background: rgba(199, 74, 45, 0.2);
+      border-color: var(--terracotta);
+    }
+  }
+
+  &__map-waze-btn {
+    color: var(--sand);
+    svg { color: #33ccff; }
+    &:hover {
+      background: rgba(51, 204, 255, 0.15);
+      border-color: #33ccff;
     }
   }
 

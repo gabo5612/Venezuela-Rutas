@@ -140,6 +140,13 @@
   aspect-ratio: 16 / 10;
   cursor: pointer;
 
+  @media (max-width: 639px) {
+    aspect-ratio: unset;
+    height: 480px;
+
+    .featured-excerpt { display: none; }
+  }
+
   @media (min-width: 1024px) {
     grid-column: span 2;
   }

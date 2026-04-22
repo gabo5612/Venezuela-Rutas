@@ -99,10 +99,13 @@
         $lat = get_field('latitude'); $lng = get_field('longitude');
         $image = get_field('image') ?: get_the_post_thumbnail_url(null, 'medium');
         $gmaps = get_field('has_a_google_maps_card');
+        $poi_tags = wp_get_post_terms(get_the_ID(), 'post_tag', ['fields' => 'names']);
+        if (is_wp_error($poi_tags)) $poi_tags = [];
         if (!empty($lat) && !empty($lng)) {
           $pois_data[] = ['lat' => $lat, 'lng' => $lng, 'entry_url' => get_permalink(),
             'image_url' => $image ?: '', 'title' => get_the_title(),
-            'google_maps_url' => $gmaps ? esc_url($gmaps) : ''];
+            'google_maps_url' => $gmaps ? esc_url($gmaps) : '',
+            'tags' => $poi_tags];
         }
       endwhile;
       wp_reset_postdata();
@@ -207,23 +210,23 @@
       // --- FILTROS UI ---
       var filtersEl = document.getElementById('gps-filters');
 
-      // Extraer tags únicos presentes en rutas cargadas
+      // Extraer tags únicos presentes en rutas Y POIs
       var tagSet = new Set();
       routes.forEach(function (r) {
-        (r.tags || []).forEach(function (t) {
-          t = String(t || '').trim();
-          if (t) tagSet.add(t);
-        });
+        (r.tags || []).forEach(function (t) { t = String(t||'').trim(); if (t) tagSet.add(t); });
+      });
+      pointsOfInterest.forEach(function (p) {
+        (p.tags || []).forEach(function (t) { t = String(t||'').trim(); if (t) tagSet.add(t); });
       });
 
-      // Construir grupos válidos (solo con tags que existan en rutas)
+      // Construir grupos válidos (con tags que existan en rutas o POIs), preservando color y dash
       var validGroups = [];
       filterGroups.forEach(function (group) {
         var validTags = (group.tags || []).filter(function (t) {
           return tagSet.has(String(t || '').trim());
         });
         if (group.label && validTags.length > 0) {
-          validGroups.push({ label: group.label, tags: validTags });
+          validGroups.push({ label: group.label, tags: validTags, _color: group._color, _dash: group._dash });
         }
       });
 
@@ -309,11 +312,16 @@
         }
       }
 
-      // --- DIBUJAR POIs (siempre, pero en su layer) ---
-      function drawPOIs() {
+      // --- DIBUJAR POIs (filtrables por tags) ---
+      function drawPOIs(activeTags) {
         poiLayer.clearLayers();
+        var filterTags = (activeTags || []).map(norm);
 
         pointsOfInterest.forEach(function (poi) {
+          if (filterTags.length > 0) {
+            var poiTagsNorm = (poi.tags || []).map(norm);
+            if (!filterTags.some(function(t){ return poiTagsNorm.includes(t); })) return;
+          }
           var lat = parseFloat(poi.lat);
           var lng = parseFloat(poi.lng);
           if (isNaN(lat) || isNaN(lng)) return;
@@ -350,7 +358,7 @@
         // mostrar/ocultar capas según modo
         if (mode === 'pois') {
           routesLayer.clearLayers();
-          // POIs visibles
+          drawPOIs([]);
           if (!map.hasLayer(poiLayer)) poiLayer.addTo(map);
 
           // centrar en POIs
@@ -373,9 +381,10 @@
           return;
         }
 
-        // Modo rutas (all o tag)
+        // Modo rutas (all o tag/group)
         routesLayer.clearLayers();
-        // POIs visibles (si quisieras ocultarlos en rutas, comenta estas 2 líneas)
+        var poiFilterTags = (mode === 'all') ? [] : activeTags;
+        drawPOIs(poiFilterTags);
         if (!map.hasLayer(poiLayer)) poiLayer.addTo(map);
 
         var bounds = L.latLngBounds([]);
@@ -410,10 +419,8 @@
           bounds.extend(polyline.getBounds());
           drewAny = true;
 
-          // marker inicio + popup
           var start = routePoints[0];
           var end = routePoints[routePoints.length - 1];
-
           var routeTitle = route.title || '';
           var routeUrl = route.route_url || '';
           var blogUrl = route.blog_url || '';
@@ -421,29 +428,36 @@
           var poiWaypoints = route.poi_waypoints || [];
 
           let popupHtml = `<strong>${routeTitle}</strong><br>`;
-
-          if (imageUrl) {
-            popupHtml += `<img src="${imageUrl}" alt="${routeTitle}" style="max-width: 100%; height: auto; margin-top: 5px; margin-bottom: 5px;"><br>`;
-          }
-
-          if (routeUrl) {
-            popupHtml += `<a href="${routeUrl}" target="_blank">View Route</a><br>`;
-          }
-
-          if (blogUrl) {
-            popupHtml += `<a href="${blogUrl}" target="_blank">View Journal</a><br>`;
-          }
-
+          if (imageUrl) popupHtml += `<img src="${imageUrl}" alt="${routeTitle}" style="max-width:100%;height:auto;margin:5px 0"><br>`;
+          if (routeUrl) popupHtml += `<a href="${routeUrl}" target="_blank">View Route</a><br>`;
+          if (blogUrl)  popupHtml += `<a href="${blogUrl}" target="_blank">View Journal</a><br>`;
           if (routePoints.length >= 2) {
-            const origin = start.join(',');
-            const destination = end.join(',');
-            const waypoints = poiWaypoints.join('|');
-            const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&waypoints=${encodeURIComponent(waypoints)}`;
+            var isMobile = window.matchMedia('(max-width: 1023px)').matches;
+            var googleMapsUrl;
+            if (isMobile) {
+              var daddrParts = [start.join(',')].concat(poiWaypoints).concat([end.join(',')]);
+              googleMapsUrl = 'https://maps.google.com/maps?daddr=' + daddrParts.join('+to:') + '&directionsmode=driving';
+            } else {
+              googleMapsUrl = 'https://www.google.com/maps/dir/?api=1'
+                + '&origin='      + start.join(',')
+                + '&destination=' + end.join(',')
+                + (poiWaypoints.length ? '&waypoints=' + encodeURIComponent(poiWaypoints.join('|')) : '')
+                + '&travelmode=driving';
+            }
             popupHtml += `<br><a href="${googleMapsUrl}" target="_blank" class="map-link-button" style="text-align:center;display:block">View on Google Maps</a>`;
           }
-
           L.marker(start, { icon: routeIcon }).addTo(routesLayer).bindPopup(popupHtml);
         });
+
+        // Also extend bounds with matching POIs so centering works for POI-only tag groups
+        if (mode !== 'all') {
+          pointsOfInterest.forEach(function (poi) {
+            var poiTagsNorm = (poi.tags || []).map(norm);
+            if (!activeTags.some(function(t){ return poiTagsNorm.includes(t); })) return;
+            var plat = parseFloat(poi.lat), plng = parseFloat(poi.lng);
+            if (!isNaN(plat) && !isNaN(plng)) { bounds.extend([plat, plng]); drewAny = true; }
+          });
+        }
 
         if (drewAny && bounds.isValid()) {
           map.fitBounds(bounds, { padding: [30, 30] });
@@ -521,7 +535,7 @@
       });
 
       // ── Primera carga ─────────────────────────────────────────────────────
-      drawPOIs();
+      drawPOIs([]);
 
       // URL param tiene prioridad sobre contexto PHP
       var urlGps = new URLSearchParams(window.location.search).get('gps');

@@ -80,6 +80,10 @@
   margin: 0 0 1rem;
   max-width: 560px;
   line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* Activity chips */
@@ -237,6 +241,10 @@
   line-height: 1.6;
   padding-left: .85rem;
   border-left: 2px solid var(--primary-border);
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* Guide contact buttons */

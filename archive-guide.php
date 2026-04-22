@@ -151,7 +151,7 @@ $current_zone = is_tax('guide-zone') ? get_queried_object() : null;
           <?php if (!empty($g_spec)) : ?>
           <div class="guide-card__specs">
             <?php foreach (array_slice($g_spec, 0, 3) as $s) : ?>
-              <span class="badge badge--outline"><?php echo esc_html($s); ?></span>
+              <span class="badge badge--outline"><?php echo esc_html( rutas_translate_specialty($s) ); ?></span>
             <?php endforeach; ?>
           </div>
           <?php endif; ?>

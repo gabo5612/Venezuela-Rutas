@@ -102,7 +102,7 @@ get_template_part('parts/header');
 
       <div class="auth-divider"><span>First time here?</span></div>
 
-      <a href="<?php echo esc_url( get_permalink( get_page_by_path('registro') ) ?: wp_registration_url() ); ?>" class="auth-btn auth-btn--outline">
+      <a href="<?php echo esc_url( home_url('/register/') ); ?>" class="auth-btn auth-btn--outline">
         <span class="material-symbols-outlined">person_add</span>
         Create free account
       </a>

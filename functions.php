@@ -3,6 +3,32 @@
 // Enqueue scripts & styles
 require_once(get_template_directory() . '/functions/enqueue-scripts.php');
 
+// ── Guide specialty translation map ──────────────────────────
+function rutas_translate_specialty( string $s ): string {
+    static $map = [
+        'escalada'    => 'Climbing',
+        'senderismo'  => 'Hiking',
+        'montañismo'  => 'Mountaineering',
+        'ciclismo'    => 'Cycling',
+        'buceo'       => 'Diving',
+        'fotografía'  => 'Photography',
+        'fotografia'  => 'Photography',
+        'pesca'       => 'Fishing',
+        'rappel'      => 'Rappelling',
+        'kayak'       => 'Kayaking',
+        'surf'        => 'Surfing',
+        'campismo'    => 'Camping',
+        'gastronomía' => 'Gastronomy',
+        'gastronomia' => 'Gastronomy',
+        'cultura'     => 'Culture',
+        'aventura'    => 'Adventure',
+        'motociclismo'=> 'Motorcycling',
+        '4x4'         => '4x4 Offroad',
+    ];
+    $key = mb_strtolower( trim( $s ), 'UTF-8' );
+    return $map[ $key ] ?? $s;
+}
+
 
 // ===============================
 // THEME SUPPORT + MENUS
@@ -165,8 +191,8 @@ add_filter('login_url', function($url, $redirect) {
 }, 10, 2);
 
 add_filter('register_url', function($url) {
-    $page = get_page_by_path('registro');
-    return $page ? get_permalink($page) : $url;
+    $page = get_page_by_path('register');
+    return $page ? get_permalink($page) : home_url('/register/');
 });
 
 // Redirect wp-login.php to custom pages (except admin/ajax requests)
@@ -176,8 +202,9 @@ add_action('init', function() {
         if (strpos($uri, 'wp-login.php') !== false && !isset($_POST['log']) && !isset($_POST['user_login'])) {
             $action = $_GET['action'] ?? '';
             if ($action === 'register') {
-                $page = get_page_by_path('registro');
-                if ($page) { wp_redirect(get_permalink($page)); exit; }
+                $page = get_page_by_path('register');
+                if ($page) { wp_redirect(get_permalink($page)); exit;
+                } else { wp_redirect(home_url('/register/')); exit; }
             } elseif (!$action || $action === 'login') {
                 $page = get_page_by_path('login');
                 if ($page) {
@@ -192,7 +219,7 @@ add_action('init', function() {
 // ── Invalidate GPS block transients when saving routes or POIs ─
 add_action('save_post', function ($post_id) {
     $type = get_post_type($post_id);
-    if ($type === 'routes')           delete_transient('gps_block_routes');
+    if ($type === 'routes')            delete_transient('gps_block_routes');
     if ($type === 'point-of-interest') delete_transient('gps_block_pois');
 });
 

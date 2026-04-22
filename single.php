@@ -114,10 +114,14 @@ $weather_lat = $last_pt ? $last_pt[0] : ($has_pin ? floatval($lat) : '');
 $weather_lon = $last_pt ? $last_pt[1] : ($has_pin ? floatval($lon) : '');
 $has_weather = $weather_lat !== '' && $weather_lon !== '';
 
-// ── Mobile Google Maps button URL ─────────────────────────
-$mobile_maps_url = '';
+// ── Google Maps button URLs ───────────────────────────────
+// Mobile/tablet: daddr format (no saddr = device location as origin)
+// Desktop: dir/?api=1 with explicit origin = route start point
+$mobile_maps_url  = '';
+$desktop_maps_url = '';
 if ($gmaps_url) {
-    $mobile_maps_url = $gmaps_url;
+    $mobile_maps_url  = $gmaps_url;
+    $desktop_maps_url = $gmaps_url;
 } elseif ($has_polyline) {
     $pt_start = $route_pts[0];
     $pt_end   = $route_pts[count($route_pts) - 1];
@@ -131,13 +135,33 @@ if ($gmaps_url) {
         $p_lng = get_field('longitude', $poi_item->ID);
         if ($p_lat && $p_lng) $wpts[] = $p_lat . ',' . $p_lng;
     }
-    $wpts_str = implode('|', $wpts);
-    $mobile_maps_url = 'https://www.google.com/maps/dir/?api=1'
+    // Mobile: daddr chain, device location (no saddr) → start → waypoints → end
+    $daddr_parts = array_merge(
+        [$pt_start[0] . ',' . $pt_start[1]],
+        $wpts,
+        [$pt_end[0] . ',' . $pt_end[1]]
+    );
+    $daddr = implode('+to:', $daddr_parts);
+    $mobile_maps_url = 'https://maps.google.com/maps'
+        . '?daddr=' . $daddr
+        . '&directionsmode=driving';
+    // Desktop: dir format, explicit origin = route start point
+    $desktop_maps_url = 'https://www.google.com/maps/dir/?api=1'
         . '&origin='      . $pt_start[0] . ',' . $pt_start[1]
         . '&destination=' . $pt_end[0]   . ',' . $pt_end[1]
-        . ($wpts_str ? '&waypoints=' . rawurlencode($wpts_str) : '');
+        . ( $wpts ? '&waypoints=' . implode('%7C', $wpts) : '' )
+        . '&travelmode=driving';
 } elseif ($has_pin || ($lat && $lon)) {
-    $mobile_maps_url = 'https://www.google.com/maps/search/?api=1&query=' . $lat . ',' . $lon;
+    $mobile_maps_url  = 'https://www.google.com/maps/search/?api=1&query=' . $lat . ',' . $lon;
+    $desktop_maps_url = $mobile_maps_url;
+}
+
+// ── Waze button URL ─────────────────────────────────────────
+$waze_url = '';
+if ($has_polyline) {
+    $waze_url = 'https://waze.com/ul?ll=' . $pt_start[0] . ',' . $pt_start[1] . '&navigate=yes';
+} elseif ($has_pin || ($lat && $lon)) {
+    $waze_url = 'https://waze.com/ul?ll=' . floatval($lat) . ',' . floatval($lon) . '&navigate=yes';
 }
 
 // ── Related posts label ──────────────────────────────────────
@@ -493,13 +517,15 @@ $related_label = match ($post_type) {
   <div id="section-map" class="page-route__map-section <?php echo !$has_checkpoints ? 'page-route__map-section--full' : ''; ?>" data-animate="fade-up">
     <div class="page-route__map-wrap" <?php echo !$has_checkpoints ? 'style="max-width:100%"' : ''; ?>>
       <div id="route-map"></div>
-      <?php if ($mobile_maps_url) : ?>
-      <a href="<?php echo esc_url($mobile_maps_url); ?>"
-         class="page-route__map-gmaps-btn"
-         target="_blank" rel="noopener">
-        <span class="material-symbols-outlined">map</span>
-        View on Google Maps
-      </a>
+      <?php if ($desktop_maps_url) : ?>
+      <div class="page-route__map-nav-btns">
+        <a href="<?php echo esc_url($desktop_maps_url); ?>"
+           class="page-route__map-gmaps-btn"
+           target="_blank" rel="noopener">
+          <span class="material-symbols-outlined">map</span>
+          Google Maps
+        </a>
+      </div>
       <?php endif; ?>
     </div>
 
@@ -625,7 +651,7 @@ $related_label = match ($post_type) {
     <?php if (!empty($guide_specialty)) : ?>
     <div class="guide-contact__specs">
       <?php foreach ($guide_specialty as $s) : ?>
-        <span class="badge badge--outline"><?php echo esc_html($s); ?></span>
+        <span class="badge badge--outline"><?php echo esc_html( rutas_translate_specialty($s) ); ?></span>
       <?php endforeach; ?>
     </div>
     <?php endif; ?>

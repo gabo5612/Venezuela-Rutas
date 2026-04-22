@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Registro
+ * Template Name: Register
  */
 if ( is_user_logged_in() ) { wp_redirect( home_url() ); exit; }
 if ( ! get_option('users_can_register') ) { wp_redirect( home_url() ); exit; }

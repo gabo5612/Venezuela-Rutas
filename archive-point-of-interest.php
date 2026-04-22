@@ -19,15 +19,16 @@
     <div class="filter-pills">
       <span class="filter-pills__label">Type:</span>
       <?php
-      $poi_cats = get_categories(['hide_empty' => true]);
+      $poi_ids  = get_posts(['post_type' => 'point-of-interest', 'posts_per_page' => -1, 'fields' => 'ids']);
+      $poi_tags = $poi_ids ? get_terms(['taxonomy' => 'post_tag', 'hide_empty' => true, 'object_ids' => $poi_ids]) : [];
       $icons    = ['location_on','forest','water','filter_hdr','wb_sunny','landscape','park'];
-      foreach ($poi_cats as $i => $cat) :
+      foreach ($poi_tags as $i => $tag) :
         $icon = $icons[$i % count($icons)];
       ?>
-      <a href="<?php echo esc_url(get_category_link($cat->term_id)); ?>"
-         class="filter-pills__pill">
+      <a href="<?php echo esc_url(get_term_link($tag)); ?>"
+         class="filter-pills__pill <?php echo is_tag($tag->slug) ? 'filter-pills__pill--active' : ''; ?>">
         <span class="material-symbols-outlined"><?php echo esc_html($icon); ?></span>
-        <?php echo esc_html($cat->name); ?>
+        <?php echo esc_html($tag->name); ?>
       </a>
       <?php endforeach; ?>
     </div>
